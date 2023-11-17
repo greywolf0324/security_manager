@@ -1,0 +1,190 @@
+/* Bootstrap 5 CSS and icons included */
+:root {
+  --colorPrimaryNormal: #00b3bb;
+  --colorPrimaryDark: #00979f;
+  --colorPrimaryGlare: #00cdd7;
+  --colorPrimaryHalf: #80d9dd;
+  --colorPrimaryQuarter: #bfecee;
+  --colorPrimaryEighth: #dff5f7;
+  --colorPrimaryPale: #f3f5f7;
+  --colorPrimarySeparator: #f3f5f7;
+  --colorPrimaryOutline: #dff5f7;
+  --colorButtonNormal: #00b3bb;
+  --colorButtonHover: #00cdd7;
+  --colorLinkNormal: #00979f;
+  --colorLinkHover: #00cdd7;
+}
+html{
+  height: 100%;
+}
+body{
+  display: flex;
+  height: 100%;
+}
+
+.upload_dropZone {
+  color: #0f3c4b;
+  background-color: var(--colorPrimaryPale, #c8dadf);
+  outline: 2px dashed var(--colorPrimaryHalf, #c1ddef);
+  outline-offset: -12px;
+  transition:
+    outline-offset 0.2s ease-out,
+    outline-color 0.3s ease-in-out,
+    background-color 0.2s ease-out;
+}
+.upload_dropZone.highlight {
+  outline-offset: -4px;
+  outline-color: var(--colorPrimaryNormal, #0576bd);
+  background-color: var(--colorPrimaryEighth, #c8dadf);
+}
+.upload_svg {
+  fill: var(--colorPrimaryNormal, #0576bd);
+}
+.btn-upload {
+  color: #fff;
+  background-color: var(--colorPrimaryNormal);
+}
+.btn-upload:hover,
+.btn-upload:focus {
+  color: #fff;
+  background-color: var(--colorPrimaryGlare);
+}
+.upload_img {
+  width: calc(33.333% - (2rem / 3));
+  object-fit: contain;
+  background-color: rgba(255, 255, 255, .8);
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.matched-row{
+  background-color: #00cdd7;
+}
+
+
+/* .sidebar li{
+  color: #FFFFFF;
+  font-size: 20;
+} */
+#inventory-list>div>h5 {
+  width: 100%;
+
+}
+
+#inventory-list>div {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#inventory-list>div>div {
+  width: 30%;
+}
+body{font-size:14px;}
+
+.navbar-vertical.navbar-expand-lg .navbar-nav .nav-link {
+   
+}
+ 
+
+/** sidebar width*/
+.navbar-vertical.navbar-expand-lg {
+    display: block;
+   
+    top: 0;
+    bottom: 0;
+    /* width: 100%; */
+    max-width: 350px;
+   overflow-y: auto;
+}
+ 
+
+.navbar-vertical .navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+   
+}
+
+ .navbar-vertical.navbar-expand-lg .navbar-nav .nav .nav-link {
+    padding-left: 2.25rem;
+}
+
+.navHeading {
+    padding-left: 0.35rem;
+}
+.navPagesSub .nav-item .nav-link {
+    padding-left: 3.25rem!important;
+}
+.conatain{
+  /* justify-content: center; */
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  font-size: 30px;
+}
+#sidebarNav.active {
+  margin-left: -200px;
+}
+#customer-name-form{
+  width: fit-content;
+}
+#customselect{
+  
+  width: 80%;
+}
+li{
+  list-style-type: none;
+}
+.topnav{
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+#homecontainer{
+
+  overflow: auto;
+}
+#homecontain{
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+.stepper-content-container {
+  height: calc(100vh - 259px);
+  overflow: auto;
+}
+.stepper-content {
+  /* height: 500px; */
+  overflow: auto;
+}
+.black-line {
+  width: 100%;
+  height: 10px;
+  background-color: rgb(3, 32, 75);
+}
+#sidebarNav{
+  min-width: 200px;
+  max-width: 200px;
+  background: #7386D5;
+  transition:all 0.3
+}
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    background-color: #82838371;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.export_buttons{
+  display: flex;
+}
+.btn{
+  white-space: nowrap;
+}
+.nondatabase_warning{
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+}

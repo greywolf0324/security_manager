@@ -1,0 +1,18 @@
+Name,Days,Method,DueNextMonth,PaymentTermActive,PaymentTermDefault
+" T/T against BL Copy","0",1,-1,True,False
+"0 Days","0",1,-1,True,False
+"105 Days","0",1,0,True,False
+"120 Days","120",1,-1,True,False
+"15 Days","15",1,1,True,False
+"2% 30 Net 31","0",1,0,True,False
+"25% Deposit - 75% Against BOL","0",1,0,True,False
+"30 Days","30",1,0,True,False
+"30% Deposit - 70% Against BOL","0",1,0,True,False
+"30% Deposit - 70% Before Shipment","0",1,0,True,False
+"45 Days","45",1,-1,True,False
+"50% Deposit - 50% Net 30 Days","30",1,-1,True,False
+"50% Deposit - 50% Upon Goods Pick Up","0",1,-1,True,False
+"60 Days","60",1,-1,True,False
+"75 Days","75",1,-1,True,False
+"90 Days","90",1,-1,True,False
+"Letter of Credit","0",1,-1,True,False

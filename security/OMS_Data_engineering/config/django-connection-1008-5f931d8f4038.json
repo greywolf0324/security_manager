@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "django-connection-1008",
+  "private_key_id": "5f931d8f403826af92d11120e66c3c83f10c19ba",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCngSXt4mhXkvVy\nDyZZPMfk0szExVomQIwc97oWYaodvbSWNQZswCHSoFJwr3KAdMDmZRiWsy16yrU2\nE+YU6pRlIfMcYDGok9GOGsQVhTMeh1gdzM9KPAOTeA2mofXnoWx0BVK3u5LR23u7\naDQrorNQFPH8eKEkULkYNqYOAianLv6cstth8ofpvAk45FuvZMOYKTMywCeD58FH\nWmEIZoTGZy7k8Nsrvv5L1oKuHIyAv1/k+NHn/KDBl2G+cLKGWbJQIveu/pYm8tBq\ntW8jdmI3IsLHs0hm+MJpO4G4Q59wOKSDsA4cIpvfctx6mYAcFEK2acx6enn/KqTd\nVhiEjNTfAgMBAAECggEAUSggwW5GEdAxPa8bbHcnfrWn4tqfwBLcEBjyv29YZgqJ\nGZHdaAl7Gbr11oUbHCP1ZmurCzELIwhd3jKr8oxpk8psKN5ukPf1uz06rhaYWv1G\nc0HNWXFUZjnvm0GzjCPJETmXB1BJZYZLH9TwGgg9itprGGE16gt2csXflL/0DGHO\ntqzhxTnxjfI8ZfRcFxEoDniy33tmgnjIJ6dod3diV9V60Sra890c4+DTUrw4DDjW\nR+OMKe6eQGs+yoPwbx8lpTYBJWdZ3jZFjbkorS/sfN5kFCGkuTXoIS/Qz5qSSmnV\nz6+TodIauo3RNqQXCLuEdrTZNKnHzGOSegrG/CkICQKBgQDZBnWXK3sBzDxZZByk\n4w7HcQH87rvX2XEh/TWd1aTXAYlLYIE0LSfae5t8OpToyG0WcUDXwJvysVbe26mu\nMMGxQXrqsWK0uNflgaD4iwFcVxv1ab4TBnd6Wl3BRkOOG3/XtfRiHo+JsjZuiCeP\nihKgCwVxME2f+WoD37haxRQ/0wKBgQDFlgRPrzebuQ+q3QFsUuy9V9W7d+lFQjEz\njO9ExHNIf2E7vLJwWdijslJtoI+jlmNwdZUZetLQwUU3ycEhxOFOzGdjhwBdtHBc\n70QXeXw5ouRDmG1o0r/ySpNWXf6qbLz9lYEEPIrqaJHVpdfnxp/GRT/FWjHpN+mk\nfBgqe9Y7RQKBgGGStuGtadNoGKX0DbDQaP+gPk2SpB+qomOurSF2QXNtPGYIUG69\n8pIXStOynup92hXh+05FSZf2xWDTD9nCEAN6tiG4ePFZva9w9YdpL8ZtX6OZ1BxH\npwX6hPZ1eb/1eyfnpaVLqis1VaWiT28Im9Eaw2qdVfkbsN9nAULGIpGDAoGBALKQ\nrTzGgV7+lKY6LXsURlen9cUCzZKGC6knCWYAlJ9EXz95fVoEGMF3+v6QSL/yvdN4\nsFLiqXt373JHp385StXH7PgJnc8RryqOId+FLzt3dwuPyfEd5dK2iwlW0Tx8ISCb\n6IlHndPSxVlsE/+nheXN16Anr0ux+Dlq3PwoBqhxAoGAZBTZmshLhqJ5y+9wcMX7\n6RZrSpH0OizxMNkwgXgj3q5Wj1kELNTgJEukD85K89kJpTb75jVOqUAF/ShY7DMY\nIKjhz/uKTd8EJMB8vdMoeUAS+K86vidB6QBUUBYCT9L6LxnGVdyzmHPyBYX/KaVF\n7IDYRpYiMKMObSi154diKSo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "gsheet-operator@django-connection-1008.iam.gserviceaccount.com",
+  "client_id": "104868267570771686318",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheet-operator%40django-connection-1008.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

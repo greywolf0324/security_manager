@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History Page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'security/css/home.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cdbootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cdbootstrap/css/cdb.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+   <nav class="navbar navbar-expand-lg navbar-vertical navbar-light bg-light border-right p-4 border" id="sidebarNav">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse align-content-stretch flex-wrap" id="navbarSupportedContent">
+          <ul class="navbar-nav flex-column w-100">
+              <li class="nav-item active">
+                  <a class="nav-link" href="#" data-toggle="collapse" data-target="#navDashboard" aria-expanded="false" aria-controls="navDashboard">
+                      <i class="fas fa-home mr-2"></i>Dashboard   
+                      <span class="d-block ml-auto">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                      </span>
+                  </a>
+                  <div id="navDashboard" class="collapse show" data-parent="#sidebarNav">
+                      <ul class="nav flex-column">
+                          <li class="nav-item">
+                              <a class="nav-link" href="{% url 'security:home' %}">Home</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" href="{% url 'security:POconversion' %}">POconversion</a>
+                          </li>
+                      </ul>
+                  </div>
+              </li>
+          </ul>
+      </div>
+   </nav>
+     <div class="conatain">
+        
+         <nav  class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex;">
+            <button type="button" id="sidebarCollapse" class="btn ">
+                <i class="fas fa-align-left"></i>
+                
+              </button>
+              <div class="topnav"> 
+                <a class="navbar-brand" href="{% url 'security:home' %}">Dashboard</a>
+                <a class="navbar-brand" href="{% url 'security:history' %}">History</a>
+              </div>
+             
+             
+         </nav>
+       
+       <div id="homecontain" >
+         {% block content %}
+         {% endblock content %}
+       </div>
+     </div>
+
+     
+  
+       
+    
+    
+    
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
+    <script src="{% static 'security/js/home.js' %}"></script>
+    <script src="https://kit.fontawesome.com/c84a4c5774.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    {% block scripts %}
+    {% endblock scripts %}
+</body>
+</html>

@@ -1,0 +1,9 @@
+# db.sqlite3
+# /db.sqlite3
+# \db.sqlite3
+# *.sqlite3
+__pycache__/*
+*.py[cod]
+*$py.class
+security/OMS_Data_engineering/config/AutoFill_DB/
+process/

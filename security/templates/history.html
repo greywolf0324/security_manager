@@ -1,0 +1,28 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    
+    <div class="table-responsive container mt-5">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>User Name</th>
+            <th>Creation Date</th>
+            <th>PO Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for history in histories %}
+            <tr>
+              <td>{{ history.0 }}</a></td>
+              <td>{{ history.1 }}</td>
+              <td>{{ history.2.created_at }}</td>
+              <td>{{ history.3 }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+{% endblock %}
