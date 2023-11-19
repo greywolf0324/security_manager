@@ -124,12 +124,15 @@ def history(request):
   print(histories[0].created_at)
   print(histories[0].updated_at)
   # History Generation
-  path = Path(__file__).resolve().parent.parent / "process/outputs/"
+  path = Path(__file__).resolve().parent.parent / "process/outputs"
   os.chdir(path)
   paths = []
   for file in glob("*.csv"):
-    paths.append("process/outputs/" + file)
+    print(path)
+    print(file)
+    paths.append(str(path) + "\\" + file)
 
+  print(paths)
   new_histories = []
   for history in histories:
     if str(history.output) in paths:
@@ -146,7 +149,7 @@ def history(request):
   users = []
   for history in new_histories:
     users.append(str(history.user).split("@")[0])
-
+  print(customer_names, users, new_histories, PO_dates)
   histories = zip(customer_names, users, new_histories, PO_dates)
 
   return render(request, 'history.html', { "histories": histories })

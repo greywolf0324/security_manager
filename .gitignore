@@ -4,6 +4,7 @@
 # *.sqlite3
 __pycache__/*
 *.py[cod]
+*.pyc
 *$py.class
-security/OMS_Data_engineering/config/AutoFill_DB/
-process/
+security/OMS_Data_engineering/config/AutoFill_DB/*
+process/*
