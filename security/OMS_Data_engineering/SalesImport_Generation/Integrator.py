@@ -165,10 +165,9 @@ class Integrate_All:
     
     def fun_shippingnotes(self, m_shipdates: str, m_canceldates: str):
         shippingnotes = [m_shipdates[0] + "-" + m_canceldates[0]]
-        print(self.length, "+++++++++++++++++++++++")
         for _ in range(1, self.length):
             shippingnotes.append("")
-        print(shippingnotes, "_+_+_+_+_+_+_+_+_+_+_")
+
         return shippingnotes
     
     def fun_invoicedata_expiredate(self, m_shipdates: str):
@@ -177,7 +176,6 @@ class Integrate_All:
         # if self.customer_name == "Walgreens":
         #     temp.append("".join([m_shipdates[0].split(" - ")[1].split("/")[i] for i in [2, 0, 1]]).replace("\n", ""))
         # else:
-        print(m_shipdates)
         if m_shipdates[0] != "":
             if self.customer_name in ["Family Dollar", "Walmart US", "Ollies", "Giant Tiger", "CVS", "Hobby Lobby", "Lekia", "Big Lots Stores", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading"]:
                 tem = m_shipdates[0].split("/")
@@ -277,12 +275,10 @@ class Integrate_All:
 
         for i,  element in enumerate(matching_res):
             #everything will be done here
-            print(list(element.keys())[0], "_______________________________")
             self.length = len(element[list(element.keys())[0]])
 
             # Create formula fields
             # # Initialize Customer_Name
-            print(self.customer_name, "_____________________________________________________________")
             self.customer_name = self.customer_name_init
             if (self.customer_name in ["Pepco", "Poundland"]) and element["Currency"][0] == "CNY":
                 self.customer_name = self.customer_name + " - RMB"
@@ -577,7 +573,6 @@ class Integrate_All:
                 for _ in range(self.length - 1):
                     temp_shippingnotes.append("")
                 
-                print(temp_shippingnotes, "_______________________")
                 SalesImport[i].update(
                     {
                         "ShippingNotes": temp_shippingnotes

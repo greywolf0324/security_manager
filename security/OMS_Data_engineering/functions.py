@@ -168,6 +168,9 @@ class SalesImport_Generator:
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
 
+        # self.filename = None
+        # self.path = None
+
     def str_converter(self, input):
         temp = []
         for item in list(input):
@@ -219,17 +222,22 @@ class SalesImport_Generator:
         pd.DataFrame(db[0]).to_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index = False)
 
     def uploadFile(self, data):
-        current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        random_string = str(uuid.uuid4().hex)
-        filename = f'{current_datetime}_{random_string}'
-        extension = data.name.split(".")[-1]
-        path = Path(__file__).resolve().parent.parent.parent / f'process/inputs/{filename}.{extension}'
+        self.paths = []
+        self.filenames = []
+        for file in data:
+            current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            random_string = str(uuid.uuid4().hex)
+            filename = f'{current_datetime}_{random_string}'
+            self.filenames.append(filename)
+            extension = file.name.split(".")[-1]
+            path = Path(__file__).resolve().parent.parent.parent / f'process/inputs/{filename}.{extension}'
+            self.paths.append(path)
+        
+            with open(path, 'wb') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
 
-        with open(path, 'wb') as destination:
-            for chunk in data.chunks():
-                destination.write(chunk)
-
-        return [path, filename]
+        # return [self.paths, self.filename]
     
     def parseUpload(self, data, customer_name = None, currency = None):
         print("==============================================================================================================")
@@ -238,10 +246,11 @@ class SalesImport_Generator:
 
         self.customer_name = customer_name
         # customer_name = "Buc-ee's"
-        paths = []
-        for file in data:
-            res = self.uploadFile(file)
-            paths.append(res[0])
+        # paths = []
+        # for file in data:
+        self.uploadFile(data)
+        paths = self.paths
+            # paths.append(self.path)
         
         # OCR: PDF parsing
         print("==============================================================================================================")
@@ -249,7 +258,7 @@ class SalesImport_Generator:
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
         PO_res = parser.PO_parser(paths, currency)
 
-        print(PO_res)
+        # print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -269,7 +278,7 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("Displaying...")
-        print(self.auto_dic)
+        # print(self.auto_dic)
         # print(OMS_equal)
         if (self.customer_name == "Pepco" or self.customer_name == "Poundland") and matching_res[0]["Currency"][0] == "CNY":
                 self.customer_name = self.customer_name + " - RMB"
@@ -289,17 +298,24 @@ class SalesImport_Generator:
 
     #     return addition
 
-    def res_viewer(self, matching_res, customer_name = None, term = None):
-
+    def res_viewer(self, data, matching_res, customer_name = None, term = None):
+        
+        # paths = []
+        # for file in data:
+        #     # res = self.uploadFile(file)
+        #     path = self.path
+        #     paths.append(path)
+        #     filename = self.filename
+        filename = self.filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
-                    print("**********")
-                    print(temp)
-                    print(temp.values[0])
-                    print("**********")
+                    # print("**********")
+                    # print(temp)
+                    # print(temp.values[0])
+                    # print("**********")
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -412,6 +428,13 @@ class SalesImport_Generator:
                     }
                 )
 
+        print(customer_name, header_details, item_details)
+
+        res = [customer_name, header_details, item_details]
+        with open(Path(__file__).resolve().parent.parent.parent / f'process/views/{filename}.json', 'w') as f:
+            json.dump(res, f)
+        
+
         # print("printing item_details...")
         # print(header_details)
         # print(item_details)
@@ -426,13 +449,14 @@ class SalesImport_Generator:
         client = gspread.authorize(creds_with_scope)
         self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
         
-        paths = []
-        for file in data:
-            res = self.uploadFile(file)
-            path = res[0]
-            paths.append(res[0])
-            filename = res[1]
-
+        # paths = []
+        # for file in data:
+        #     # res = self.uploadFile(file)
+        #     path = self.path
+        #     paths.append(path)
+        #     filename = self.filename
+        path = self.paths[0]
+        filename = self.filenames[0]
         sku_match = {}
 
         if customer_name in self.SKU_list:
@@ -466,13 +490,11 @@ class SalesImport_Generator:
 
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-        print(sales_import)
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
                 
-        print(sales_import)
 
         print("==============================================================================================================")
         print("Just a second, writing...")

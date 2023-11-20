@@ -11,8 +11,6 @@ class SalesImport_Updater:
     def updater(self, sales_import):
         updated_salesimport = []
 
-        for key in sales_import[0].keys():
-            print(key, len(sales_import[0][key]))
         for invoice_num, invoice in enumerate(sales_import):
             
 
@@ -32,8 +30,7 @@ class SalesImport_Updater:
                             updated_salesimport[-1][key].append(invoice[key][0])
                         except:
                             updated_salesimport[-1][key].append("")
-                print(invoice)
-                print(len(invoice[list(invoice.keys())[0]]))
+
                 for i in range(1, len(invoice[list(invoice.keys())[0]])):
                     for key in self.field_names:
                         if key == "StockLocation":

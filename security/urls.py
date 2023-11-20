@@ -8,6 +8,7 @@ urlpatterns = [
   path('parse-upload', views.parseUpload, name='parse-upload'),
   path('required-items', views.requiredItems, name='required-items'),
   path('history', views.history, name='history'),
+  path('history_view/<str:creation_date>/', views.history_viewer, name='history_view'),
   path('download-file/<id>', views.downloadFile, name='download-file'),
   path('POconversion', views.POconversion, name='POconversion'),
   path('dbchange', views.auto_matching_DB_changer, name='dbchange'),

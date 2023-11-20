@@ -1052,19 +1052,19 @@ class EXCEL_Parsing:
             i = 0
             while i < len(pdf[list(pdf.keys())[0]]):
                 try:
-                    print(pdf[list(pdf.keys())[55]][i])
+                    # print(pdf[list(pdf.keys())[55]][i])
                     math.isnan(pdf[list(pdf.keys())[55]][i])
                 except:
-                    print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
+                    # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
                     temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
 
                 try:
                     #Maijer
-                    print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
+                    # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
                     if str(pdf[list(pdf.keys())[57]][i]) != "nan":
                         math.isnan(str(pdf[list(pdf.keys())[57]][i]))
                 except:
-                    print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
+                    # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
                     temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
                 # print(temp)
                 # print("temp______")
@@ -1080,7 +1080,7 @@ class EXCEL_Parsing:
             # print(len(res), len(temp))
             if len(temp) != 0:
                 for i, items in enumerate(temp):
-                    print(temp[-1 - i])
+                    # print(temp[-1 - i])
                     res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
                     res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
                     res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]

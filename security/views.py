@@ -49,14 +49,18 @@ def home(request):
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
+    print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # if customername == "Buc-ee's":
       # res = generator.processFile(files, matching_res, {}, customername, termOptions)
     # if customername == "Pepco":
       # currency = request.POST['currency']
+    
     res = generator.processFile(files, matching_res, {}, customername, termOptions)
+    # res_view = generator.res_viewer(matching_res, customername, termOptions)
     if res == "fail":
       return JsonResponse({ "message": "You need to update database" }, status=400)
-    history = ProcessHistory.objects.create(user=user, input=res[0], output=res[1])
+    history = ProcessHistory.objects.create(user=user, input=res[0], output=res[1], )
+
     return JsonResponse({ "id": history.id }, status=200)
 
 
@@ -67,14 +71,16 @@ def home(request):
 @login_required
 def viewer(request):
   if request.method == 'POST':
+    files = request.FILES.getlist('data')
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
+    print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # if customername == "Buc-ee's":
       # res = generator.processFile(files, matching_res, {}, customername, termOptions)
     # if customername == "Pepco":
       # currency = request.POST['currency']
-    res = generator.res_viewer(matching_res, customername, termOptions)
+    res = generator.res_viewer(files, matching_res, customername, termOptions)
     if res == "fail":
       return JsonResponse({ "message": "You need to update database" }, status=400)
     return JsonResponse({ "res": json.dumps(res) }, status=200)
@@ -93,6 +99,7 @@ def auto_matching_DB_viewer(request):
 def parseUpload(request):
   files = request.FILES.getlist('data')
   customer_name = request.POST['customername']
+  print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   # if customer_name == "Buc-ee's":
   #   # currency = ""
   #   res = generator.parseUpload(files, customer_name = customer_name)
@@ -133,11 +140,15 @@ def history(request):
     paths.append(str(path) + "\\" + file)
 
   print(paths)
+
   new_histories = []
+  creation_dates = []
   for history in histories:
     if str(history.output) in paths:
+      creation_dates.append(str(history.created_at))
       new_histories.append(history)
-
+  
+  
 
   file_contents = []
   for history in new_histories:
@@ -149,10 +160,35 @@ def history(request):
   users = []
   for history in new_histories:
     users.append(str(history.user).split("@")[0])
-  print(customer_names, users, new_histories, PO_dates)
-  histories = zip(customer_names, users, new_histories, PO_dates)
+  print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
+  # histories = zip(customer_names, users, creation_dates, PO_dates)
+  histories = zip(customer_names, users, creation_dates, PO_dates)
+  
+  return render(request, 'history.html', {"histories": histories})
+  # return JsonResponse({ "customer_names": json.dumps(customer_names), "users": json.dumps(users), "creation_dates": json.dumps(creation_dates), "PO_dates": json.dumps(PO_dates) }, status = 200)
 
-  return render(request, 'history.html', { "histories": histories })
+@login_required
+def history_viewer(request, creation_date):
+  histories = ProcessHistory.objects.all()
+  for history in histories:
+    if str(history.created_at) == creation_date:
+      db_name = str(history.output)
+      break
+  # print(db_name[:-59], "!!!!!!!!!!!!!!!!!!!!!!!!")
+  # print(db_name[-51:-3], "!!!!!!!!!!!!!!!!!!!!!!!!")
+  # history = ProcessHistory.objects.get(creation_date = creation_date)
+  # with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
+  #   customer_name = Output_analyzer([f.read()])[0][0]
+  # with open((Path(__file__).resolve().parent.parent / history.input), 'r') as f:
+  file_name = db_name[:-59] + "views\\" + db_name[-51:-3] + "json"
+  # print(file_name)
+  with open(file_name) as f:
+    db = json.load(f)
+
+  return JsonResponse({"viewing": db})
+  # return render(request, 'history_view.html', {'history_viewer': db})
+
+
 
 
 def POconversion(request):

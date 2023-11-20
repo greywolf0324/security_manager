@@ -3,13 +3,14 @@
 {% block content %}
     
     <div class="table-responsive container mt-5">
-      <table class="table">
+      <table class="table" id="history">
         <thead>
           <tr>
             <th>Customer Name</th>
             <th>User Name</th>
             <th>Creation Date</th>
             <th>PO Date</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -17,8 +18,16 @@
             <tr>
               <td>{{ history.0 }}</a></td>
               <td>{{ history.1 }}</td>
-              <td>{{ history.2.created_at }}</td>
+              <td>{{ history.2 }}</td>
               <td>{{ history.3 }}</td>
+              <td>
+                <form method="post">
+                  {% csrf_token %}
+                  <!-- {{ history.2 }} -->
+                  <a type="submit" class="btn btn-primary" href="{% url 'security:history_view' history.2 %}">View</a>
+                </form>
+              </td>
+              
             </tr>
           {% endfor %}
         </tbody>
