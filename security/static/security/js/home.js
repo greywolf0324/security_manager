@@ -759,4 +759,18 @@ $(document).ready(function() {
     })
   })
 
+  // $('#history_viewer').addEventListener('click', function(event) {
+  //   event.preventDefault();
+
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open('GET', '/responser/', true);
+  //   xhr.onreadystatechange = function() {
+  //       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+  //           // Handle the response here
+  //           var response = JSON.parse(xhr.responseText);
+  //           console.log(response, "_____+++++"); // Access the received data
+  //       }
+  //   };
+  //   xhr.send();
+  // })
 });

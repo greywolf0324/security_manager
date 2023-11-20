@@ -190,9 +190,46 @@ def history_viewer(request, creation_date):
   # print(file_name)
   with open(file_name) as f:
     db = json.load(f)
+  
+  customername = db[0]
+  headerkeys = []
+  itemkeys = []
+  headerdetails = []
+  itemdetails = []
 
-  return JsonResponse({"viewing": db})
-  # return render(request, 'history_view.html', {'history_viewer': db})
+  for key in db[1][0].keys():
+    headerkeys.append(key)
+  
+  for key in db[2][0].keys():
+    itemkeys.append(key)
+
+  for line in db[1]:
+    temp = []
+    for key, values in line.items():
+      temp.append(values[0])
+    
+    headerdetails.append(temp)
+
+  for line in db[2]:
+    temp = []
+    for key, values in line.items():
+      temp.append(values)
+
+    dic = []
+    for j in range(len(temp[0])):
+      tem_dic = []
+      for i in range(len(temp)):
+        tem_dic.append(temp[i][j])
+      
+      dic.append(tem_dic)
+    
+    itemdetails.append(dic)
+
+  print(headerdetails[0])
+  print(itemdetails[0])
+  print(itemdetails)
+  # return JsonResponse(responser, status=200)
+  return render(request, 'history_view.html', {'customername': customername, "headerkeys": headerkeys, "itemkeys": itemkeys, "details": zip(headerdetails, itemdetails)})
 
 
 
