@@ -13,25 +13,26 @@
             <th></th>
           </tr>
         </thead>
-        {% if histories != "empty" %}
-        <tbody>
-          {% for history in histories %}
-            <tr>
-              <td>{{ history.0 }}</a></td>
-              <td>{{ history.1 }}</td>
-              <td>{{ history.2 }}</td>
-              <td>{{ history.3 }}</td>
-              <td>
-                <form method="post">
-                  {% csrf_token %}
-                  <a type="submit" class="btn btn-primary" href="{% url 'security:history_view' history.2 %}" id="history_viewer">View</a>
-                </form>
-              </td>
-              
-            </tr>
-          {% endfor %}
-        </tbody>
-        {% endif %}
+          {% if histories != "empty" %}
+            <div>abcdefg</div>
+            <tbody>
+              {% for history in histories %}
+                <tr>
+                  <td>{{ history.0 }}</a></td>
+                  <td>{{ history.1 }}</td>
+                  <td>{{ history.2 }}</td>
+                  <td>{{ history.3 }}</td>
+                  <td>
+                    <form method="post">
+                      {% csrf_token %}
+                      <a type="submit" class="btn btn-primary" href="{% url 'security:history_view' history.2 %}" id="history_viewer">View</a>
+                    </form>
+                  </td>
+                  
+                </tr>
+              {% endfor %}
+            </tbody>
+          {% endif %}
       </table>
     </div>
 
