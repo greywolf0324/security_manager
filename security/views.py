@@ -160,11 +160,17 @@ def history(request):
   users = []
   for history in new_histories:
     users.append(str(history.user).split("@")[0])
-  print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
+  # print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
   # histories = zip(customer_names, users, creation_dates, PO_dates)
   histories = zip(customer_names, users, creation_dates, PO_dates)
   
-  return render(request, 'history.html', {"histories": histories})
+  if len(customer_names) != 0:
+    print("=================================")
+    return render(request, 'history.html', {"histories": histories})
+  
+  else:
+    return render(request, 'history.html', {"histories": "empty"})
+    # return render(request, 'history.html', {"histories": zip([""], [""], [""], [""])})
   # return JsonResponse({ "customer_names": json.dumps(customer_names), "users": json.dumps(users), "creation_dates": json.dumps(creation_dates), "PO_dates": json.dumps(PO_dates) }, status = 200)
 
 @login_required
