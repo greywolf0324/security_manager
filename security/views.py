@@ -153,7 +153,7 @@ def history(request):
   file_contents = []
   for history in new_histories:
     # f = open((Path(__file__).resolve().parent.parent.parent / history.output), 'rb')
-    with open((Path(__file__).resolve().parent.parent.parent / history.output), 'rb') as f:
+    with open((Path(__file__).resolve().parent.parent.parent / history.output), 'r') as f:
       temp = f.read()
       file_contents.append(f.read())
 
