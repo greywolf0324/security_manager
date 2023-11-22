@@ -139,8 +139,9 @@ def history(request):
     print(file)
     paths.append(str(path) + "\\" + file)
 
+  print("+++++++++++++++++++++++++++++++++++")
   print(paths)
-
+  print("+++++++++++++++++++++++++++++++++++")
   new_histories = []
   creation_dates = []
   for history in histories:
@@ -148,7 +149,7 @@ def history(request):
       creation_dates.append(str(history.created_at))
       new_histories.append(history)
   
-  print(str(Path(__file__).resolve().parent.parent / history.output), "_____")
+  print(new_histories)
 
   file_contents = []
   temp = ""
@@ -169,7 +170,7 @@ def history(request):
   
   # if len(customer_names) != 0:
   #   print("=================================")
-  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output)[1:], "file_contents": temp})
+  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output)[1:], "file_contents": paths})
   
   # else:
   #   return render(request, 'history.html', {"histories": "empty"})
