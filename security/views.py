@@ -166,7 +166,7 @@ def history(request):
   
   # if len(customer_names) != 0:
   #   print("=================================")
-  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output)})
+  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output), "file_contents": file_contents})
   
   # else:
   #   return render(request, 'history.html', {"histories": "empty"})
