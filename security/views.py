@@ -137,7 +137,7 @@ def history(request):
   for file in glob("*.csv"):
     print(path)
     print(file)
-    paths.append(str(path) + "\\" + file)
+    paths.append(str(path) + "/" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
@@ -149,7 +149,8 @@ def history(request):
   history_location = []
   for history in histories:
     history_location.append(str(history.output))
-    # print(history.output)
+  
+  print(history_location)
   for history in histories:
     if str(history.output) in paths:
       creation_dates.append(str(history.created_at))
