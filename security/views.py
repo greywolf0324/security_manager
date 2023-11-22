@@ -154,7 +154,7 @@ def history(request):
       creation_dates.append(str(history.created_at))
       new_histories.append(history)
   
-  print(new_histories[0].output)
+  # print(new_histories[0].output)
 
   file_contents = []
   temp = ""
