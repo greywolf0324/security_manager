@@ -144,12 +144,17 @@ def history(request):
   print("+++++++++++++++++++++++++++++++++++")
   new_histories = []
   creation_dates = []
+  print("_____________________________")
+  history_location = []
+  for history in histories:
+    history_location.append(str(history.output))
+    # print(history.output)
   for history in histories:
     if str(history.output) in paths:
       creation_dates.append(str(history.created_at))
       new_histories.append(history)
   
-  print(new_histories)
+  print(new_histories[0].output)
 
   file_contents = []
   temp = ""
@@ -158,7 +163,7 @@ def history(request):
     with open(Path(__file__).resolve().parent.parent.parent / history.output, 'rb') as f:
       temp = f.read()
       file_contents.append(f.read())
-  print(temp, "_________________________")
+  # print(temp, "_________________________")
   [customer_names, PO_dates] = Output_analyzer(file_contents)
 
   users = []
@@ -170,7 +175,7 @@ def history(request):
   
   # if len(customer_names) != 0:
   #   print("=================================")
-  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output)[1:], "file_contents": paths})
+  return render(request, 'history.html', {"histories": "empty", "real": paths, "history": history_location})
   
   # else:
   #   return render(request, 'history.html', {"histories": "empty"})
