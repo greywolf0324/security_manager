@@ -153,6 +153,7 @@ def history(request):
   file_contents = []
   for history in new_histories:
     with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
+      temp = f.read()
       file_contents.append(f.read())
 
   [customer_names, PO_dates] = Output_analyzer(file_contents)
@@ -166,7 +167,7 @@ def history(request):
   
   # if len(customer_names) != 0:
   #   print("=================================")
-  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output), "file_contents": file_contents})
+  return render(request, 'history.html', {"histories": "empty", "review": str(Path(__file__).resolve().parent.parent / history.output), "file_contents": temp})
   
   # else:
   #   return render(request, 'history.html', {"histories": "empty"})
