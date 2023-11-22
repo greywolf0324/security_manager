@@ -145,7 +145,7 @@ def history(request):
   new_histories = []
   creation_dates = []
   print("_____________________________")
-  print(type(paths[0]))
+  # print(type(paths[0]))
   history_location = []
   for history in histories:
     history_location.append(str(history.output))
