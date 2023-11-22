@@ -173,8 +173,6 @@ def history(request):
   # histories = zip(customer_names, users, creation_dates, PO_dates)
   histories = zip(customer_names, users, creation_dates, PO_dates)
   
-  # if len(customer_names) != 0:
-  #   print("=================================")
   return render(request, 'history.html', {"histories": "empty", "real": paths, "history": history_location})
   
   # else:
