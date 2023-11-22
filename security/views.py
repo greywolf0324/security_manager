@@ -152,9 +152,10 @@ def history(request):
 
   file_contents = []
   for history in new_histories:
-    with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
-      temp = f.read()
-      file_contents.append(f.read())
+    f = open((Path(__file__).resolve().parent.parent / history.output), 'rb')
+    # with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
+    temp = f.read()
+    file_contents.append(f.read())
 
   [customer_names, PO_dates] = Output_analyzer(file_contents)
 
