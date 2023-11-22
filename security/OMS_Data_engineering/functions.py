@@ -299,7 +299,6 @@ class SalesImport_Generator:
     #     return addition
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
-        
         # paths = []
         # for file in data:
         #     # res = self.uploadFile(file)
