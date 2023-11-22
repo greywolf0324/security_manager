@@ -137,7 +137,7 @@ def history(request):
   for file in glob("*.csv"):
     print(path)
     print(file)
-    paths.append(str(path) + "/" + file)
+    paths.append(str(path) + "\\" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
@@ -160,7 +160,7 @@ def history(request):
   file_contents = []
   for history in new_histories:
     # f = open((Path(__file__).resolve().parent.parent.parent / history.output), 'rb')
-    with open(Path(__file__).resolve().parent.parent.parent / history.output, 'rb') as f:
+    with open(Path(__file__).resolve().parent.parent / history.output, 'rb') as f:
       file_contents.append(f.read())
   
   if len(file_contents) == 0:
