@@ -167,7 +167,7 @@ class SalesImport_Generator:
         self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
-
+        self.filenames = []
         # self.filename = None
         # self.path = None
 
@@ -223,7 +223,7 @@ class SalesImport_Generator:
 
     def uploadFile(self, data):
         self.paths = []
-        self.filenames = []
+        
         for file in data:
             current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             random_string = str(uuid.uuid4().hex)
@@ -251,7 +251,7 @@ class SalesImport_Generator:
         self.uploadFile(data)
         paths = self.paths
             # paths.append(self.path)
-        
+        print(self.filenames, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         # OCR: PDF parsing
         print("==============================================================================================================")
         print("On PDF parsing...")
@@ -306,6 +306,7 @@ class SalesImport_Generator:
         #     path = self.path
         #     paths.append(path)
         #     filename = self.filename
+        print(self.filenames, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         filename = self.filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
