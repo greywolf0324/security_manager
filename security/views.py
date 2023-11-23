@@ -198,7 +198,7 @@ def history_viewer(request, creation_date):
   # with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
   #   customer_name = Output_analyzer([f.read()])[0][0]
   # with open((Path(__file__).resolve().parent.parent / history.input), 'r') as f:
-  file_name = db_name[:-59] + "views\\" + db_name[-51:-3] + "json"
+  file_name = db_name[:-59] + "views/" + db_name[-51:-3] + "json"
   # print(file_name)
   with open(file_name) as f:
     db = json.load(f)
