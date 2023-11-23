@@ -168,13 +168,13 @@ def history(request):
   histories = "empty"
 
   # else:
-  #   [customer_names, PO_dates] = Output_analyzer(file_contents)
+  [customer_names, PO_dates] = Output_analyzer(file_contents)
 
-  #   users = []
-  #   for history in new_histories:
-  #     users.append(str(history.user).split("@")[0])
-  #   # print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
-  #   # histories = zip(customer_names, users, creation_dates, PO_dates)
+  users = []
+  for history in new_histories:
+    users.append(str(history.user).split("@")[0])
+  # print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
+  # histories = zip(customer_names, users, creation_dates, PO_dates)
     
   #   histories = zip(customer_names, users, creation_dates, PO_dates)
   
