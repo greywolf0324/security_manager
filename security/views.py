@@ -178,7 +178,7 @@ def history(request):
     
     histories = zip(customer_names, users, creation_dates, PO_dates)
   
-  return render(request, 'history.html', {"histories": histories, "real": paths, "history": history_location, "new": file_contents})
+  return render(request, 'history.html', {"histories": histories, "real": paths, "history": history_location, "new": new_histories})
   
   # else:
   #   return render(request, 'history.html', {"histories": "empty"})
