@@ -258,7 +258,7 @@ class SalesImport_Generator:
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
         PO_res = parser.PO_parser(paths, currency)
 
-        # print(PO_res)
+        print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -290,8 +290,164 @@ class SalesImport_Generator:
             elif self.customer_name == "Walmart":
                 if matching_res[0]["Currency"][0] == "US Dollar":
                     self.customer_name = self.customer_name + " US"
+        
+        field_names = [
+            'PO Number',
+            'Release Number',
+            'PO Date',
+            'Dept #',
+            'Retailers PO',
+            'Requested Delivery Date',
+            'Delivery Dates',
+            'Ship Dates',
+            'Cancel Date',
+            'Carrier',
+            'Carrier Details',
+            'Ship To Location',
+            'PO Line #',
+            'Qty Ordered',
+            'Unit of Measure',
+            'Unit Price',
+            'Buyers Catalog or Stock Keeping #',
+            'UPC/EAN',
+            'Vendor Style',
+            'Retail Price',
+            'Product/Item Description',
+            'Color',
+            'Size',
+            'Pack Size',
+            'Pack Size UOM',
+            'Number of Inner Packs',
+            'Number of Pcs per Inner Pack',
+            'Store #',
+            'Qty per Store #',
+            'Record Type',
+            'PO purpose',
+            'PO Type',
+            'Contract Number',
+            'Currency',
+            'Ship Status',
+            'Letter of Credit',
+            'Vendor #',
+            'Division #',
+            'Cust Acct #',
+            'Customer Order #',
+            'Promo #',
+            'Ticket Description',
+            'Other Info / #s',
+            'Frt Terms',
+            'Carrier Service Level',
+            'Payment Terms %',
+            'Payment Terms Disc Due Date',
+            'Payment Terms Disc Days Due',
+            'Payment Terms Net Due Date',
+            'Payment Terms Net Days',
+            'Payment Terms Disc Amt',
+            'Payment Terms Desc',
+            'Contact Phone',
+            'Contact Fax',
+            'Contact Email',
+            'Allow/Charge Type',
+            'Allow/Charge Service',
+            'Allow/Charge Amt',
+            'Allow/Charge %',
+            'Allow/Charge Rate',
+            'Allow/Charge Qty',
+            'Allow/Charge Desc',
+            'Ship To Name',
+            'Ship To Address 1',
+            'Ship To Address 2',
+            'Ship To City',
+            'Ship To State',
+            'Ship to Zip',
+            'Ship To Country',
+            'Ship To Contact',
+            'Bill To Name',
+            'Bill To Address 1',
+            'Bill To Address 2',
+            'Bill To City',
+            'Bill To State',
+            'Bill To Zip',
+            'Bill To Country',
+            'Bill To Contact',
+            'Buying Party Name',
+            'Buying Party Location',
+            'Buying Party Address 1',
+            'Buying Party Address 2',
+            'Buying Party City',
+            'Buying Party State',
+            'Buying Party Zip',
+            'Buying Party Country',
+            'Buying Party Contact',
+            'Ultimate Location',
+            'Notes/Comments',
+            'Ship To Additional Name',
+            'Ship To Additional Name 2',
+            'Bill To Additional Name',
+            'Bill To Additional Name 2',
+            'Buyer Additional Name',
+            'Buyer Additional Name 2',
+            'GTIN',
+            'PO Total Amount',
+            'PO Total Weight ',
+            'PO Total UOM ',
+            'Shipping account number',
+            'Mark for Name',
+            'Mark for Address 1',
+            'Mark for Address 2',
+            'Mark for City',
+            'Mark for State',
+            'Mark for Postal',
+            'Mark for Country',
+            'Shipping Container Code',
+            'National Drug Code',
+            'Expiration Date',
+            'Dist',
+            'Scheduled Quantity',
+            'Scheduled Qty UOM',
+            'Required By Date',
+            'Must Arrive By',
+            'Entire Shipment',
+            'Agreement Number',
+            'Additional Vendor Part #',
+            'Buyer Part Number',
+            'Carrier Details Special Handling',
+            'Restrictions/Conditions'
+        ]
+        if os.path.isfile("sales_origin.xlsx"):
+            os.remove("sales_origin.xlsx")
+        book = xlsxwriter.Workbook("sales_origin.xlsx")
+        sheet = book.add_worksheet("cont_excel")
+        # keys = list(sales_import[0].keys())
+        for idx, header in enumerate(field_names):
+            sheet.write(0, idx, header)
+
+        book.close()
+
+        book = load_workbook("sales_origin.xlsx")
+        sheet = book.get_sheet_by_name("cont_excel")
+        # print(keys, type(keys[0]))
+        # print("*****")
+        # print(field_names, type(field_names[0]))
+        for num, dic in enumerate(matching_res):
+            keys = list(dic.keys())
+
+            for i in range(len(dic[keys[0]])):
+                temp = []
+
+                for key in field_names:
+                    if key in keys:
+                        temp.append(dic[key][i])
+                    else:
+                        temp.append("")
+
+                sheet.append(temp)
+
+        output = Path(__file__).resolve().parent.parent.parent / f'sales_origin.xlsx'
+        
+        book.save(filename = output)
+
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
-    
     # def requiredFields(self, matching_res):
     #     noticer = NOTICER()
     #     addition = noticer.getter(matching_res)
