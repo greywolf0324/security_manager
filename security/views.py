@@ -137,7 +137,7 @@ def history(request):
   for file in glob("*.csv"):
     print(path)
     print(file)
-    paths.append(str(path) + "/" + file)
+    paths.append(str(path) + "\\" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
