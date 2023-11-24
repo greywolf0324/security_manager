@@ -1,21 +1,56 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'security/css/home.css' %}">
 </head>
 <body>
-
-  <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-md-6 mt-5">
-              <div class="card">
-                {% block content %}
-                {% endblock content %}
-              </div>
-          </div>
-      </div>
+  <div class="sign">
+  <div class="sign-header d-flex flex-row justify-content-between">
+    <div class="header-logo">
+      <!-- <img src="../download.jpg" class="rounded"> -->
+      <img src="{% static 'security/image/download.jpg' %}" width="81px">
+    </div>
+    {% if is_signup_page %}
+        <a href="{% url 'securityauth:signin' %}" class="btn-sign">Sign In</a>
+    {% else %}
+        <a href="{% url 'securityauth:signup' %}" class="btn-sign">Sign Up</a>
+    {% endif %}
   </div>
+  <div class="sign-card-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mt-5">
+                <div class="card">
+                  {% block content %}
+                  {% endblock content %}
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="sign-footer">
+
+  </div>
+</div>
+<!-- <script>
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const passwordIcon = document.getElementById('password-icon');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordIcon.classList.remove('fa-eye');
+        passwordIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        passwordIcon.classList.remove('fa-eye-slash');
+        passwordIcon.classList.add('fa-eye');
+    }
+  }
+</script> -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -1,0 +1,8 @@
+django
+pandas
+openpyxl
+xlsxwriter
+pdfplumber
+google-api-python-client
+gspread
+CurrencyConverter
