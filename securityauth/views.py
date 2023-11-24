@@ -20,7 +20,7 @@ def signin(request):
         if user.is_allowed is False:
           print('user is not allowed')
           form.add_error(None, 'You are not allowed yet.')
-          return render(request, 'signin.html', { 'form': forms.SigninForm })
+          return render(request, 'signin.html', { 'form': forms.SigninForm ,'is_signup_page': False})
         login(request, user)
         return redirect('security:home')  # Replace 'home' with the URL name of your home page
       else:
@@ -28,7 +28,7 @@ def signin(request):
         form.add_error(None, 'Invalid username or password.')
   else:
      form = forms.SigninForm()
-  return render(request, 'signin.html', { 'form': forms.SigninForm })
+  return render(request, 'signin.html', { 'form': forms.SigninForm,'is_signup_page': False })
 
 def signup(request):
   if request.method == 'POST':
@@ -38,5 +38,5 @@ def signup(request):
       password = form.cleaned_data['password']
       User.objects.create(username=username, email=username, password=make_password(password))
       return redirect('securityauth:signin')
-    return render(request, 'signup.html', {'form': form})    
-  return render(request, 'signup.html', { 'form': forms.SignupForm })
+    return render(request, 'signup.html', {'form': form, 'is_signup_page': True})    
+  return render(request, 'signup.html', { 'form': forms.SignupForm, 'is_signup_page': True })
