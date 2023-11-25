@@ -238,6 +238,12 @@ $(document).ready(function() {
     $('#sidebarNav').toggleClass('active');
   });
 
+  
+    $('#customername').select2({
+      dropdownCssClass: 'custom-dropdown',
+      // Add other Select2 configuration options as needed
+    });
+
   $("#customername").change(function() {
     if ($(this).val() === "Pepco") $("#currency-selector").show()
     else $("#currency-selector").hide()
