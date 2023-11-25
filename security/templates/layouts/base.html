@@ -59,12 +59,13 @@
       </button>
     </div>
 
-    <ul class="features-list" style="padding-left: 3px;">
+    <ul class="features-list d-flex d-flex flex-column justify-content-between" style="padding-left: 3px; height: 87vh;">
+      <div>
         <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'security:home' %}">
-            <li class="features-item draft">
-                <i class="fas fa-home" style="font-size: 20px; color:white"></i>
-                <span class="features-item-text">Home</span>
-            </li>
+          <li class="features-item draft">
+              <i class="fas fa-home" style="font-size: 20px; color:white"></i>
+              <span class="features-item-text">Home</span>
+          </li>
         </a>
 
         <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'security:POconversion' %}">
@@ -73,21 +74,31 @@
                 <span class="features-item-text">POconversion</span>
             </li>
         </a>
+      </div>
+      <div>
+        <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'securityauth:signin' %}">
+          <li class="features-item draft">
+              
+              <i class='fas fa-sign-out-alt' style="font-size: 20px; color: white;"></i>
+              <span class="features-item-text">Log out</span>
+          </li>
+        </a>
+      </div>
     </ul>
 
-    <a class="home-side-bar-link" style="text-decoration: none; position: absolute;bottom: 25px;" href="{% url 'securityauth:signin' %}">
+    <!-- <a class="home-side-bar-link" style="text-decoration: none; position: absolute;bottom: 25px;" href="{% url 'securityauth:signin' %}">
         <li class="features-item draft">
             
             <i class='fas fa-sign-out-alt' style="font-size: 24px; margin-left: 14px; margin-top: 5px; color: white;"></i>
             <span class="features-item-text">Log out</span>
         </li>
-    </a>
+    </a> -->
   </div>
 
 
-     <div class="home-contain">
+     <div class="home-contain" style="background-color: #e1f8f7;">
         
-         <nav  class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex;">
+         <nav  class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; position: fixed ; width: inherit;">
             <button type="button" id="sidebarCollapse" class="btn ">
                 <i class="fas fa-align-left"></i>
                 
@@ -100,7 +111,7 @@
              
          </nav>
        
-       <div id="homecontain" style="background-color: #e1f8f7;">
+       <div id="homecontain" style="background-color: #e1f8f7; margin-top: 40px;  ">
          {% block content %}
          {% endblock content %}
        </div>
