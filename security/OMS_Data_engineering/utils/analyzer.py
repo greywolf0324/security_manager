@@ -34,7 +34,7 @@ def Output_analyzer(file_contents):
         
         else:
             po_dates.append("")
-        temp_name = str(file_content).split("\\r\\n")[1]
+        temp_name = str(file_content).split("\\n")[1]
         temp_name = temp_name.split(",")[1]
         temp_name = temp_name.replace("\\", "")
         user_names.append(temp_name)
