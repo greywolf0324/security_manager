@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="table-responsive container mt-5">
-  <div  style="display: flex; gap: 60px; margin-left: 40px">
+  <div class="row" style="margin-left: 40px">
     <div class="col-3">
       <label class="form-label">Filter</label>
       <select class="form-select" id="filter-option" name="filter-option">
@@ -11,28 +11,56 @@
         <option>Customer Name</option>
         <option>User Name</option>
       </select>
-    </div>
-
-    <!-- <div>
-      <label class="form-label">Order</label>
-      <select class="form-select" id="filter-option" name="filter-option">
-        <option value="">plus</option>
-        <option>minus</option>
-      </select>
-    </div> -->
-    
+    </div>    
   </div>
-  <div class="mt-4">
+  <div class="row mt-4">
+    <script>
+      function toggleCheckboxes(masterCheckbox) {
+        var checkboxes = document.getElementsByClassName("subCheckbox");
+        for (var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = masterCheckbox.checked;
+        }
+      }
+    
+      function updateMasterCheckbox() {
+        var masterCheckbox = document.getElementById("masterCheckbox");
+        var checkboxes = document.getElementsByClassName("subCheckbox");
+        masterCheckbox.checked = true;
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (!checkboxes[i].checked) {
+            masterCheckbox.checked = false;
+            break;
+          }
+        }
+      }
+    </script>
+    <style>
+      #history thead, #history tbody tr {
+          display: table;
+          width: 100%;
+          table-layout: fixed;
+      }
+      #history tbody {
+          height: calc(100vh - 448px);
+          table-layout: fixed;
+          overflow: auto;
+          display: block;
+          width: 100%;
+      }
+      .container{
+        max-width: 1324px !important;
+      }
+    </style>
     <table class="table" id="history">
       <thead>
         <tr>
-          <th></th>
+          <th style="width: 5%;"><input type="checkbox" id="checkbox-all" name="checkbox" onchange="toggleCheckboxes(this)"></th>
           <th>Customer Name</th>
           <th>User Name</th>
           <th>
             Creation Date
           </th>
-          <th>PO Date</th>
+          <th class="text-center pe-5">PO Date</th>
           <th></th>
         </tr>
       </thead>
@@ -41,12 +69,12 @@
       <tbody>
         {% for history in histories %}
         <tr>
-          <td><input type="checkbox" id="checkbox" name="checkbox"></td>
+          <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()"></td>
           <td>{{ history.0 }}</td>
           <td>{{ history.1 }}</td>
           <td>{{ history.2 }}</td>
-          <td>{{ history.3 }}</td>
-          <td>
+          <td class="text-center">{{ history.3 }}</td>
+          <td class="text-center">
             <form method="post">
               {% csrf_token %}
               <a type="submit" class="btn btn-primary" href="{% url 'security:history_view' history.2 %}"
@@ -60,7 +88,14 @@
       {% endif %}
     </table>
   </div>
+  <div class="row mt-5">
+      <div class="col-10"></div>
+      <div class="col-2 d-flex align-items-end justify-content-start ps-5 ">
+        <button class="btn btn-danger text-white w-50">Delete</button>
+      </div>
+  </div>
 </div>
+
 
 <script>
   console.log("{{ real }}", "____")

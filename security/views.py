@@ -134,10 +134,18 @@ def history(request):
   path = Path(__file__).resolve().parent.parent / "process/outputs"
   os.chdir(path)
   paths = []
+  
+  view_dir = Path(__file__).resolve().parent.parent / "process/views"
+  view_paths = os.listdir(view_dir)
+  view_filename_paths = []
+  for view_path in view_paths:
+    view_filename_paths.append(view_path[:-4])
+    
   for file in glob("*.csv"):
     print(path)
     print(file)
-    paths.append(str(path) + "\\" + file)
+    if file[:-3] in view_filename_paths:
+      paths.append(str(path) + "/" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
