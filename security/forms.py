@@ -11,5 +11,3 @@ class ProcessForm(forms.Form):
 
 # class HistoryForm(forms.Form):
 
-class HistoryDeletionForm(forms.Form):
-    creation_dates = forms.CharField(widget=forms.HiddenInput())

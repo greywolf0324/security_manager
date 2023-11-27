@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import ProcessForm
-from .forms import HistoryDeletionForm
 from .OMS_Data_engineering.functions import SalesImport_Generator
 from .OMS_Data_engineering.utils.analyzer import Input_analyzer, Output_analyzer
 from .models import ProcessHistory
@@ -254,14 +253,19 @@ def history_viewer(request, creation_date):
 
 @login_required
 def history_deletion(request):
-    form = HistoryDeletionForm(request.POST)
-    if form.is_valid():
-        creation_dates = form.cleaned_data['creation_dates'].split(',')
-        # Perform the deletion based on creation_dates
-        # ...
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        creation_dates = data.get('creationDates')
 
-        print(creation_dates, "Sucesss, Wonderful, WOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-
+        if creation_dates:
+            print(creation_dates, "Deletion successful")
+            return JsonResponse({'message': 'Deletion successful'})
+        else:
+            print("No creation dates received")
+            return JsonResponse({'message': 'No creation dates received'}, status=400)
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", str(e))
+        return JsonResponse({'message': 'Error decoding JSON'}, status=400)
 
 def POconversion(request):
   customername = request.GET.get('customer-name', customer_list[0])

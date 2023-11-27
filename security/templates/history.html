@@ -63,7 +63,7 @@
       <tbody>
         {% for history in histories %}
         <tr class="table-row">
-          <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()"></td>
+          <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()" data-creation-date="{{ history.2 }}"></td>
           <td>{{ history.0 }}</td>
           <td>{{ history.1 }}</td>
           <td>{{ history.2 }}</td>
@@ -86,14 +86,12 @@
   <div class="row mt-5">
       <div class="col-10"></div>
       <div class="col-2 d-flex align-items-end justify-content-start ps-5 ">
-        <!-- <button class="btn btn-danger text-white w-50" id="delete-btn">Delete</button> -->
-        <form id="yourForm">
-          <!-- your table content with checkboxes -->
-          <!-- <input type="button" value="Delete" id="deleteButton" class="btn btn-danger text-white"> -->
-          <button class="btn btn-danger text-white rounded" id="deleteButton">
-            <i class="fa fa-trash"></i><span style="font-size: 16px; font-weight: bold;">Delete</span> 
-          </button>
-      </form>
+          <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button class="btn btn-danger text-white rounded" id="deleteButton">
+              <i class="fa fa-trash"></i><span style="font-size: 16px; font-weight: bold;">Delete</span> 
+            </button>
+          </form>
       </div>
   </div>
 </div>
@@ -127,80 +125,12 @@
 </script>
 
 
-  <script>
-  let sortOrder = 1; // 1 for ascending, -1 for descending
+<script>
+  let sortOrder = 1; 
   let sortedColumn = 0;
-
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   const searchInput = document.getElementById("searchInput");
-  //   const tableRows = document.querySelectorAll(".table-row");
-
-  //   searchInput.addEventListener("input", function () {
-  //     const searchText = this.value.toLowerCase();
-
-  //     tableRows.forEach(function (row) {
-  //       const rowData = row.textContent.toLowerCase();
-  //       row.style.display = rowData.includes(searchText) ? "" : "none";
-  //     });
-  //   });
-  // });
-  
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   const searchInput = document.getElementById("searchInput");
-  //   const filterOption = document.getElementById("filter-option");
-  //   const searchButton = document.getElementById("searchButton");
-  //   const tableRows = document.querySelectorAll(".table-row");
-
-  //   // Attach event listeners to both the search button and search input
-  //   searchButton.addEventListener("click", function (event) {
-  //     event.preventDefault();
-  //     filterTableRows();
-  //   });
-
-  //   searchInput.addEventListener("input", function () {
-  //     filterTableRows();
-  //   });
-
-  //   function filterTableRows() {
-  //     const searchText = searchInput.value.toLowerCase();
-  //     const selectedFilter = filterOption.value.toLowerCase();
-
-  //     tableRows.forEach(function (row) {
-  //       let displayRow = false;
-
-  //       // Check if the row contains the specified filter column
-  //       const filterColumnIndex = getColumnIndexByName(selectedFilter);
-  //       if (filterColumnIndex !== -1) {
-  //         const filterValue = row.cells[filterColumnIndex];
-  //         if (filterValue) {
-  //           // Check if the cell exists before accessing its textContent
-  //           const filterText = filterValue.textContent.toLowerCase();
-  //           displayRow = filterText.includes(searchText);
-  //         }
-  //       } else {
-  //         // If no filter column is selected, check all columns for the search text
-  //         const rowData = row.textContent.toLowerCase();
-  //         displayRow = rowData.includes(searchText);
-  //       }
-
-  //       row.style.display = displayRow ? "" : "none";
-  //     });
-  //   }
-
-  //   function getColumnIndexByName(columnName) {
-  //     const headerRow = document.getElementById("history").rows[0];
-  //     for (let i = 0; i < headerRow.cells.length; i++) {
-  //       if (headerRow.cells[i].textContent.toLowerCase() === columnName) {
-  //         return i;
-  //       }
-  //     }
-  //     return -1;
-  //   }
-  // });
-
   function extractColumnName(columnText) {
   return columnText.replace(/[^\w\s]/g, '').trim().replace(/\s/g, '');
-}
+  }
 
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
@@ -300,4 +230,46 @@ function sortTable(columnIndex) {
     sortedColumn = columnIndex;
   }
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const deleteButton = document.getElementById("deleteButton");
+
+    deleteButton.addEventListener("click", async function () {
+      event.preventDefault();
+      const checkboxes = document.querySelectorAll('.subCheckbox:checked');
+      console.log("checkboxes", checkboxes)
+      const selectedCreationDates = Array.from(checkboxes).map(checkbox => checkbox.dataset.creationDate);
+      console.log("selectedCreationDates", selectedCreationDates);
+
+
+      if (selectedCreationDates.length > 0) {
+        try {
+          const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+          console.log("csrfToken",csrfToken)
+
+          const response = await fetch('http://localhost:8000/history-delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ creationDates: selectedCreationDates }),
+          });
+
+          if (response.ok) {
+            console.log('Deletion successful');
+          } else {
+            console.error('Deletion failed');
+          }
+        } catch (error) {
+          console.error('Error during deletion', error);
+        }
+      } else {
+        console.log('No checkboxes selected');
+      }
+    });
+  });
+</script>
+
   {% endblock %}
