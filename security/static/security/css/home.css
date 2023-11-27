@@ -499,3 +499,17 @@ a .history-btn:hover {
 
 
 /* Home */
+
+/* History */
+.sortable-column {
+  font-size: 17px;
+}
+
+.sortable-column:hover {
+  cursor: pointer;
+}
+
+.order-symbol { 
+  font-size: 17px;
+}
+/* History */

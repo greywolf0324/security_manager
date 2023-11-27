@@ -145,7 +145,7 @@ def history(request):
     print(path)
     print(file)
     if file[:-3] in view_filename_paths:
-      paths.append(str(path) + "/" + file)
+      paths.append(str(path) + "\\" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
@@ -251,7 +251,10 @@ def history_viewer(request, creation_date):
   # return JsonResponse(responser, status=200)
   return render(request, 'history_view.html', {'customername': customername, "headerkeys": headerkeys, "itemkeys": itemkeys, "details": zip(headerdetails, itemdetails)})
 
-
+@login_required
+def history_deletion(request):
+  creation_dates = request.POST['dates']
+  print(creation_dates, "+++++++++++++++++++++++++++")
 
 
 def POconversion(request):

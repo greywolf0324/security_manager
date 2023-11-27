@@ -15,4 +15,5 @@ urlpatterns = [
   path('viewer', views.viewer, name='viewer'),
   path('export-doubleIgnore', views.live_doubleIgnore, name='export-file'),
   path('export-doubleUpdate', views.live_doubleUpdate, name='export-file'),
+  path('history_delete', views.history_deletion, name='history-delete')
 ]

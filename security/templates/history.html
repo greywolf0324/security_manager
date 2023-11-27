@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="table-responsive container mt-5">
-  <div class="row" style="margin-left: 40px">
+  <div class="row" style="margin-left: 40px; align-items: end;">
     <div class="col-3">
       <label class="form-label">Filter</label>
       <select class="form-select" id="filter-option" name="filter-option">
@@ -11,7 +11,15 @@
         <option>Customer Name</option>
         <option>User Name</option>
       </select>
-    </div>    
+    </div>  
+    <div class="col-4">
+    <!-- <nav class="navbar navbar-light bg-light"> -->
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" id="searchInput" style="width: 70%;" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>  
+    <!-- </nav> -->
   </div>
   <div class="row mt-4">
     <script>
@@ -55,12 +63,10 @@
       <thead>
         <tr>
           <th style="width: 5%;"><input type="checkbox" id="checkbox-all" name="checkbox" onchange="toggleCheckboxes(this)"></th>
-          <th>Customer Name</th>
-          <th>User Name</th>
-          <th>
-            Creation Date
-          </th>
-          <th class="text-center pe-5">PO Date</th>
+          <th onclick="sortTable(1)" class="sortable-column">Customer Name <span id="sortSymbol1" class="order-symbol">&#x02191;</span></th>
+          <th onclick="sortTable(2)" class="sortable-column">User Name <span id="sortSymbol2" class="order-symbol">&#x02191;</span></th>
+          <th onclick="sortTable(3)" class="sortable-column">Creation Date <span id="sortSymbol3" class="order-symbol">&#x02191;</span></th>
+          <th onclick="sortTable(4)" class="sortable-column" style="padding-left: 40px;">PO Date <span id="sortSymbol4" class="order-symbol">&#x02191;</span></th>
           <th></th>
         </tr>
       </thead>
@@ -68,12 +74,12 @@
       {% if histories != "empty" %}
       <tbody>
         {% for history in histories %}
-        <tr>
+        <tr class="table-row">
           <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()"></td>
           <td>{{ history.0 }}</td>
           <td>{{ history.1 }}</td>
           <td>{{ history.2 }}</td>
-          <td class="text-center">{{ history.3 }}</td>
+          <td style="padding-left: 40px;">{{ history.3 }}</td>
           <td class="text-center">
             <form method="post">
               {% csrf_token %}
@@ -102,5 +108,79 @@
   console.log("{{ real }}", "____")
   console.log("{{ history }}", "____")
   console.log("{{ new.0.output }}", "____")
+</script>
+
+
+  <script>
+  let sortOrder = 1; // 1 for ascending, -1 for descending
+  let sortedColumn = 0;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const tableRows = document.querySelectorAll(".table-row");
+
+    searchInput.addEventListener("input", function () {
+      const searchText = this.value.toLowerCase();
+
+      tableRows.forEach(function (row) {
+        const rowData = row.textContent.toLowerCase();
+        row.style.display = rowData.includes(searchText) ? "" : "none";
+      });
+    });
+  });
+
+  function sortTable(columnIndex) {
+    console.log("Sorting table for column index:", columnIndex);
+    const table = document.getElementById("history");
+    const rows = Array.from(table.tBodies[0].rows);
+    console.log("Sorted rows:", rows);
+    if (sortedColumn === columnIndex) {
+      sortOrder = -sortOrder;
+    } else {
+      sortOrder = 1;
+    }
+
+    rows.sort((a, b) => {
+      const aValue = a.cells[columnIndex].textContent.trim();
+      const bValue = b.cells[columnIndex].textContent.trim();
+
+      const isDate = (dateString) => /^\d{4}-\d{2}-\d{2}$/.test(dateString);
+      const aDate = isDate(aValue) ? new Date(aValue) : null;
+      const bDate = isDate(bValue) ? new Date(bValue) : null;
+
+      if (aDate && bDate) {
+        return sortOrder * (aDate - bDate);
+      } else if (!isNaN(aValue) && !isNaN(bValue)) {
+        return sortOrder * (parseFloat(aValue) - parseFloat(bValue));
+      } else {
+        return sortOrder * aValue.localeCompare(bValue);
+      }
+    });
+
+    const headerRow = table.rows[0];
+
+    for (let i = 1; i < headerRow.cells.length-1; i++) {
+      const orderSymbol = i === columnIndex ? (sortOrder === 1 ? ' &#x02191;' : ' &#x02193;') : '';
+      const orderSymbolElement = document.getElementById(`sortSymbol${i}`);
+      console.log("orderSymbolElement:", orderSymbolElement);
+      orderSymbolElement.innerHTML = orderSymbol;
+      console.log("")
+      orderSymbolElement.classList.remove("active");
+    }
+
+    const clickedOrderSymbol = document.getElementById(`sortSymbol${columnIndex}`);
+    clickedOrderSymbol.classList.add("active");
+
+    while (table.tBodies[0].firstChild) {
+      table.tBodies[0].removeChild(table.tBodies[0].firstChild);
+    }
+
+    rows.forEach((row) => table.tBodies[0].appendChild(row));
+
+    sortedColumn = columnIndex;
+  }
+
+
+
 </script>
   {% endblock %}
