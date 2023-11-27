@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import ProcessForm
+from .forms import HistoryDeletionForm
 from .OMS_Data_engineering.functions import SalesImport_Generator
 from .OMS_Data_engineering.utils.analyzer import Input_analyzer, Output_analyzer
 from .models import ProcessHistory
@@ -253,8 +254,13 @@ def history_viewer(request, creation_date):
 
 @login_required
 def history_deletion(request):
-  creation_dates = request.POST['dates']
-  print(creation_dates, "+++++++++++++++++++++++++++")
+    form = HistoryDeletionForm(request.POST)
+    if form.is_valid():
+        creation_dates = form.cleaned_data['creation_dates'].split(',')
+        # Perform the deletion based on creation_dates
+        # ...
+
+        print(creation_dates, "Sucesss, Wonderful, WOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
 
 
 def POconversion(request):

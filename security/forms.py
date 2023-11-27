@@ -10,3 +10,6 @@ class ProcessForm(forms.Form):
   currency = forms.CharField(max_length=10)
 
 # class HistoryForm(forms.Form):
+
+class HistoryDeletionForm(forms.Form):
+    creation_dates = forms.CharField(widget=forms.HiddenInput())
