@@ -343,7 +343,7 @@ body{font-size:14px;}
   top: 0px;
   right: 0px;
   width: calc(100vw - 23.2rem);
-  height: 100vh;
+  /* height: 100vh; */
 }
 .collapse-home-contain {
   /* right: 0.5rem; */
@@ -512,4 +512,115 @@ a .history-btn:hover {
 .order-symbol { 
   font-size: 17px;
 }
+.custom-select1 {
+  position: relative;
+  /* width: 200px; */
+  width: 100%;
+  margin: 10px;
+}
+
+.custom-select1 label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: white;
+  padding: 0 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.custom-select1 select{
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.custom-date {
+  position: relative;
+  /* width: 200px; */
+  width: 100%;
+  margin: 10px;
+}
+
+.custom-date label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: white;
+  padding: 0 5px;
+  color: black;
+  font-weight: bold;
+}
+.custom-date .date-style {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.custom-select-date {
+  position: relative;
+  /* width: 200px; */
+  /* width: 100%; */
+  margin: 10px;
+}
+
+.custom-select-date label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: white;
+  padding: 0 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.custom-select-date input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-message {
+  display: none; 
+  position: absolute; 
+  top: 35%; 
+  left:0; 
+  background-color: white; 
+  color: red; 
+  padding: 3px; 
+  z-index: 1; 
+  border-radius: 20px;
+}
 /* History */
+
+/* table */
+#history tbody tr:nth-child(odd) {
+  background-color: #f0f2f4; /* Gray color for odd rows */
+}
+
+#history tbody tr:nth-child(even) {
+  background-color: white; /* White color for even rows */
+}
+/* table */
+
+/* History View Table */
+#item-headerdetail-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Gray color for odd rows */
+}
+
+#item-headerdetail-table tbody tr:nth-child(even) {
+  background-color: white; /* White color for even rows */
+}
+
+#item-details-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Gray color for odd rows */
+}
+
+#item-details-table tbody tr:nth-child(even) {
+  background-color: white; /* White color for even rows */
+}
+/* History View Table */
