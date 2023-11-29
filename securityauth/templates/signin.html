@@ -14,18 +14,18 @@
     {% endif %}
     <form method="POST" class="pb-5">
       {% csrf_token %}
-      <div class="form-group mb-3">
-        <label for="{{ form.email.id_for_label }}" class="form-label">Email:</label>
+      <div class="form-group mb-3 label-pos">
+        <label for="{{ form.email.id_for_label }}" class="form-label label-pos-static">Email*</label>
         <div class="email-input">{{ form.email }}</div>
         {{ form.email.errors }}
       </div>
-      <div class="form-group mb-3">
-        <label for="{{ form.password.id_for_label }}">Password:</label>
-        <div class="email-password">
+      <div class="form-group mb-3  label-pos">
+        <label for="{{ form.password.id_for_label }}" class="form-label label-pos-static">Password*</label>
+        <div class="email-password ">
           {{ form.password }}
-          <span class="toggle-password" onclick="togglePasswordVisibility()">
-            <i id="password-icon" class="fas fa-eye"></i>
-          </span>
+          <div class="input-group-addon" onclick="togglePasswordVisibility()">
+            <i class="bi bi-eye" id="togglePassword"></i>
+          </div>
         </div>
         {{ form.password.errors }}
       </div>   
@@ -38,16 +38,16 @@
   <script>
     function togglePasswordVisibility() {
       const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
-      const passwordIcon = document.getElementById('password-icon');
+      const passwordIcon = document.getElementById('togglePassword');
 
       if (passwordInput.type === 'password') {
           passwordInput.type = 'text';
-          passwordIcon.classList.remove('fa-eye');
-          passwordIcon.classList.add('fa-eye-slash');
+          passwordIcon.classList.remove('bi-eye');
+          passwordIcon.classList.add('bi-eye-slash');
       } else {
           passwordInput.type = 'password';
-          passwordIcon.classList.remove('fa-eye-slash');
-          passwordIcon.classList.add('fa-eye');
+          passwordIcon.classList.remove('bi-eye-slash');
+          passwordIcon.classList.add('bi-eye');
       }
     }
   </script>

@@ -406,21 +406,20 @@ $(document).ready(function() {
         <th>Terms Options From OMS: <span class="text-danger">${termsOptionsFromOMS(termRsOptions)}</span></th>
       </tr>
     </thead>
-    <tbody></tbody>
     <thead>
       <tr>
         ${
           keys.map(key => `<th>${key}</th>`)
         }
       </tr>
-    </thead>
+    </thead><tbody>
     `;
     let temp = {}
     for(var i = 0;i<data.length;i++){
       console.log(data[0], "+++++ ")
       console.log(keys[0], "_____")
       tables += `
-    <tbody>
+    
       ${
         [...Array(data[i][keys[0]].length)].map((_, index) => {
           if (temp[data[i][sku_keyname][index]]) return ""
@@ -471,10 +470,9 @@ $(document).ready(function() {
             </tr>`
         })
       }
-    </tbody>    
   `
     }
-    
+    tables += '</tbody>'
     $(selector).html(tables)
   }
 

@@ -1,0 +1,11 @@
+.label-pos{
+    position: relative;
+}
+
+.label-pos-static{
+    position: absolute;
+    top: -13px;
+    left: 7px;
+    background: white;
+    padding: 2px;
+}

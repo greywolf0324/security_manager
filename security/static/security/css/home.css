@@ -242,11 +242,12 @@ a .btn-sign :hover {
   color: #0f3c4b;
   background-color: var(--colorPrimaryPale, #c8dadf);
   outline: 2px dashed var(--colorPrimaryHalf, #c1ddef);
-  outline-offset: -12px;
+  outline-offset: -14px;
   transition:
     outline-offset 0.2s ease-out,
     outline-color 0.3s ease-in-out,
     background-color 0.2s ease-out;
+  border-radius: 17px !important;
 }
 .upload_dropZone.highlight {
   outline-offset: -4px;
@@ -271,6 +272,7 @@ a .btn-sign :hover {
   background-color: rgba(255, 255, 255, .8);
   border-radius: 5px;
   margin: 10px;
+  word-wrap: break-word;
 }
 
 .matched-row{
@@ -380,11 +382,11 @@ li{
 }
 .stepper-content-container {
   height: calc(100vh - 259px);
-  overflow: auto;
+  /* overflow: auto; */
 }
 .stepper-content {
   /* height: 500px; */
-  overflow: auto;
+  /* overflow: auto; */
 }
 .black-line {
   width: 100%;
@@ -513,3 +515,48 @@ a .history-btn:hover {
   font-size: 17px;
 }
 /* History */
+
+
+/* sign */
+
+.label-pos{
+  position: relative;
+}
+
+.label-pos-static{
+  position: absolute;
+  top: -13px;
+  left: 7px;
+  background: white;
+  padding: 2px;
+}
+
+.input-group-addon{
+  position: absolute;
+  top: 10px;
+  right: 0;
+}
+
+.input-group-addon i {
+  margin-left: -30px;
+  cursor: pointer;
+  z-index: 200;
+  position: absolute;
+  font-size: large;
+  color: #6c757d;
+}
+
+/* table scroll */
+
+/* #table-view thead, #table-view tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+} */
+/* #table-view tbody {
+  height: calc(100vh - 448px);
+  table-layout: fixed;
+  overflow: auto;
+  display: block;
+  width: 100%;
+} */
