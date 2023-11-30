@@ -438,6 +438,7 @@ $(document).ready(function() {
       console.log(keys[0], "_____")
       tables += `
     
+    
       ${
         [...Array(data[i][keys[0]].length)].map((_, index) => {
           if (temp[data[i][sku_keyname][index]]) return ""

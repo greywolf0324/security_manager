@@ -2,33 +2,103 @@
 
 {% block content %}
 
-<div class="table-responsive container mt-5">
-  <div class="row" style="align-items: end;">
-    <div class="col-1">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="refreshButton" onclick="refreshPage()">
-        <i class="fa fa-refresh" style="font-size:15px"></i> Refresh
-      </button>
+<div style="margin: 15px">
+  <div class="row" style="align-items: end; margin: 0;">
+  <div class="row" style="margin: 0; background-color: white; border-radius: 4px;">
+    <div class="d-flex custom-select1 col-2 mt-4 align-items-start px-0">
+      <input type="checkbox" class="col-1" id="check-customer" name="check-customer" value="customer">
+      <div class="col-11">
+        <label for="selectOption">Customer Name</label>
+        <select id="selectOption-customer">
+            <option value="All">All</option>
+            <option value="Buc-ee's">Buc-ee's</option>
+            <option value="Pepco">Pepco</option>
+            <option value = "Poundland">Poundland</option>
+            <option value = "Walgreens">Walgreens</option>
+            <option value = "Dollarama">Dollarama</option>
+            <option value = "Family Dollar">Family Dollar</option>
+            <option value = "Gabe's">Gabe's</option>
+            <option value = "TEDI">TEDI</option>
+            <option value = "Big Lots Stores">Big Lots Stores</option>
+            <option value = "Walmart">Walmart</option>
+            <option value = "TARGET">TARGET</option>
+            <option value = "Ollies">Ollies</option>
+            <option value = "Five Below">Five Below</option>
+            <option value = "CVS">CVS</option>
+            <option value = "Meijers">Meijers</option>
+            <option value = "MICHAELS">MICHAELS</option>
+            <option value = "Fred Meyer">Fred Meyer</option>
+            <option value = "Tar Heel Trading">Tar Heel Trading</option>
+        </select>
+      </div>
     </div>
-    <div class="col-3">
-      <label class="form-label">Filter</label>
+    <div class="d-flex custom-select1 col-2 mt-4 align-items-start px-0">
+      <input type="checkbox" class="col-1" id="check-user" name="check-user" value="username">
+      <div class="col-11">
+        <label for="selectOption">User Name</label>
+        <select id="selectOption-user">
+            <option value="All">All</option>
+            <option value="johngrey0324">johngrey0324</option>
+            <option value="simon">simon</option>
+            <option value="johngrey">johngrey</option>
+            <option value="lucy">lucy</option>
+            <option value="melody">melody</option>
+            <option value="elaine">elaine</option>
+            <option value="jasmine">jasmine</option>
 
-      <select class="form-select" id="filter-option" name="filter-option">
-        <option value="all">Select Filter</option>
-        <option value="customerName">Customer Name</option>
-        <option value="userName">User Name</option>
-        <option value="creationDate">Creation Date</option>
-        <option value="poDate">PO Date</option>
-      </select>
+        </select>
+      </div>
+    </div>
+    <div class="col-2 d-flex align-items-start px-0 custom-date mt-4">
+      <input type="checkbox" class="col-1" id="check-creationdate" name="check-creationdate" value="creationdate">
+      <div class="col-11 flex-column">  
+        <label>Creation Date</label>
+          <div class="date-style">
+            <div class="custom-select-date">
+              <label for="selectOption">Start Date</label>
+              <input type="date" id="creatStartDate" name="startDate">
+            </div>
+            <div class="custom-select-date">
+              <label for="selectOption">End Date</label>
+              <input type="date" id="creatEndDate" name="endDate">
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-2 d-flex align-items-start px-0 custom-date mt-4">
+      <input type="checkbox" class="col-1" id="check-podate" name="check-podate" value="podate">
+      <div class="col-11 flex-column">
+        <label>PO Date</label>
+        <div class="date-style">
+          <div class="custom-select-date">
+            <label for="selectOption">Start Date</label>
+            <input type="date" id="poStartDate" name="startDate">
+          </div>
+          <div class="custom-select-date">
+            <label for="selectOption">End Date</label>
+            <input type="date" id="poEndDate" name="endDate">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-column col-2" style="position: relative;">
+      <div id="toastContainer" class="filter-message">
+      </div>
 
-    </div>  
-    <div class="col-4">
-      <form class="form-inline">
-        <input class="form-control mr-sm-2" id="searchInput" style="width: 70%;" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" id="searchButton" type="button"><i class="fa fa-search" style="font-size:15px"></i></button>
-      </form>
-    </div>  
+      <div style="margin-top: 22px;">
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="filterButton">
+          <i class="fa fa-filter" style="font-size:15px"></i> Filter
+        </button>
+      </div>
+      <div style="margin-top: 22px;">
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="refreshButton" onclick="refreshPage()">
+          <i class="fa fa-refresh" style="font-size:15px"></i> Clear
+        </button>
+      </div>
+    </div>
+
   </div>
-  <div class="row mt-4">
+  <div class="row mt-4" style="margin: 0; background-color: white; border-radius: 4px;" >
     
     <style>
       #history thead, #history tbody tr {
@@ -62,7 +132,7 @@
       {% if histories != "empty" %}
       <tbody>
         {% for history in histories %}
-        <tr class="table-row">
+        <tr class="table-row" data-customer-name="{{ history.0 }}" data-user-name="{{ history.1 }}" data-creation-date="{{ history.2 }}" data-po-date="{{ history.3 }}">
           <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()" data-creation-date="{{ history.2 }}"></td>
           <td>{{ history.0 }}</td>
           <td>{{ history.1 }}</td>
@@ -131,57 +201,6 @@
   function extractColumnName(columnText) {
   return columnText.replace(/[^\w\s]/g, '').trim().replace(/\s/g, '');
   }
-
-document.addEventListener("DOMContentLoaded", function () {
-  const searchInput = document.getElementById("searchInput");
-  const filterOption = document.getElementById("filter-option");
-  const searchButton = document.getElementById("searchButton");
-  const tableRows = document.querySelectorAll(".table-row");
-  const refreshButton = document.getElementById("refreshButton"); 
-  searchButton.addEventListener("click", function (event) {
-    event.preventDefault();
-    filterTableRows();
-  });
-  function refreshPage() {
-    location.reload();
-  }
-  refreshButton.addEventListener("click", function (event) {
-      event.preventDefault();
-      refreshPage();
-    });
-  function filterTableRows() {
-    const searchText = searchInput.value.toLowerCase();
-    const selectedFilter = filterOption.value.toLowerCase();
-
-    tableRows.forEach(function (row) {
-      let displayRow = false;
-
-      const filterColumnIndex = getColumnIndexByName(extractColumnName(selectedFilter));
-      if (filterColumnIndex !== -1) {
-        const filterValue = row.cells[filterColumnIndex];
-        if (filterValue) {
-          const filterText = filterValue.textContent.toLowerCase();
-          displayRow = filterText.includes(searchText);
-        }
-      } else {
-        const rowData = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
-        displayRow = rowData.includes(searchText);
-      }
-
-      row.style.display = displayRow ? "" : "none";
-    })
-  }
-
-  function getColumnIndexByName(columnName) {
-    const headerRow = document.getElementById("history").rows[0];
-    for (let i = 0; i < headerRow.cells.length; i++) {
-      if (extractColumnName(headerRow.cells[i].textContent.trim().toLowerCase()) === columnName) {
-        return i;
-      }
-    }
-    return -1;
-  }
-});
   
 function sortTable(columnIndex) {
     const table = document.getElementById("history");
@@ -233,6 +252,34 @@ function sortTable(columnIndex) {
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    const refreshButton = document.getElementById("refreshButton"); 
+    function refreshPage() {
+      location.reload();
+    }
+    refreshButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      refreshPage();
+    });
+
+      // Get current date in the format "YYYY-MM-DD"
+      function getCurrentDate() {
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const day = String(today.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+      }
+
+      // Set the default values for Start Date and End Date
+      document.getElementById("creatStartDate").value = getCurrentDate();
+      document.getElementById("creatEndDate").value = getCurrentDate();
+      document.getElementById("poStartDate").value = getCurrentDate();
+      document.getElementById("poEndDate").value = getCurrentDate();
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
     const deleteButton = document.getElementById("deleteButton");
 
     deleteButton.addEventListener("click", async function () {
@@ -271,5 +318,77 @@ function sortTable(columnIndex) {
     });
   });
 </script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+  const filterButton = document.getElementById("filterButton");
+  const toastContainer = document.getElementById("toastContainer");
+
+  filterButton.addEventListener("click", function () {
+    const customerCheckbox = document.getElementById("check-customer");
+    const userCheckbox = document.getElementById("check-user");
+    const creationDateCheckbox = document.getElementById("check-creationdate");
+    const poDateCheckbox = document.getElementById("check-podate");
+
+    // Check if at least one filter option is selected
+    if (!customerCheckbox.checked && !userCheckbox.checked && !creationDateCheckbox.checked && !poDateCheckbox.checked) {
+      showToastMessage("Please check at least one filter option");
+      return; // Abort filter operation
+    }
+
+    const customerFilter = document.getElementById("selectOption-customer").value;
+    const userFilter = document.getElementById("selectOption-user").value;
+    const creatStartDateFilter = document.getElementById("creatStartDate").value;
+    const creatEndDateFilter = document.getElementById("creatEndDate").value;
+    const poStartDateFilter = document.getElementById("poStartDate").value;
+    const poEndDateFilter = document.getElementById("poEndDate").value;
+
+    const rows = document.querySelectorAll(".table-row");
+
+    rows.forEach(row => {
+      const customerMatch = !customerCheckbox.checked || (customerFilter === "All" || row.dataset.customerName === customerFilter);
+      const userMatch = !userCheckbox.checked || (userFilter === "All" || row.dataset.userName === userFilter);
+
+      let creationDateMatch = true;
+      if (creationDateCheckbox.checked) {
+        const rowCreationDate = new Date(`${row.dataset.creationDate}Z`).toISOString().split('T')[0];
+        const startDate = new Date(`${creatStartDateFilter}T00:00:00Z`).toISOString().split('T')[0];
+        const endDate = new Date(`${creatEndDateFilter}T23:59:59Z`).toISOString().split('T')[0];
+
+        creationDateMatch = rowCreationDate >= startDate && rowCreationDate <= endDate;
+      }
+
+      let poDateMatch = true;
+      if (poDateCheckbox.checked) {
+        const rowPoDate = new Date(`${row.dataset.poDate}Z`).toISOString().split('T')[0];
+        const startDate = new Date(`${poStartDateFilter}T00:00:00Z`).toISOString().split('T')[0];
+        const endDate = new Date(`${poEndDateFilter}T23:59:59Z`).toISOString().split('T')[0];
+
+        poDateMatch = rowPoDate >= startDate && rowPoDate <= endDate;
+      }
+
+      // Show row only if all conditions are met
+      const showRow = customerMatch && userMatch && creationDateMatch && poDateMatch;
+
+      row.style.display = showRow ? "table-row" : "none";
+    });
+  });
+
+  function showToastMessage(message) {
+    // Display the toast message near the filter button
+    toastContainer.textContent = message;
+    toastContainer.style.display = "block";
+
+    // Hide the toast message after a certain duration (e.g., 3 seconds)
+    setTimeout(() => {
+      toastContainer.style.display = "none";
+    }, 3000);
+  }
+});
+
+
+</script>
+
 
   {% endblock %}
