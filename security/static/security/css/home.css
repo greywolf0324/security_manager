@@ -499,6 +499,20 @@ a .history-btn:hover {
   overflow: scroll;
 }
 
+/* Sign */
+.sign-message {
+  display: none; 
+  position: absolute; 
+  top: 52%; 
+  /* left:7%;  */
+  text-align: center;
+  /* background-color: white;  */
+  color: red; 
+  padding: 3px; 
+  z-index: 1; 
+  border-radius: 20px;
+}
+/* Sign */
 
 /* Home */
 
