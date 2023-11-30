@@ -969,6 +969,7 @@ class EXCEL_Parsing:
             except:
                 pdf = pd.read_excel(path)
 
+            cols = len(pdf.columns)
             res.append({})
             # this lines are to block excel inputs
             # if "PD MOLDIMALS SURPRISE" in list(pdf[list(pdf.keys())[20]]):
@@ -982,10 +983,14 @@ class EXCEL_Parsing:
                     a = True
                 
                 try:
-                    b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
+                    if cols == 122:
+                        b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
+                    else:
+                        b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
                 except:
                     b = True
                 # print(a, b, i)
+                
                 if a ^ b:
                     if a:
                         res.append({})
@@ -1050,50 +1055,53 @@ class EXCEL_Parsing:
             temp = []
             temp_note = []
             i = 0
-            while i < len(pdf[list(pdf.keys())[0]]):
-                try:
-                    # print(pdf[list(pdf.keys())[55]][i])
-                    math.isnan(pdf[list(pdf.keys())[55]][i])
-                except:
-                    # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
-                    temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
-
-                try:
-                    #Maijer
-                    # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
-                    if str(pdf[list(pdf.keys())[57]][i]) != "nan":
-                        math.isnan(str(pdf[list(pdf.keys())[57]][i]))
-                except:
-                    # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
-                    temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
-                # print(temp)
-                # print("temp______")
-                try:
-                    # print(pdf[list(pdf.keys())[88]][i], type(pdf[list(pdf.keys())[88]][i]))
-                    math.isnan(pdf[list(pdf.keys())[88]][i])
-                except:
-                    temp_note.append(pdf[list(pdf.keys())[88]][i])
-                # print(temp_note)
-                # print("temp_note______")
-                i = i + 1
-            # print(temp)
-            # print(len(res), len(temp))
-            if len(temp) != 0:
-                for i, items in enumerate(temp):
-                    # print(temp[-1 - i])
-                    res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
-                    res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
-                    res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
+            if cols == 122:
+                while i < len(pdf[list(pdf.keys())[0]]):
                     try:
-                        res[-1 - i][list(pdf.keys())[57]][0] = temp[-1 - i][3]
-                        res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]
+                        # print(pdf[list(pdf.keys())[55]][i])
+                        math.isnan(pdf[list(pdf.keys())[55]][i])
                     except:
-                        pass
-            # print(len(temp_note))
-            if len(temp_note) / 3 == len(temp) and len(temp) != 0:
-                for i in range(int(len(temp_note) / 3)):
-                    res[-1 - i][list(pdf.keys())[88]][0] = ", ".join([temp_note[-1 - i * 3], temp_note[-1 - i * 3 - 1], temp_note[-1 - i * 3 - 2]])
-            # elif len(temp_note) != 0:
+                        # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
+                        temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
+
+                    try:
+                        #Maijer
+                        # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
+                        if str(pdf[list(pdf.keys())[57]][i]) != "nan":
+                            math.isnan(str(pdf[list(pdf.keys())[57]][i]))
+                    except:
+                        # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
+                        temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
+                    # print(temp)
+                    # print("temp______")
+                    try:
+                        # print(pdf[list(pdf.keys())[88]][i], type(pdf[list(pdf.keys())[88]][i]))
+                        math.isnan(pdf[list(pdf.keys())[88]][i])
+                    except:
+                        temp_note.append(pdf[list(pdf.keys())[88]][i])
+                    # print(temp_note)
+                    # print("temp_note______")
+                    i = i + 1
+                # print(temp)
+                # print(len(res), len(temp))
+                if len(temp) != 0:
+                    for i, items in enumerate(temp):
+                        # print(temp[-1 - i])
+                        res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
+                        res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
+                        res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
+                        try:
+                            res[-1 - i][list(pdf.keys())[57]][0] = temp[-1 - i][3]
+                            res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]
+                        except:
+                            pass
+                # print(len(temp_note))
+                if len(temp_note) / 3 == len(temp) and len(temp) != 0:
+                    for i in range(int(len(temp_note) / 3)):
+                        res[-1 - i][list(pdf.keys())[88]][0] = ", ".join([temp_note[-1 - i * 3], temp_note[-1 - i * 3 - 1], temp_note[-1 - i * 3 - 2]])
+                # elif len(temp_note) != 0:
+                # elif len(pdf.columns) == 84:
+                #     res.append({})
 
         # res.pop(-1)
 

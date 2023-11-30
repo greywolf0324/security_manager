@@ -11,7 +11,7 @@
 # "Product/Item Description": "",
 # "PO Total Amount": "",
 # "PO Total Weight": "",
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 import json
 import re
 import pandas as pd
@@ -1727,11 +1727,163 @@ class PO_Match_ORBICO(PO_Match):
         return output
 
 class PO_Match_EXCEL(PO_Match):
-    def match_final(self, PO_res):
-        df = pd.DataFrame(PO_res[0])
-        df.to_excel("sales_origin.xlsx")
-        return PO_res
+    def __init__(self) -> None:
+        self.PO_keys = []
+        self.length = 2
+        self.pair = {
+            "PO Number": "Invoice Number",
+            "PO Date": "PO Date",
+            "Ship Dates": "Requested Ship / Delivery Date",
+            # "Cancel Date": "",
+            "Qty Ordered": "Qty Ordered",
+            "Unit of Measure": "Unit of Measure",
+            "Unit Price": "Unit Price",
+            "Buyers Catalog or Stock Keeping #": "Buyer's Catalog or Stock Keeping #",
+            "UPC/EAN": "UPC/EAN",
+            "Vendor Style": "Vendor Style",
+            "Product/Item Description": "Product/Item Description",
+            "PO Total Amount": "Invoice Total",
+            # "PO Total Weight": "",
+            "Ship To Location": "Ship To Location",
+            "Payment Terms Net Days": "Payment Terms Net Days",
+            "Ship To Name": "Ship To Name",
+            "Ship To Address 1": "Ship To Address 1",
+            "Ship To Address 2": "Ship to address 2",				
+            "Ship To City":	"Ship to City",			
+            "Ship To State": "Ship To State",
+            "Ship to Zip": "Ship to Zip",
+            "Ship To Country": "Ship To ctry"
+        }
+        f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
+        self.field_names = json.load(f)
+        self.field_names_temp = []
+        for item in self.field_names:
+            self.field_names_temp.append(item) 
+        for item in self.field_names_temp:
+            a = list(self.pair.keys())
+            if item in list(self.pair.keys()):
+                (self.field_names).remove(item)
+                
+    def match_convTstr(self, input: list):
+        temp = []
+
+        for item in input:
+            try:
+                c = math.isnan(item)
+            except:
+                c = False
+            
+            if c:
+                temp.append("")
+            else:
+                temp.append(str(item))
+
+        return temp
     
+    def match_same(self, input):
+        self.initial_part_init()
+
+        for key in self.pair:
+            if key == "PO Number":
+                input[key] = input[self.pair[key]]
+
+                input["Retailers PO"] = [input[self.pair[key]][0]]
+
+                for _ in range(self.length - 1): 
+                    input["Retailers PO"].append("")
+
+                del input[self.pair[key]]
+
+            elif key in ["PO Date", "Ship Dates", "PO Total Amount", "Ship To Location", "Payment Terms Net Days", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country"]:
+                input[key] = [input[self.pair[key]][0]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+                if key not in ["PO Date", "Ship To Location", "Payment Terms Net Days", "Ship To Name", "Ship To Address 1", "Ship To State", "Ship to Zip"]:
+                    del input[self.pair[key]]
+            
+            elif key in ["Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Product/Item Description"]:
+                if key in ["Buyers Catalog or Stock Keeping #"]:
+                    temp = []
+                    for value in input[self.pair[key]]:
+                        try:
+                            temp.append(int(float(value)))
+                        except:
+                            temp.append("")
+                    input[key] = temp
+                else:
+                    input[key] = input[self.pair[key]]
+
+                if key in ["Buyers Catalog or Stock Keeping #"]:
+                    del input[self.pair[key]]
+
+        # for key in input.keys():
+        #     if key not in list(self.pair.keys()) and key in self.field_names:
+        #         input[key] = self.match_convTstr(input[key])
+        #         input[key].insert(0, "")
+
+        return input
+    
+    def match_formula(self, input):
+        temp_key = input.keys()
+
+        for item in self.field_names:
+            if item not in temp_key or item not in self.PO_inherited:
+                temp = []
+                
+                for _ in range(self.length):
+                    temp.append("")
+                
+                try:
+                    del input[item]
+                except:
+                    pass
+
+                input.update({item: temp})
+            
+        return input
+    
+    def match_final(self, PO_res):
+        print(PO_res)
+        if len(PO_res[0].keys()) > 100:
+            print(len(PO_res[0].keys()), "=======================")
+            df = pd.DataFrame(PO_res[0])
+            df.to_excel("sales_origin.xlsx")
+            return PO_res
+        else:
+            # get PO_res keys
+            self.PO_keys = list(PO_res[0].keys())
+            self.PO_inherited = []
+
+            for key in self.pair:
+                self.PO_inherited.append(self.pair[key])
+
+            temp = []
+            for key in self.PO_keys:
+                if key not in self.PO_inherited and key in self.field_names:
+                    temp.append(key)
+            
+            self.PO_inherited.extend(temp)
+
+            for content in PO_res:
+                self.length = len(content[list(content.keys())[0]])
+
+                item = self.match_same(content)
+                item = self.match_formula(item)
+
+                for key in self.PO_keys:
+                    if key not in self.PO_inherited:
+                        del item[key]
+
+            print(len(PO_res[0].keys()))
+            print("*****************************")
+            for key, item in PO_res[0].items():
+                print(key, ": ", len(item))
+            df = pd.DataFrame(PO_res[0])
+            df.to_excel("sales_origin.xlsx")
+
+            return PO_res
 class PO_Match_CVS(PO_Match):
     def __init__(self) -> None:
         self.PO_keys = []
