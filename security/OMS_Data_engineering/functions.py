@@ -259,7 +259,6 @@ class SalesImport_Generator:
         PO_res = parser.PO_parser(paths, currency)
 
         # print(PO_res)
-        pd.DataFrame(PO_res[0]).to_csv("111.csv", index=False)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
