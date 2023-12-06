@@ -174,7 +174,7 @@ const termsOptionsFromOMS = (term) => {
    '90 Days',
    'Letter of Credit']
    console.log(term, "term")
-  return `<select class="terms-options" onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option ===  term?"selected":""}>${option}</option>`)}</select>`
+  return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option ===  term?"selected":""}>${option}</option>`)}</select>`
 }
 
 const term_options = [' T/T against BL Copy',
@@ -372,11 +372,11 @@ $(document).ready(function() {
     // element.html(conten)
   }
 
-  function displayTable(data, selector, options, termRsOptions, data3, locations, data5) {
+  function displayTable(data, selector, selector1, options, termRsOptions, data3, locations, data5) {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
     console.log(data5, "data5")
     const customername = data5
-    const customernameoptions = customername==="Pepco"?"<select><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select><option>${customername}</option></select>`
+    const customernameoptions = customername==="Pepco"?"<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select class='w-75 form-select'><option>${customername}</option></select>`
     
     var termsfrompo = data[0]["Payment Terms Net Days"][0]||""
     // if (termsfrompo !== ""){
@@ -388,24 +388,42 @@ $(document).ready(function() {
     //     }
     //   }  
     // }
+    var head1 = `<div class="table table-striped border rounded">
+                  <div class="row px-5 py-3">
+                    <div class="col-lg-6">
+                      <div class="fw-bold">Customer Name From P0: <span class="text-danger">${customername}</span></div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="row fw-bold">
+                        <div class="col-lg-4 text-start">
+                          Customer Name Options: 
+                        </div>
+                        <div class="col-lg-8">
+                          ${customernameoptions}
+                        </div>                      
+                      </div>                    
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="fw-bold">Terms From PO: <span class="text-danger">${termsfrompo}</span></div>                    
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="row fw-bold">
+                        <div class="col-lg-4 text-start">
+                          Terms Options From OMS: 
+                        </div>
+                        <div class="col-lg-8">
+                          ${termsOptionsFromOMS(termRsOptions)}
+                        </div>                      
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+    $(selector1).html(head1)
     console.log(data, "_____")
     const table_len = data.length
     const sku_keyname = customerStyle(customername)
     var tables = `
-    <thead>
-      <tr>
-        <th colspan="3">Customer Name From PO: <span class="text-danger">${customername}</span></th>
-        <th></th>
-        <th></th>
-        <th>Customer Name Options: ${customernameoptions}</th>
-      </tr>
-      <tr>
-        <th colspan="3" >Terms From PO: <span class="text-danger" id="default-terms">${termsfrompo}</span></th>
-        <th></th>
-        <th></th>
-        <th>Terms Options From OMS: <span class="text-danger">${termsOptionsFromOMS(termRsOptions)}</span></th>
-      </tr>
-    </thead>
+  
     <thead>
       <tr>
         ${
@@ -419,6 +437,7 @@ $(document).ready(function() {
       console.log(data[0], "+++++ ")
       console.log(keys[0], "_____")
       tables += `
+    
     
       ${
         [...Array(data[i][keys[0]].length)].map((_, index) => {
@@ -438,7 +457,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==selectedValue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   else if (key === "Unit of Measure") {
                     try {
@@ -450,7 +469,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   else if (key === "StockLocation") {
                     try {
@@ -462,7 +481,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   return `<td contenteditable="true">${data[i][key][index]}</td>`;
                 })
@@ -474,6 +493,7 @@ $(document).ready(function() {
     }
     tables += '</tbody>'
     $(selector).html(tables)
+    $(selector).parent().removeClass('d-none')
   }
 
   function getTableData(selector) {
@@ -543,7 +563,7 @@ $(document).ready(function() {
           }
           
         }
-        displayTable(data1, "#table-view", {"sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations}, data2.OMS_Payment_term, data3, data4, data5)
+        displayTable(data1, "#table-view", "#table-header-view", {"sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations}, data2.OMS_Payment_term, data3, data4, data5)
         document.getElementById('loader1').classList.toggle('d-none');
       },
       error: function(xhr, status, error) {

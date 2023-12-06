@@ -142,7 +142,7 @@ def history(request):
     print(path)
     print(file)
     if file[:-3] in view_filename_paths:
-      paths.append(str(path) + "/" + file)
+      paths.append(str(path) + "\\" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)
