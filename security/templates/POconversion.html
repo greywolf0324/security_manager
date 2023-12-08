@@ -2,72 +2,76 @@
 {% load custom_filters %}
 
 {% block content %}
-<div style="width: 80%; margin-top: 50px;">
-    <form id="customer-name-form">
-        <select name="customer-name" class="form-select" id="customer-name">
-            <option value="Select Customer" disabled>Select Customer</option>
-            {% for customer in customers %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="w-100">
+          <form id="customer-name-form">
+            <select name="customer-name" class="form-select" id="customer-name">
+              <option value="Select Customer" disabled>Select Customer</option>
+              {% for customer in customers %}
                 <option value="{{ customer }}" {% if customer == customername %}selected{% endif %}>{{ customer }}</option>
-            {% endfor %}
-        </select>
-    </form>
-    <div class="table-responsive container mt-5" id="customselect" >
-    {% if conversion == "non-exists" %}
-        <div class="nondatabase_warning">Don't exist matching DataBase for this customer</div>
-    <!-- <script>console.log("asdfasdf")</script> -->
-    {% else %}
-        <table class="table" id="dbtable">
-            {% csrf_token %}
-            <thead>
-                <tr>
-                    <th>PO</th>
-                    <th>Unit of Measure</th>
-                    <th>StockLocation</th>
-                    <th>Vendor Style from OMS_equal</th>
+              {% endfor %}
+            </select>
+          </form>
+          <div class="table-responsive mt-3" id="customselect" >
+            {% if conversion == "non-exists" %}
+              <div class="nondatabase_warning">Don't exist matching DataBase for this customer</div>
+            {% else %}
+            <table class="table" id="dbtable">
+              {% csrf_token %}
+              <thead>
+                <tr class="bg-light-gray">
+                  <th>PO</th>
+                  <th>Unit of Measure</th>
+                  <th>StockLocation</th>
+                  <th>Vendor Style from OMS_equal</th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for item, uom, location, target in conversion %}
-                <tr>
-                    <td contenteditable="true">{{ item }}</td>
-                    <td data-type="select">
-                        <select>
+              </thead>
+              <tbody>
+                      {% for item, uom, location, target in conversion %}
+                      <tr>
+                        <td contenteditable="true">{{ item }}</td>
+                        <td data-type="select">
+                          <select class="min-w-160px form-select">
                             {% for uom_item in uom_options %}
-                                <option {% if uom == uom_item %}selected{% endif %}>{{ uom_item }}</option>
+                              <option {% if uom == uom_item %}selected{% endif %}>{{ uom_item }}</option>
                             {% endfor %}
-                        </select>
-                    </td>
-                    <td contenteditable="true">
-                        <select>
+                          </select>
+                        </td>
+                        <td contenteditable="true">
+                          <select class="min-w-160px form-select">
                             {% for location_item in location_options %}
+                              {% if location_item %}
                                 <option {% if location == location_item %}selected{% endif %}>{{ location_item }}</option>
+                              {% endif %}
                             {% endfor %}
-                        </select>
-                    </td>
-                    <td contenteditable="true">
-                        <select>
+                          </select>
+                        </td>
+                        <td contenteditable="true">
+                          <select class="min-w-160px form-select">
                             {% with item_values=vendor_options|get_item:item %}
-                                {% for vendor_item in item_values %}
-                                    <option {% if target == vendor_item %}selected{% endif %}>{{ vendor_item }}</option>
-                                {% endfor %}
+                              {% for vendor_item in item_values %}
+                                <option {% if target == vendor_item %}selected{% endif %}>{{ vendor_item }}</option>
+                              {% endfor %}
                             {% endwith %}
-                        </select>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-end">
-            <button id="savebutton" class="btn btn-primary">Save</button>
-        </div>
+                          </select>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              <div class="d-flex justify-content-end mt-3">
+                <button id="savebutton" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          {% endif %}
+        </div>        
+      </div>
     </div>
-    {% endif %}
+  </div>
 </div>
-
-<script>
-
-</script>
-
 {% endblock %}
 
 {% block scripts %}
