@@ -9,7 +9,7 @@ a:hover {
 }
 
 .menu-vertical .menu-icon {
-    font-size: 20px;
+    font-size: 26px;
     margin-left: 4px;
     margin-right: 24px;
 }
@@ -19,7 +19,7 @@ a:hover {
 }
 
 .menu-vertical .menu-inner > .menu-item {
-    margin: 4px 0;
+    margin: 11px 0;
 }
 
 .menu-inner {
@@ -28,15 +28,15 @@ a:hover {
 
 @media (min-width: 1200px) {
     .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .menu-vertical, .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu.menu-vertical {
-        width: 4.375rem;
+        width: 6.5rem;
     }
 
     .layout-menu-fixed.layout-menu-collapsed .layout-page {
-        padding-left: 4.375rem !important;
+        padding-left: 6.5rem !important;
     }
 
     .layout-navbar-fixed.layout-menu-collapsed:not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-content-navbar .layout-navbar, .layout-menu-fixed.layout-navbar-fixed.layout-menu-collapsed .layout-content-navbar .layout-navbar {
-        left: 4.375rem !important;
+        left: 6.5rem !important;
     }
 }
 
@@ -176,7 +176,7 @@ small {
 }
 
 .modal {
-    --bs-modal-width: 920px;
+    --bs-modal-width: 720px;
 }
 
 body {
@@ -211,7 +211,7 @@ body {
     gap: 0.25rem !important;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     .md-flex-1 {
         flex: 1;
     }
@@ -230,7 +230,7 @@ body {
 }
 
 .text-info {
-    color: #5e81f4 !important;
+    color: #00cfe8 !important;
 }
 
 .justify-center {
@@ -255,7 +255,7 @@ body {
 }
 
 .layout-navbar-fixed.layout-menu-collapsed .layout-navbar.navbar-detached {
-    width: calc(100% - calc(1.5rem * 2) - 4.375rem) !important;
+    width: calc(100% - calc(1.5rem * 2) - 6.5rem) !important;
 }
 
 #modaltable td {
@@ -286,115 +286,5 @@ body {
 }
 
 .table-separate-tr>tbody>tr>td, .table-separate-tr>thead>tr>th {
-    font-size: 10px;
-}
-
-.text-light-blue {
-    color: #83A0FC !important;
-}
-
-.menu-vertical .menu-inner > .menu-item .menu-link {
-    margin: 0 0.625rem;
-}
-
-.layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .menu-vertical .menu-inner > .menu-item, .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu.menu-vertical .menu-inner > .menu-item {
-    width: 4.375rem;
-}
-
-.layout-wrapper:not(.layout-horizontal) .bg-menu-theme .menu-inner .menu-item .menu-link {
-    height: 3.125rem;
-    padding-left: 10px;
-}
-
-.menu-vertical .app-brand {
-    margin: 0 0.7rem !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-.menu-vertical .menu-item .menu-link>div {
-    line-height: 50px;
-    padding-bottom: 6px;
-}
-
-.menu-vertical .menu-item .menu-link:hover, .menu-vertical .menu-item .menu-link.active {
-    background-color: #EFF2FE !important;
-}
-
-.text-dark-gray {
-    color: #6f6b7d;
-}
-
-.overflow-y-auto {
-    overflow-y: auto !important;
-}
-
-.overflow-y-scroll {
-    overflow-y: scroll !important;
-}
-
-.max-h-660px {
-    max-height: 660px !important;
-}
-
-.custom-scroll-box::-webkit-scrollbar {
-    width: 8px;
-}
-  
-.custom-scroll-box::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-}
-  
-.custom-scroll-box::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-}
-
-.table th {
-    text-transform: unset !important;
-}
-
-.fw-500 {
-    font-weight: 500 !important;
-}
-
-.text-black {
-    color: black !important;
-}
-
-.w-10-pro {
-    width: 10% !important;
-}
-
-.w-25-pro {
-    width: 25% !important;
-}
-
-.w-30-pro {
-    width: 30% !important;
-}
-
-.gap-5 {
-    gap: 1.25rem !important;
-}
-
-.flex-row-reverse {
-    flex-direction: row-reverse !important;
-}
-
-.px-20px {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-}
-
-.modal-open .modal {
-    overflow-y: hidden;
-}
-
-.modal-open {
-    padding-right: 0 !important;
-}
-
-body {
-    padding: 0 !important;
+    font-size: 12px;
 }
