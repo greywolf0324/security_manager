@@ -107,8 +107,11 @@
                   <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
               
                 </fieldset>
+                <div style="text-align:center">
+                  <button id="clear-my-files" type="button" class="btn btn-outline-dark waves-effect">Clear</button>
+                </div>
               </label>
-    
+
               <div class="w-100 my-2">
                 <div class="col-6">
                   <label class="form-label" style="font-size: 18px; font-weight: bold;">Customer Name</label>
@@ -246,9 +249,11 @@
                 {% comment %} <div class="card-header border-b pb-2">
                   <h5 class="card-title my-0 customername">Customer Order Mapping</h5>
                 </div> {% endcomment %}
-                <div class="card-body pt-2">
+                <div class="card-body pt-2 overflow-y-auto" style="height: 600px;">
                   <div id="view_details">
                   </div>
+                </div>
+                <div class="card-body pt-2">
                   <div class="col-12 d-flex flex-row-reverse mt-2">
                     <button id="final-step" type="button" onclick="processStepper.navigate('4')" class="btn btn-outline-dark waves-effect">Next</button>
                     <button type="button" onclick="processStepper.navigate('2')" class="btn btn-outline-dark waves-effect">Prev</button>
@@ -256,9 +261,9 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3 col-sm-12 h-content">
+            <div class="col-md-3 col-sm-12">
               <div class="card h-content">
-                <div class="card-body p-0" id="step_3_customer_info">
+                <div class="card-body p-0 overflow-y-auto" id="step_3_customer_info"  style="height: 600px;">
                 </div>
               </div>
             </div>
