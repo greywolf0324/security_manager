@@ -251,14 +251,14 @@ class SalesImport_Generator:
         self.uploadFile(data)
         paths = self.paths
             # paths.append(self.path)
-        print(self.filenames, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
         # OCR: PDF parsing
         print("==============================================================================================================")
         print("On PDF parsing...")
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
         PO_res = parser.PO_parser(paths, currency)
 
-        print(PO_res)
+        # print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")

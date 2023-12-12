@@ -701,7 +701,7 @@ class Family_Dollar_Parsing:
 
 class Gabes_Parsing:
     def __init__(self, customer_name) -> None:
-        self.O_coordinates = [261.0, 41, 362.51695, 55]
+        # self.O_coordinates = [261.0, 41, 362.51695, 55]
         self.S_coordinates = [256.0, 65, 366.0, 145]
         self.P_coordinates = [3.0, 181, 555.77734, 193]
         self.p_v_lines = [3.0, 55.57422, 242.89456, 371.7969, 555.77734]
@@ -717,17 +717,26 @@ class Gabes_Parsing:
 
             for page_num, page in enumerate(pdf.pages):
                 if page_num == 0:
-                    O_page = page.within_bbox(self.O_coordinates)
-                    S_page = page.within_bbox(self.S_coordinates)
-                    P_page = page.within_bbox(self.P_coordinates)
+                    O_page = page.within_bbox([page.search("Order Date")[0]['x0'] - 5, page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x1'] + 40, page.search("Order Date")[0]['bottom']])
+                    S_page = page.within_bbox([page.search("Ship To:")[0]['x0'], page.search("Ship To:")[0]['top'], page.search("Ship To:")[0]['x1'] + 60, page.search("Ship Via")[0]['top']])
+                    P_page = page.within_bbox([page.search("Freight")[0]['x0'], page.search("Freight")[0]['bottom'], page.width, page.search("Internal Item #")[0]['top']])
                     P_content = P_page.extract_table(dict(
-                                    explicit_vertical_lines = self.p_v_lines,
-                                    explicit_horizontal_lines = self.p_h_lines 
+                                    explicit_vertical_lines = [page.search("Freight")[0]['x0'], page.search("Ship Date")[0]['x0'], page.search("Ship Date")[0]['x1'] + 5, page.search("Cancel Date")[0]['x1'], page.width],
+                                    explicit_horizontal_lines =  [page.search("Freight")[0]['bottom'], page.search("Internal Item")[0]['top']]
                                 ))
+                    bill_to_text = page.within_bbox([0, 0, page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top']]).extract_text()
+                    comment_text = page.within_bbox([0, page.search("Vendor:")[0]['top'], page.search("Purchase Order")[0]['x0'], page.search("Ship Via")[0]['top']]).extract_text()
+                    ship_to_text = page.within_bbox([page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top'], page.width, page.search("Ship Via")[0]['top']]).extract_text()
+                    
+                    print(bill_to_text.split("\n"))
+                    print("======")
+                    print(comment_text)
+                    print("======")
+                    print(ship_to_text.split("\n"))
 
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
-                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.extract_text_simple().split("Order Date ")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.within_bbox([page.search("Order Date")[0]['x0'], page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x0'] + 150, page.search("Order Date")[0]['bottom']]).extract_text().split("Order Date ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["PO"] = page.extract_text_simple().split("\n")[0].split("Purchase Order ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["Ship To"] = S_page.extract_text_simple().replace("\xa0", "")
                     res[f"PDF{k}"][f"page{page_num}"]["Ship Date"] = P_content[0][1]
@@ -739,7 +748,18 @@ class Gabes_Parsing:
                     res[f"PDF{k}"][f"page{page_num}"]["Description"] = page.extract_tables()[0][6][7].split("\n")
                     res[f"PDF{k}"][f"page{page_num}"]["Unit Cost"] = page.extract_tables()[0][6][10].split("\n")
                     res[f"PDF{k}"][f"page{page_num}"]["Total Cost"] = page.extract_tables()[0][7][-1]
-        
+                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_name"] = bill_to_text.split("\n")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_add"] = bill_to_text.split("\n")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_city"] = bill_to_text.split("\n")[2].split(", ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_state"] = bill_to_text.split("\n")[2].split(", ")[1].split(" ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_zip"] = bill_to_text.split("\n")[2].split(", ")[1].split(" ")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["comment"] = comment_text
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_name"] = ship_to_text.split("\n")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_add_1"] = ship_to_text.split("\n")[2]
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_add_2"] = ship_to_text.split("\n")[3]
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_city"] = ship_to_text.split("\n")[4].split(", ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_state"] = ship_to_text.split("\n")[4].split(", ")[1].split(" ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_zip"] = ship_to_text.split("\n")[4].split(", ")[1].split(" ")[1]
         return res
     
   
@@ -969,6 +989,7 @@ class EXCEL_Parsing:
             except:
                 pdf = pd.read_excel(path)
 
+            cols = len(pdf.columns)
             res.append({})
             # this lines are to block excel inputs
             # if "PD MOLDIMALS SURPRISE" in list(pdf[list(pdf.keys())[20]]):
@@ -982,10 +1003,14 @@ class EXCEL_Parsing:
                     a = True
                 
                 try:
-                    b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
+                    if cols == 122:
+                        b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
+                    else:
+                        b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
                 except:
                     b = True
                 # print(a, b, i)
+                
                 if a ^ b:
                     if a:
                         res.append({})
@@ -1050,50 +1075,53 @@ class EXCEL_Parsing:
             temp = []
             temp_note = []
             i = 0
-            while i < len(pdf[list(pdf.keys())[0]]):
-                try:
-                    # print(pdf[list(pdf.keys())[55]][i])
-                    math.isnan(pdf[list(pdf.keys())[55]][i])
-                except:
-                    # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
-                    temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
-
-                try:
-                    #Maijer
-                    # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
-                    if str(pdf[list(pdf.keys())[57]][i]) != "nan":
-                        math.isnan(str(pdf[list(pdf.keys())[57]][i]))
-                except:
-                    # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
-                    temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
-                # print(temp)
-                # print("temp______")
-                try:
-                    # print(pdf[list(pdf.keys())[88]][i], type(pdf[list(pdf.keys())[88]][i]))
-                    math.isnan(pdf[list(pdf.keys())[88]][i])
-                except:
-                    temp_note.append(pdf[list(pdf.keys())[88]][i])
-                # print(temp_note)
-                # print("temp_note______")
-                i = i + 1
-            # print(temp)
-            # print(len(res), len(temp))
-            if len(temp) != 0:
-                for i, items in enumerate(temp):
-                    # print(temp[-1 - i])
-                    res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
-                    res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
-                    res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
+            if cols == 122:
+                while i < len(pdf[list(pdf.keys())[0]]):
                     try:
-                        res[-1 - i][list(pdf.keys())[57]][0] = temp[-1 - i][3]
-                        res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]
+                        # print(pdf[list(pdf.keys())[55]][i])
+                        math.isnan(pdf[list(pdf.keys())[55]][i])
                     except:
-                        pass
-            # print(len(temp_note))
-            if len(temp_note) / 3 == len(temp) and len(temp) != 0:
-                for i in range(int(len(temp_note) / 3)):
-                    res[-1 - i][list(pdf.keys())[88]][0] = ", ".join([temp_note[-1 - i * 3], temp_note[-1 - i * 3 - 1], temp_note[-1 - i * 3 - 2]])
-            # elif len(temp_note) != 0:
+                        # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
+                        temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
+
+                    try:
+                        #Maijer
+                        # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
+                        if str(pdf[list(pdf.keys())[57]][i]) != "nan":
+                            math.isnan(str(pdf[list(pdf.keys())[57]][i]))
+                    except:
+                        # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
+                        temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
+                    # print(temp)
+                    # print("temp______")
+                    try:
+                        # print(pdf[list(pdf.keys())[88]][i], type(pdf[list(pdf.keys())[88]][i]))
+                        math.isnan(pdf[list(pdf.keys())[88]][i])
+                    except:
+                        temp_note.append(pdf[list(pdf.keys())[88]][i])
+                    # print(temp_note)
+                    # print("temp_note______")
+                    i = i + 1
+                # print(temp)
+                # print(len(res), len(temp))
+                if len(temp) != 0:
+                    for i, items in enumerate(temp):
+                        # print(temp[-1 - i])
+                        res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
+                        res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
+                        res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
+                        try:
+                            res[-1 - i][list(pdf.keys())[57]][0] = temp[-1 - i][3]
+                            res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]
+                        except:
+                            pass
+                # print(len(temp_note))
+                if len(temp_note) / 3 == len(temp) and len(temp) != 0:
+                    for i in range(int(len(temp_note) / 3)):
+                        res[-1 - i][list(pdf.keys())[88]][0] = ", ".join([temp_note[-1 - i * 3], temp_note[-1 - i * 3 - 1], temp_note[-1 - i * 3 - 2]])
+                # elif len(temp_note) != 0:
+                # elif len(pdf.columns) == 84:
+                #     res.append({})
 
         # res.pop(-1)
 

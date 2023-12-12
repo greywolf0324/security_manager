@@ -49,7 +49,6 @@ def home(request):
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
-    print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # if customername == "Buc-ee's":
       # res = generator.processFile(files, matching_res, {}, customername, termOptions)
     # if customername == "Pepco":
@@ -75,7 +74,6 @@ def viewer(request):
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
-    print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # if customername == "Buc-ee's":
       # res = generator.processFile(files, matching_res, {}, customername, termOptions)
     # if customername == "Pepco":
@@ -99,7 +97,6 @@ def auto_matching_DB_viewer(request):
 def parseUpload(request):
   files = request.FILES.getlist('data')
   customer_name = request.POST['customername']
-  print(files, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   # if customer_name == "Buc-ee's":
   #   # currency = ""
   #   res = generator.parseUpload(files, customer_name = customer_name)
@@ -145,7 +142,7 @@ def history(request):
     print(path)
     print(file)
     if file[:-3] in view_filename_paths:
-      paths.append(str(path) + "\\" + file)
+      paths.append(str(path) + "/" + file)
 
   print("+++++++++++++++++++++++++++++++++++")
   print(paths)

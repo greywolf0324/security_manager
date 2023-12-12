@@ -19,6 +19,12 @@
     event.stopPropagation();
   };
 
+  $("#upload_image_background").change((e) => {
+    if (e.target.value) {
+      $("#step_progress_1").css('width', '75%');
+    }
+  })
+
   const highlight = event =>
     event.target.classList.add('highlight');
   
@@ -174,7 +180,7 @@ const termsOptionsFromOMS = (term) => {
    '90 Days',
    'Letter of Credit']
    console.log(term, "term")
-  return `<select class="terms-options" onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option ===  term?"selected":""}>${option}</option>`)}</select>`
+  return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option ===  term?"selected":""}>${option}</option>`)}</select>`
 }
 
 const term_options = [' T/T against BL Copy',
@@ -299,40 +305,122 @@ $(document).ready(function() {
     const keys_item = Object.keys(data_item[0])
     const element = $(selector)
     const input_len = data_header.length
-    let content = '<div class="black-line" style = "width: 100%; height: 7px; background-color: darkslategray;"></div>'
-    for (let i = 0; i < input_len; i++) {
-      content += '<h4 class="mt-3 mb-2">Header Details</h4>'
-      content += '<table class="table table-bordered" bgcolor="pink">'
-      content += "<thead><tr>"
-      content += keys_header.map(key => `<th>${key}</th>`)
-      content += "</tr></thead><tbody>"
-
-      if (single) {
-          content += "<tr>"
-          content += keys_header.map((key, index) => `<td>${data_header[i][key]}</td>`)
-          content += "</tr>"
-        // content += "<tr>"
-        // content += keys_header.map((key) => `<td>${data_header[i][key]}</td>`)
-        // content += "</tr>"
-      } else {
-          for (let j = 0; j < data_header[i][keys_header[0]].length; j++) {
-            content += "<tr>"
-            content += keys_header.map((key, index) => `<td>${data_header[i][key][j]}</td>`)
-            content += "</tr>"
-          }
+    if (single) {
+      $("#step_3_customer_info").html(`
+      <div class="w-100 d-flex p-4 customer-item">
+        <div class="w-50px d-flex justify-center pt-3">
+          <i class="fas fs-20px fa-address-card"></i>
+        </div>
+        <div class="flex-1">
+          <div class="w-100">
+          <p class="mb-0">
+            <strong>Customer PO:</strong>
+            <span class="text-info">${data_header[0]["PO#"][0]}</span>
+          </p>
+          <p class="mb-0">
+            PO Date:
+            <span class="text-info">${data_header[0]["PO Date"][0]}</span>
+          </p>
+          <p class="mb-0">
+            Ship Date:
+            <span class="text-info">${data_header[0]["Ship Date"][0]}</span>
+          </p>
+          <p class="mb-0">
+            PO Total:
+            <span class="text-info">${Number(data_header[0]["PO Total"][0]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+          </p>
+          </div>
+        </div>
+      </div>
+      `);
+    } else {
+      let tmpHtml = '';
+      for (let j = 0; j < data_header[0][keys_header[0]].length; j++) {
+        tmpHtml += `<div class="w-100 d-flex p-4 customer-item">
+          <div class="w-50px d-flex justify-center pt-3">
+            <i class="fas fs-20px fa-address-card"></i>
+          </div>
+          <div class="flex-1">
+            <div class="w-100">
+            <p class="mb-0">
+              <strong>Customer PO:</strong>
+              <span class="text-info">${data_header[0][keys_header[0]][j]}</span>
+            </p>
+            <p class="mb-0">
+              PO Date:
+              <span class="text-info">${data_header[0][keys_header[1]][j]}</span>
+            </p>
+            <p class="mb-0">
+              Ship Date:
+              <span class="text-info">${data_header[0][keys_header[3]][j]}</span>
+            </p>
+            <p class="mb-0">
+              PO Total:
+              <span class="text-info">${Number(data_header[0][keys_header[6]][j]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+            </p>
+            </div>
+          </div>
+        </div>`
       }
-      content += '</tbody></table>'
+      $("#step_3_customer_info").html(tmpHtml);
+    }
+    let content = `
+      <div class="row">
+        <div class="col-md-4 col-sm-12">
+          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+            <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[0][keys_header[0]][0]}</span></p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+            <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[0][keys_header[2]][0]}</span></p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+            <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[0][keys_header[4]][0]}</span></p>
+          </div>
+        </div>
+      </div>
+    `
+    content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
+    content += "<thead><tr class='bg-light-gray'>"
+    const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
+    content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
+    content += "</tr></thead><tbody>"
+    for (let i = 0; i < input_len; i++) {
+      // content += '<p class="text-muted mt-3 mb-2">Header Details</p>'
+      // content += '<div class="table table-striped border rounded"><table class="table table-striped">'
+      // content += "<thead><tr>"
+      // content += keys_header.map(key => `<th>${key}</th>`).join("")
+      // content += "</tr></thead><tbody>"
+
+      // if (single) {
+      //     content += "<tr>"
+      //     content += keys_header.map((key, index) => `<td>${data_header[i][key]}</td>`).join("")
+      //     content += "</tr>"
+      //   // content += "<tr>"
+      //   // content += keys_header.map((key) => `<td>${data_header[i][key]}</td>`)
+      //   // content += "</tr>"
+      // } else {
+      //     for (let j = 0; j < data_header[i][keys_header[0]].length; j++) {
+      //       content += "<tr>"
+      //       content += keys_header.map((key, index) => `<td>${data_header[i][key][j]}</td>`).join("")
+      //       content += "</tr>"
+      //     }
+      // }
+      // content += '</tbody></table></div>'
       // Showing item details
-      content += '<h4 class="mt-3 mb-2">Item Details</h4>'
-      content += '<table class="table table-bordered">'
-      content += "<thead><tr>"
-      content += keys_item.map(key => `<th>${key}</th>`)
-      content += "</tr></thead><tbody>"
+      // content += '<p class="text-muted mt-3 mb-2">Item Details</p>'
+      // content += '<div class="table table-striped border rounded overflow-x-auto"><table class="table table-striped">'
+      // content += "<thead><tr>"
+      // content += keys_item.map(key => `<th>${key}</th>`).join("")
+      // content += "</tr></thead><tbody>"
 
       if (single) {
         for (let j = 0; j < data_item[i]["Buyers Catalog or Stock Keeping #"].length; j++){
           content += "<tr>"
-          content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`)
+          content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
           content += "</tr>"
         }
           
@@ -342,12 +430,11 @@ $(document).ready(function() {
       } else {
           for (let j = 0; j < data_item[i][keys_item[0]].length; j++) {
             content += "<tr>"
-            content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`)
+            content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
             content += "</tr>"
           }
       }
-      content += '</tbody></table>'
-      content += '<div class="black-line" style = "width: 100%; height: 7px; background-color: darkslategray"></div>'
+      // content += '</tbody></table></div>'
     }
     element.html(content)
     // =======================
@@ -372,11 +459,11 @@ $(document).ready(function() {
     // element.html(conten)
   }
 
-  function displayTable(data, selector, options, termRsOptions, data3, locations, data5) {
+  function displayTable(data, selector, selector1, options, termRsOptions, data3, locations, data5) {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
     console.log(data5, "data5")
     const customername = data5
-    const customernameoptions = customername==="Pepco"?"<select><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select><option>${customername}</option></select>`
+    const customernameoptions = customername==="Pepco"?"<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select class='w-75 form-select'><option>${customername}</option></select>`
     
     var termsfrompo = data[0]["Payment Terms Net Days"][0]||""
     // if (termsfrompo !== ""){
@@ -388,24 +475,46 @@ $(document).ready(function() {
     //     }
     //   }  
     // }
+    $("#customer_name").html(customername);
+    $("#customer_term").html(termsfrompo + " Days");
+    $("#customer_term_select").html(termsOptionsFromOMS(termRsOptions));
+    
+    // var head1 = `<div class="table table-striped border rounded">
+    //               <div class="row mx-0">
+    //                 <div class="col-lg-6 border-b border-r d-flex items-center">
+    //                   <div class="fw-bold">Customer Name From P0: <span class="text-danger">${customername}</span></div>
+    //                 </div>
+    //                 <div class="col-lg-6 border-b d-flex items-center">
+    //                   <div class="row fw-bold w-100">
+    //                     <div class="col-lg-4 text-start">
+    //                       Customer Name Options: 
+    //                     </div>
+    //                     <div class="col-lg-8">
+    //                       ${customernameoptions}
+    //                     </div>                      
+    //                   </div>                    
+    //                 </div>
+    //                 <div class="col-lg-6 border-r d-flex items-center">
+    //                   <div class="fw-bold">Terms From PO: <span class="text-danger">${termsfrompo}</span></div>                    
+    //                 </div>
+    //                 <div class="col-lg-6 d-flex items-center">
+    //                   <div class="row fw-bold w-100">
+    //                     <div class="col-lg-4 text-start">
+    //                       Terms Options From OMS: 
+    //                     </div>
+    //                     <div class="col-lg-8">
+    //                       ${termsOptionsFromOMS(termRsOptions)}
+    //                     </div>                      
+    //                   </div>
+    //                 </div>
+    //               </div>
+    //             </div>`;
+    // $(selector1).html(head1)
     console.log(data, "_____")
     const table_len = data.length
     const sku_keyname = customerStyle(customername)
     var tables = `
-    <thead>
-      <tr>
-        <th colspan="3">Customer Name From PO: <span class="text-danger">${customername}</span></th>
-        <th></th>
-        <th></th>
-        <th>Customer Name Options: ${customernameoptions}</th>
-      </tr>
-      <tr>
-        <th colspan="3" >Terms From PO: <span class="text-danger" id="default-terms">${termsfrompo}</span></th>
-        <th></th>
-        <th></th>
-        <th>Terms Options From OMS: <span class="text-danger">${termsOptionsFromOMS(termRsOptions)}</span></th>
-      </tr>
-    </thead>
+  
     <thead>
       <tr>
         ${
@@ -419,6 +528,7 @@ $(document).ready(function() {
       console.log(data[0], "+++++ ")
       console.log(keys[0], "_____")
       tables += `
+    
     
       ${
         [...Array(data[i][keys[0]].length)].map((_, index) => {
@@ -438,7 +548,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==selectedValue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select step-2-vendor-style" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   else if (key === "Unit of Measure") {
                     try {
@@ -450,7 +560,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   else if (key === "StockLocation") {
                     try {
@@ -462,7 +572,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   return `<td contenteditable="true">${data[i][key][index]}</td>`;
                 })
@@ -474,6 +584,7 @@ $(document).ready(function() {
     }
     tables += '</tbody>'
     $(selector).html(tables)
+    $(selector).parent().removeClass('d-none')
   }
 
   function getTableData(selector) {
@@ -510,6 +621,8 @@ $(document).ready(function() {
     // const [customInputs] = getTableData("#table-view")
   })
   $("#first-step-next").click(function() {
+    $(".step-progress").css('width', '25%');
+    $("#step_progress_1").css('width', '100%');
     var formData = new FormData($('#data-form')[0]);
     document.getElementById('loader1').classList.toggle('d-none');
     $.ajax({
@@ -523,7 +636,7 @@ $(document).ready(function() {
         console.log(data1, "_____")
         data1 = JSON.parse(data1)
         data2 = JSON.parse(data2)
-        data3 = JSON.parse(data3)
+        data3 = JSON.parse(data3.replace(/NaN/g, '\"\"'))
         data4 = JSON.parse(data4)
         data5 = JSON.parse(data5)
         originalData = data1
@@ -543,14 +656,40 @@ $(document).ready(function() {
           }
           
         }
-        displayTable(data1, "#table-view", {"sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations}, data2.OMS_Payment_term, data3, data4, data5)
+        $("#customize_box_title").html(data5)
+        document.getElementById('step_2_content').classList.toggle('d-none');
+        displayTable(data1, "#table-view", "#table-header-view", {"sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations}, data2.OMS_Payment_term, data3, data4, data5)
         document.getElementById('loader1').classList.toggle('d-none');
+        let isCompleted = true
+        $(".step-2-vendor-style").each((id, ele) => {
+          if(!ele.value) {
+            isCompleted = false;
+            return;
+          }
+        });
+        if (isCompleted) {
+          $("#step_progress_2").css('width', '75%');
+        } else {
+          $("#step_progress_2").css('width', '50%');
+        }
       },
       error: function(xhr, status, error) {
           $('#message').text('Error uploading files: ' + error);
       }
     });
   })
+  $(".step-2-vendor-style").change(() => {
+    let isCompleted = true
+    $(".step-2-vendor-style").each((id, ele) => {
+      if(!ele.value) {
+        isCompleted = false;
+        return;
+      }
+    });
+    if (isCompleted) {
+      $("#step_progress_2").css('width', '75%');
+    }
+  });
   $("#openDialogButton").click(function() {
     
     data=savedata
@@ -561,9 +700,9 @@ $(document).ready(function() {
     var table = '<table>'
     var newtable = '<table>'
    
-    table += `<thead><tr><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th></tr></thead>`;
+    table += `<thead><tr class="bg-light-gray"><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th></tr></thead>`;
     table += '<tbody>';
-    newtable += `<thead><tr><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th><th></th><th></th></tr></thead>`;
+    newtable += `<thead><tr class="bg-light-gray"><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th></tr></thead>`;
     newtable += '<tbody>';
     
     hasValue.forEach(function(v, index) {
@@ -664,11 +803,16 @@ $(document).ready(function() {
       contentType: false,
       success: function(response) {
         const [_customername, headerDetails, itemDetails] = JSON.parse(response.res)
-        $(".review-stepper .customername").html(_customername);
+        // $(".review-stepper .customername").html(_customername);
+        $(".modal-backdrop.fade.show").remove()
         buildTable(headerDetails, itemDetails, "#view_details")
         document.getElementById('loader2').classList.toggle('d-none');
         // buildTable(itemDetails[0], "#item-details")
         // buildTable(headerDetails[0], "#header-details", true)
+        $(".step-progress").css('width', '25%');
+        $("#step_progress_1").css('width', '100%');
+        $("#step_progress_2").css('width', '100%');
+        $("#step_progress_3").css('width', '75%');
       },
       error: function(xhr, status, error) {
       }
@@ -677,7 +821,7 @@ $(document).ready(function() {
 
   $('#final-step').click(function() {
     const formData = buildFinalForm()
-    document.getElementById('csv-container').classList.toggle('d-none');
+    // document.getElementById('csv-container').classList.toggle('d-none');
     document.getElementById('loader3').classList.toggle('d-none');
     $.ajax({
       url: '/',
@@ -687,14 +831,20 @@ $(document).ready(function() {
       contentType: false,
       success: function(response) {
         $("#download-output").attr('href', `/download-file/${response.id}`)
-        document.getElementById('csv-container').classList.toggle('d-none');
-        document.getElementById('csv-container').innerHTML = `<h5 class="text-success">Click Download button to download your result</h5>`;
+        // document.getElementById('csv-container').classList.toggle('d-none');
+        // document.getElementById('csv-container').innerHTML = `<h5 class="text-success">Click Download button to download your result</h5>`;
         document.getElementById('loader3').classList.toggle('d-none');
+        document.getElementById('step_4_content').classList.toggle('d-none');
+        $(".step-progress").css('width', '25%');
+        $("#step_progress_1").css('width', '100%');
+        $("#step_progress_2").css('width', '100%');
+        $("#step_progress_3").css('width', '100%');
+        $("#step_progress_4").css('width', '75%');
       },
       error: function(xhr, status, error) {
         if (xhr.status === 400) {
-          document.getElementById('csv-container').classList.toggle('d-none');
-          document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
+          // document.getElementById('csv-container').classList.toggle('d-none');
+          // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
           document.getElementById('loader3').classList.toggle('d-none');
         }
       }
