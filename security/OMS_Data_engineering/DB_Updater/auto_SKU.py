@@ -30,22 +30,10 @@ class AutoDB:
         else:
             self.auto_dic = {}
             auto_df = pd.read_csv(Path(__file__).resolve().parent.parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
-            # print(auto_df["PO"], "***********")
-            for item in string_converter(list(auto_df["PO"])):
-                print(type(item), item, "__")
 
-            print(type(string_converter(list(auto_df["PO"]))))
-            print("______________________________________")
             if customer_name in self.SKU_list:
                 for po in matching_res: 
-                    # print(list(po["Vendor Style"])[1:])
                     for sku in list(po["Vendor Style"])[1:]:
-                        # print("Printing autoFill_DB PO types...")
-                        # if len(list(auto_df["PO"])) != 0:
-                        #     print(type(list(auto_df["PO"])[0]))
-                        # else:
-                        #     print("DB is empty... :)")
-                        
                         try:
                             sku_con = int(float(sku))
                         except:
@@ -59,25 +47,16 @@ class AutoDB:
                             )
             
             else:
-                # for item in list(auto_df["PO"]):
-                #     print(type(item), item)
                 for po in matching_res: 
                     
                     for sku in list(po["Buyers Catalog or Stock Keeping #"])[1:]:
-                        # for sku in list(po["Buyers Catalog or Stock Keeping #"])[1:]:
-                        #     print(type(sku), sku, "__")
-                        # print(str(sku))
-                        # if str(sku) == "724510":
-                        #     print("same_____")
                         if str(sku) in string_converter(list(auto_df["PO"])):
-                            # print("+++++++++++++++++++++++++++++++++++++++++++++++")
                             self.auto_dic.update(
                                 {
                                     int(sku): [list(auto_df[auto_df["PO"] == int(float(sku))]["Unit of Measure"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["StockLocation"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["Vendor Style from OMS_equal"])[0]]
                                 }
                             )
-                        # else:
-                        #     print(str(sku), "++++++++")
+
         return self.auto_dic
 
     def auto_DB_updater(self, sku_match, customer_name):

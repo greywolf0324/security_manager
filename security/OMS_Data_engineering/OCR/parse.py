@@ -674,6 +674,7 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"] = {}
                 content = page.extract_tables()
                 PO_page = page.within_bbox(self.PO_coordinates)
+                bill_to_page = page.within_bbox([page.search("Bill To")[0]['x0'], page.search("Bill To")[0]['top'], page.search("Bill To")[0]['x0'] + 150, page.search("PO Initiated")[0]['top']])
                 
                 res[f"PDF{k}"][f"page{page_num}"]["Purchase Order"] = PO_page.extract_text_simple().split("Purchase Order: ")[1]
                 res[f"PDF{k}"][f"page{page_num}"]["PO First Ship Date"] = content[0][0][4]
@@ -696,6 +697,12 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"]["Total Master Cases Ordered"] = content[3][1][13]
                 res[f"PDF{k}"][f"page{page_num}"]["Total First Cost"] = content[3][1][14]
                 res[f"PDF{k}"][f"page{page_num}"]["RMS Retail Price"] = content[3][1][15]
+                res[f"PDF{k}"][f"page{page_num}"]["Comments"] = content[0][6][8]
+                res[f"PDF{k}"][f"page{page_num}"]["bt_name"] = bill_to_page.extract_text().split("\n")[1]
+                res[f"PDF{k}"][f"page{page_num}"]["add_1"] = bill_to_page.extract_text().split("\n")[2]
+                res[f"PDF{k}"][f"page{page_num}"]["city"] = bill_to_page.extract_text().split("\n")[3].split(", ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["state"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["zip"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[1]
                 
         return res
 
@@ -728,12 +735,6 @@ class Gabes_Parsing:
                     comment_text = page.within_bbox([0, page.search("Vendor:")[0]['top'], page.search("Purchase Order")[0]['x0'], page.search("Ship Via")[0]['top']]).extract_text()
                     ship_to_text = page.within_bbox([page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top'], page.width, page.search("Ship Via")[0]['top']]).extract_text()
                     
-                    print(bill_to_text.split("\n"))
-                    print("======")
-                    print(comment_text)
-                    print("======")
-                    print(ship_to_text.split("\n"))
-
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
                     res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.within_bbox([page.search("Order Date")[0]['x0'], page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x0'] + 150, page.search("Order Date")[0]['bottom']]).extract_text().split("Order Date ")[1]
