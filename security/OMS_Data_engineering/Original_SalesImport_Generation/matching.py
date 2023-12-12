@@ -1092,18 +1092,6 @@ class PO_Match_Gabes(PO_Match):
             "Vendor Style": "Style",
             "Product/Item Description": "Description",
             "PO Total Amount": "Total Cost",
-            "Ship To Name": "ship_to_name",
-            "Ship To Address 1": "ship_to_add_1",
-            "Ship To Address 2": "ship_to_add_2",
-            "Ship To City": "ship_to_city",
-            "Ship To State": "ship_to_state",
-            "Ship to Zip": "ship_to_zip",
-            "Bill To Name": "bill_to_name",
-            "Bill To Address 1": "bill_to_add",
-            "Bill To City": "bill_to_city",
-            "Bill To State": "bill_to_state",
-            "Bill To Zip": "bill_to_zip",
-            "Notes/Comments": "comment",
         }
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
         self.field_names = json.load(f)
@@ -1144,25 +1132,27 @@ class PO_Match_Gabes(PO_Match):
 
                 del input[self.pair[key]]
 
-            # elif key == "PO Date":
-            #     temp = input[self.pair[key]].split('/')
-            #     temp[2] = '20' + str(temp[0])
-            #     input[key] = ['/'.join(temp)]
+            elif key == "PO Date":
+                temp = [input[self.pair[key]].split('/')[i] for i in [2, 0, 1]]
+                temp[0] = '20' + str(temp[0])
+                date = '\\'.join(temp)
+                input[key] = [date]
 
+                for _ in range(self.length - 1):
+                    input[key].append("")
 
-            #     for _ in range(self.length - 1):
-            #         input[key].append("")
+                del input[self.pair[key]]
 
-            #     del input[self.pair[key]]
+            elif key == "Ship Dates":
+                input[key] = [input[self.pair[key]]]
 
-            elif key in ["PO Date", "Ship Dates", "Cancel Date"]:
-                temp = input[self.pair[key]].split("/")
-                temp[2] = '20' + str(temp[2])
-                for i, dt in enumerate(temp[:2]):
-                    if len(dt) == 1:
-                        temp[i] = '0' + temp[i]
+                for _ in range(self.length - 1):
+                    input[key].append("")
 
-                input[key] = ['/'.join(temp)]
+                del input[self.pair[key]]
+
+            elif key == "Cancel Date":
+                input[key] = [input[self.pair[key]]]
 
                 for _ in range(self.length - 1):
                     input[key].append("")
@@ -1199,14 +1189,6 @@ class PO_Match_Gabes(PO_Match):
                 for i in range(self.length - 1):
                     input[key].append("")
                 
-                del input[self.pair[key]]
-
-            elif key in ["Ship To Name","Ship To Address 1","Ship To Address 2","Ship To City","Ship To State","Bill To Name","Bill To Address 1","Bill To City","Bill To State", "Ship to Zip", "Bill To Zip", "Notes/Comments"]:
-                input[key] = [input[self.pair[key]]]
-
-                for i in range(self.length - 1):
-                    input[key].append("")
-
                 del input[self.pair[key]]
             
             else:
