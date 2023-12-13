@@ -12,7 +12,7 @@
         {% endfor %}
       </div>
     {% endif %}
-    <form method="POST" class="pb-5">
+    <form method="POST" class="pb-5" id="signinForm">
       {% csrf_token %}
       <div class="form-group mb-3 label-pos">
         <label for="{{ form.email.id_for_label }}" class="form-label label-pos-static">Email*</label>
@@ -34,6 +34,7 @@
       </div>
       <!-- <a href="{% url 'securityauth:signup' %}">Sign Up</a> -->
     </form>
+    <div id="toastContainer" class="sign-message"></div>
   </div>
   <script>
     function togglePasswordVisibility() {
@@ -50,5 +51,47 @@
           passwordIcon.classList.add('bi-eye');
       }
     }
+    function displayToastMessage(message, isError = false) {
+      const toastContainer = document.getElementById("toastContainer");
+      toastContainer.textContent = message;
+      toastContainer.style.color = isError ? "red" : "green"; // Red for errors, green for success
+      toastContainer.style.display = "block";
+
+      setTimeout(() => {
+        toastContainer.style.display = "none";
+      }, 3000);
+  }
+    function handleFormSubmission() {
+    const form = document.getElementById("signinForm");
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch(form.action, {
+            method: form.method,
+            body: formData,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.redirect_url) {
+              window.location.href = data.redirect_url;
+            }
+          } else {
+            const data = await response.json();
+            displayToastMessage(data.error_message, true);
+          }
+        } catch (error) {
+          console.error('Error during form submission', error);
+        }
+      });
+  }
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    handleFormSubmission();
+  });
+</script>
   </script>
 {% endblock %}

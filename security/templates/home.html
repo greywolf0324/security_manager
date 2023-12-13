@@ -92,12 +92,12 @@
     </div>
     <div class="stepper-content-container">
       <div class="stepper-content fade-in" stepper-label="1">
-        <div class="card h-content">
+        <div class="card" style="position: relative;">
           <div class="card-body">
             <form class="w-100 h-100" id="data-form">
               {% csrf_token %}
               <label for="upload_image_background" class="w-100">
-                <fieldset class="upload_dropZone text-center mb-3 p-4 bg-transparent flex justify-center items-center" style="cursor: pointer;">
+                <fieldset class="upload_dropZone text-center p-4 bg-transparent flex justify-center items-center" style="cursor: pointer;">
             
                   <i class="fas fs-40px fa-upload text-gray"></i>
                   <p class="medium fw-bold mt-2 mb-0 text-gray"> Drop files here or click to upload.</p>
@@ -107,10 +107,11 @@
                   <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
               
                 </fieldset>
-                <div style="text-align:center">
-                  <button id="clear-my-files" type="button" class="btn btn-outline-dark waves-effect">Clear</button>
-                </div>
+                
               </label>
+              <div style="text-align:center">
+                <button id="clear-my-files" type="button" class="btn btn-outline-dark waves-effect">Clear Files</button>
+              </div>
 
               <div class="w-100 my-2">
                 <div class="col-6">
@@ -156,23 +157,23 @@
                 </div>
               </div>
     
-              <div class="my-20px col-12 d-flex flex-row-reverse">
+              <div class="my-20px col-12 d-flex flex-row-reverse" style="position: absolute; bottom: 35px; right: 5px;">
                 <button id="first-step-next" type="button" onclick="processStepper.navigate('2')" class="btn btn-outline-dark waves-effect btn-next">Next</button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      <div class="stepper-content fade-in" stepper-label="2" id="additional-uom" style="position: relative;">
+      <div class="stepper-content fade-in" stepper-label="2" id="additional-uom" style="position: relative; height: 100%;">
         <div id="loader1" class="w-100 d-none justify-content-center" style="display: flex;">
           <div class="spinner-border text-primary" role="status">
             <span class="sr-only"></span>
           </div>
           <h5 class="ms-3 text-primary">Creating View...</h5>
         </div>
-        <div id="step_2_content" class="row d-none">
-          <div class="col-md-9 col-sm-12">
-            <div class="card h-content">
+        <div id="step_2_content" class="row d-none" style="height: 100%;">
+          <div class="col-md-9 col-sm-12" style="height: 100%; position: relative;">
+            <div class="card">
               <div class="card-header border-b pb-2">
                 <h5 class="card-title my-0" id="customize_box_title">&nbsp;</h5>
               </div>
@@ -191,6 +192,10 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="d-flex flex-row-reverse" style="position: absolute; bottom: 20px; right: 20px;">
+              <button id="openDialogButton" type="button" class="btn btn-outline-dark waves-effect" data-bs-toggle="modal" data-bs-target="#myModal">Next</button>
+              <button type="button" onclick="processStepper.navigate('1')" class="btn btn-outline-dark waves-effect">Prev</button>
             </div>
           </div>
           <div class="col-md-3 col-sm-12 h-content">
@@ -228,10 +233,10 @@
               </div>
             </div>
           </div>
-          <div class="col-12 d-flex flex-row-reverse mt-2 pt-5 mt-5">
+          <!-- <div class="col-12 d-flex flex-row-reverse mt-2 pt-5 mt-5">
             <button id="openDialogButton" type="button" class="btn btn-outline-dark waves-effect" data-bs-toggle="modal" data-bs-target="#myModal">Next</button>
             <button type="button" onclick="processStepper.navigate('1')" class="btn btn-outline-dark waves-effect">Prev</button>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -262,7 +267,7 @@
               </div>
             </div>
             <div class="col-md-3 col-sm-12">
-              <div class="card h-content">
+              <div class="card">
                 <div class="card-body p-0 overflow-y-auto" id="step_3_customer_info"  style="height: 600px;">
                 </div>
               </div>
