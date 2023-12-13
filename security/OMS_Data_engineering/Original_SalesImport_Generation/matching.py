@@ -663,6 +663,7 @@ class PO_Match_Dollarama(PO_Match):
             "PO Total Amount": "Total_Total USD Cost",
             "PO Total Weight": "Total_Total Weight",
             "Vendor Style": "Vendor",
+            "Notes/Comments": ["ISI", "AD", "comment"]
         }
 
         self.month_match = {
@@ -850,6 +851,18 @@ class PO_Match_Dollarama(PO_Match):
                     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
+            
+            elif key == "Notes/Comments":
+                input[key] = [""]
+
+                for subkey in self.pair[key]:
+                    input[key][0] += input[subkey]
+                
+                for _ in range(self.length - 1):
+                    input[key].append("")
+                
+                for subkey in self.pair[key]:
+                    del input[subkey]
         
         return input
 
@@ -860,7 +873,11 @@ class PO_Match_Dollarama(PO_Match):
         self.PO_inherited = []
 
         for key in self.pair:
-            self.PO_inherited.append(self.pair[key])
+            if key != "Notes/Comments":
+                self.PO_inherited.append(self.pair[key])
+            else:
+                for subkey in self.pair[key]:
+                    self.PO_inherited.append(subkey)
 
         for content in output:
             self.length = self.length_gain(content["Ready Dates"]) + 1
@@ -1051,6 +1068,14 @@ class PO_Match_Family_Dollar(PO_Match):
 
                 for i in range(self.length - 1): 
                     input[key].append(int(int(input["Pack Size UOM"][1]) / int(input["Number of Pcs per Inner Pack"][1])))
+            
+            elif key == "Notes/Comments":
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append("")
+                
+                del [input[self.pair[key]]]
                 
         
         return input

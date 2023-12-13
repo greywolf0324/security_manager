@@ -258,7 +258,7 @@ class SalesImport_Generator:
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
         PO_res = parser.PO_parser(paths, currency)
 
-        # print(PO_res)
+        print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -458,6 +458,7 @@ class SalesImport_Generator:
         filename = self.filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
+            print("---", invoice["Vendor Style"], len(invoice[list(invoice.keys())[0]]))
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
