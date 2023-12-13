@@ -674,6 +674,7 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"] = {}
                 content = page.extract_tables()
                 PO_page = page.within_bbox(self.PO_coordinates)
+                bill_to_page = page.within_bbox([page.search("Bill To")[0]['x0'], page.search("Bill To")[0]['top'], page.search("Bill To")[0]['x0'] + 150, page.search("PO Initiated")[0]['top']])
                 
                 res[f"PDF{k}"][f"page{page_num}"]["Purchase Order"] = PO_page.extract_text_simple().split("Purchase Order: ")[1]
                 res[f"PDF{k}"][f"page{page_num}"]["PO First Ship Date"] = content[0][0][4]
@@ -696,6 +697,12 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"]["Total Master Cases Ordered"] = content[3][1][13]
                 res[f"PDF{k}"][f"page{page_num}"]["Total First Cost"] = content[3][1][14]
                 res[f"PDF{k}"][f"page{page_num}"]["RMS Retail Price"] = content[3][1][15]
+                res[f"PDF{k}"][f"page{page_num}"]["Comments"] = content[0][6][8]
+                res[f"PDF{k}"][f"page{page_num}"]["bt_name"] = bill_to_page.extract_text().split("\n")[1]
+                res[f"PDF{k}"][f"page{page_num}"]["add_1"] = bill_to_page.extract_text().split("\n")[2]
+                res[f"PDF{k}"][f"page{page_num}"]["city"] = bill_to_page.extract_text().split("\n")[3].split(", ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["state"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["zip"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[1]
                 
         return res
 
@@ -721,10 +728,13 @@ class Gabes_Parsing:
                     S_page = page.within_bbox(self.S_coordinates)
                     P_page = page.within_bbox(self.P_coordinates)
                     P_content = P_page.extract_table(dict(
-                                    explicit_vertical_lines = self.p_v_lines,
-                                    explicit_horizontal_lines = self.p_h_lines 
+                                    explicit_vertical_lines = [page.search("Freight")[0]['x0'], page.search("Ship Date")[0]['x0'], page.search("Ship Date")[0]['x1'] + 5, page.search("Cancel Date")[0]['x1'], page.width],
+                                    explicit_horizontal_lines =  [page.search("Freight")[0]['bottom'], page.search("Internal Item")[0]['top']]
                                 ))
-
+                    bill_to_text = page.within_bbox([0, 0, page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top']]).extract_text()
+                    comment_text = page.within_bbox([0, page.search("Vendor:")[0]['top'], page.search("Purchase Order")[0]['x0'], page.search("Ship Via")[0]['top']]).extract_text()
+                    ship_to_text = page.within_bbox([page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top'], page.width, page.search("Ship Via")[0]['top']]).extract_text()
+                    
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
                     res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.extract_text_simple().split("Order Date ")[1]

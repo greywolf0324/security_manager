@@ -122,11 +122,6 @@ def history(request):
   user = request.user
   histories = ProcessHistory.objects.filter(user=user).order_by('-id')
 
-  print(histories[0].user)
-  print(histories[0].input)
-  print(histories[0].output)
-  print(histories[0].created_at)
-  print(histories[0].updated_at)
   # History Generation
   path = Path(__file__).resolve().parent.parent / "process/outputs"
   os.chdir(path)
@@ -139,18 +134,11 @@ def history(request):
     view_filename_paths.append(view_path[:-4])
     
   for file in glob("*.csv"):
-    print(path)
-    print(file)
     if file[:-3] in view_filename_paths:
       paths.append(str(path) + "\\" + file)
 
-  print("+++++++++++++++++++++++++++++++++++")
-  print(paths)
-  print("+++++++++++++++++++++++++++++++++++")
   new_histories = []
   creation_dates = []
-  print("_____________________________")
-  # print(type(paths[0]))
   history_location = []
   for history in histories:
     history_location.append(str(history.output))
@@ -160,16 +148,12 @@ def history(request):
       creation_dates.append(str(history.created_at))
       new_histories.append(history)
   
-  print("**********************")
-  print(new_histories)
-  print("**********************")
-
   file_contents = []
   for history in new_histories:
     # f = open((Path(__file__).resolve().parent.parent.parent / history.output), 'rb')
     with open(Path(__file__).resolve().parent.parent / history.output, 'rb') as f:
       file_contents.append(f.read())
-  # print(file_contents)
+
   if len(file_contents) == 0:
     histories = "empty"
 
@@ -179,8 +163,6 @@ def history(request):
     users = []
     for history in new_histories:
       users.append(str(history.user).split("@")[0])
-    # print(customer_names, users, creation_dates, PO_dates, type(PO_dates[0]))
-    # histories = zip(customer_names, users, creation_dates, PO_dates)
     
     histories = zip(customer_names, users, creation_dates, PO_dates)
   
@@ -198,14 +180,11 @@ def history_viewer(request, creation_date):
     if str(history.created_at) == creation_date:
       db_name = str(history.output)
       break
-  # print(db_name[:-59], "!!!!!!!!!!!!!!!!!!!!!!!!")
-  # print(db_name[-51:-3], "!!!!!!!!!!!!!!!!!!!!!!!!")
   # history = ProcessHistory.objects.get(creation_date = creation_date)
   # with open((Path(__file__).resolve().parent.parent / history.output), 'rb') as f:
   #   customer_name = Output_analyzer([f.read()])[0][0]
   # with open((Path(__file__).resolve().parent.parent / history.input), 'r') as f:
   file_name = db_name[:-59] + "views/" + db_name[-51:-3] + "json"
-  # print(file_name)
   with open(file_name) as f:
     db = json.load(f)
   
@@ -243,20 +222,12 @@ def history_viewer(request, creation_date):
     
     itemdetails.append(dic)
 
-  print(headerdetails[0])
-  print(itemdetails[0])
-  print(itemdetails)
-  # return JsonResponse(responser, status=200)
   return render(request, 'history_view.html', {'customername': customername, "headerkeys": headerkeys, "itemkeys": itemkeys, "details": zip(headerdetails, itemdetails)})
 
 @login_required
 def history_deletion(request):
     histories = ProcessHistory.objects.all()
-    print(len(histories), "=================================")
     path_outputs = Path(__file__).resolve().parent.parent / "process/outputs"
-    # for history in histories:
-    #   # if str(history.created_at) in creation_dates:
-    #   print(history.)
         
     os.chdir(path_outputs)
     # for file in glob("*.csv"):
@@ -265,31 +236,23 @@ def history_deletion(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
         creation_dates = data.get('creationDates')
-        print(creation_dates)
+
         if creation_dates:
             for history in histories:
               if str(history.created_at) in creation_dates:
-                print("===================")
-                print(history.output, "============")
-                print(history.input, "============")
                 temp = str(history.output)
                 temp = temp.replace("outputs", "views")
                 temp = temp.replace("csv", "json")
-                print(temp, "===========")
                 history.delete()
                 os.remove(str(history.output))
                 os.remove(str(history.input))
                 os.remove(temp)
               # ProcessHistory.objects.filter(str(history.created_at) in creation_dates).delete()
-              # print("deleted!!!!!!!!!!")
             
-            print(creation_dates, "Deletion successful")
             return JsonResponse({'message': 'Deletion successful'})
         else:
-            print("No creation dates received")
             return JsonResponse({'message': 'No creation dates received'}, status=400)
     except json.JSONDecodeError as e:
-        print("Error decoding JSON:", str(e))
         return JsonResponse({'message': 'Error decoding JSON'}, status=400)
 
 def POconversion(request):
@@ -303,7 +266,6 @@ def POconversion(request):
     location_options = conversion["location_options"]
     vendor_options = conversion["vendor_options"]
     
-    # print(conversion["LOCATION"])
     # return JsonResponse({ "customername": customername, "conversion": combined_values, "customers": customer_list })
     return render(request, 'POconversion.html', { "customername": customername, "conversion":combined_values,"customers": customer_list, "uom_options": uom_options, "location_options": location_options, "vendor_options": vendor_options })
 

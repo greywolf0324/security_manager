@@ -593,7 +593,7 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
                   else if (key === "StockLocation") {
                     try {
@@ -878,6 +878,8 @@ $(document).ready(function() {
       },
       error: function(xhr, status, error) {
         if (xhr.status === 400) {
+          // document.getElementById('csv-container').classList.toggle('d-none');
+          // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
           // document.getElementById('csv-container').classList.toggle('d-none');
           // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
           document.getElementById('loader3').classList.toggle('d-none');

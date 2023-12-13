@@ -16,9 +16,9 @@ def Output_analyzer(file_contents):
             locs.append(temp.find('"'))
             temp = temp[locs[-1] + 1:]
 
-        if len(locs) != 0:
+        if len(locs) != 0 and len(locs) != 2:
             po_date = file_content[locs[0] + locs[1] + 1:].split(",")[23]
-
+            print("===", po_date)
             str_date = []
             if po_date:
                 po_date = str(int(float(po_date)))

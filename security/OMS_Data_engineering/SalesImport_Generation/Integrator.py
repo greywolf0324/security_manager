@@ -274,6 +274,13 @@ class Integrate_All:
             SalesImport.append({})
 
         for i,  element in enumerate(matching_res):
+            print("---", element["PO Date"][0])
+            temp = element["PO Date"][0].split("/")
+            if customer_name == "Big Lots Stores" and len(temp) == 3:
+                if len(temp[0]) == 1:
+                    temp[0] = '0' + temp[0]
+            
+            element["PO Date"][0] = "/".join(temp)
             #everything will be done here
             self.length = len(element[list(element.keys())[0]])
 
