@@ -15,11 +15,10 @@ def Output_analyzer(file_contents):
         while temp.find('"') + 1:
             locs.append(temp.find('"'))
             temp = temp[locs[-1] + 1:]
-        print("===", locs)
-        print(file_content)
+
         if len(locs) != 0 and len(locs) != 2:
             po_date = file_content[locs[0] + locs[1] + 1:].split(",")[23]
-
+            print("===", po_date)
             str_date = []
             if po_date:
                 po_date = str(int(float(po_date)))
@@ -35,7 +34,7 @@ def Output_analyzer(file_contents):
         
         else:
             po_dates.append("")
-        temp_name = str(file_content).split("\\n")[1]
+        temp_name = str(file_content).split("\\r\\n")[1]
         temp_name = temp_name.split(",")[1]
         temp_name = temp_name.replace("\\", "")
         user_names.append(temp_name)

@@ -267,7 +267,7 @@ class SalesImport_Generator:
         self.matching_res = matching_res
         
         # print(len(list(matching_res[0].keys())))
-        # print(matching_res[0])
+        print(matching_res[0])
         # # Extract equal OMS
         print("==============================================================================================================")
         print("tracking equal things...")
@@ -291,161 +291,161 @@ class SalesImport_Generator:
                 if matching_res[0]["Currency"][0] == "US Dollar":
                     self.customer_name = self.customer_name + " US"
         
-        field_names = [
-            'PO Number',
-            'Release Number',
-            'PO Date',
-            'Dept #',
-            'Retailers PO',
-            'Requested Delivery Date',
-            'Delivery Dates',
-            'Ship Dates',
-            'Cancel Date',
-            'Carrier',
-            'Carrier Details',
-            'Ship To Location',
-            'PO Line #',
-            'Qty Ordered',
-            'Unit of Measure',
-            'Unit Price',
-            'Buyers Catalog or Stock Keeping #',
-            'UPC/EAN',
-            'Vendor Style',
-            'Retail Price',
-            'Product/Item Description',
-            'Color',
-            'Size',
-            'Pack Size',
-            'Pack Size UOM',
-            'Number of Inner Packs',
-            'Number of Pcs per Inner Pack',
-            'Store #',
-            'Qty per Store #',
-            'Record Type',
-            'PO purpose',
-            'PO Type',
-            'Contract Number',
-            'Currency',
-            'Ship Status',
-            'Letter of Credit',
-            'Vendor #',
-            'Division #',
-            'Cust Acct #',
-            'Customer Order #',
-            'Promo #',
-            'Ticket Description',
-            'Other Info / #s',
-            'Frt Terms',
-            'Carrier Service Level',
-            'Payment Terms %',
-            'Payment Terms Disc Due Date',
-            'Payment Terms Disc Days Due',
-            'Payment Terms Net Due Date',
-            'Payment Terms Net Days',
-            'Payment Terms Disc Amt',
-            'Payment Terms Desc',
-            'Contact Phone',
-            'Contact Fax',
-            'Contact Email',
-            'Allow/Charge Type',
-            'Allow/Charge Service',
-            'Allow/Charge Amt',
-            'Allow/Charge %',
-            'Allow/Charge Rate',
-            'Allow/Charge Qty',
-            'Allow/Charge Desc',
-            'Ship To Name',
-            'Ship To Address 1',
-            'Ship To Address 2',
-            'Ship To City',
-            'Ship To State',
-            'Ship to Zip',
-            'Ship To Country',
-            'Ship To Contact',
-            'Bill To Name',
-            'Bill To Address 1',
-            'Bill To Address 2',
-            'Bill To City',
-            'Bill To State',
-            'Bill To Zip',
-            'Bill To Country',
-            'Bill To Contact',
-            'Buying Party Name',
-            'Buying Party Location',
-            'Buying Party Address 1',
-            'Buying Party Address 2',
-            'Buying Party City',
-            'Buying Party State',
-            'Buying Party Zip',
-            'Buying Party Country',
-            'Buying Party Contact',
-            'Ultimate Location',
-            'Notes/Comments',
-            'Ship To Additional Name',
-            'Ship To Additional Name 2',
-            'Bill To Additional Name',
-            'Bill To Additional Name 2',
-            'Buyer Additional Name',
-            'Buyer Additional Name 2',
-            'GTIN',
-            'PO Total Amount',
-            'PO Total Weight ',
-            'PO Total UOM ',
-            'Shipping account number',
-            'Mark for Name',
-            'Mark for Address 1',
-            'Mark for Address 2',
-            'Mark for City',
-            'Mark for State',
-            'Mark for Postal',
-            'Mark for Country',
-            'Shipping Container Code',
-            'National Drug Code',
-            'Expiration Date',
-            'Dist',
-            'Scheduled Quantity',
-            'Scheduled Qty UOM',
-            'Required By Date',
-            'Must Arrive By',
-            'Entire Shipment',
-            'Agreement Number',
-            'Additional Vendor Part #',
-            'Buyer Part Number',
-            'Carrier Details Special Handling',
-            'Restrictions/Conditions'
-        ]
-        if os.path.isfile("sales_origin.xlsx"):
-            os.remove("sales_origin.xlsx")
-        book = xlsxwriter.Workbook("sales_origin.xlsx")
-        sheet = book.add_worksheet("cont_excel")
-        # keys = list(sales_import[0].keys())
-        for idx, header in enumerate(field_names):
-            sheet.write(0, idx, header)
+        # field_names = [
+        #     'PO Number',
+        #     'Release Number',
+        #     'PO Date',
+        #     'Dept #',
+        #     'Retailers PO',
+        #     'Requested Delivery Date',
+        #     'Delivery Dates',
+        #     'Ship Dates',
+        #     'Cancel Date',
+        #     'Carrier',
+        #     'Carrier Details',
+        #     'Ship To Location',
+        #     'PO Line #',
+        #     'Qty Ordered',
+        #     'Unit of Measure',
+        #     'Unit Price',
+        #     'Buyers Catalog or Stock Keeping #',
+        #     'UPC/EAN',
+        #     'Vendor Style',
+        #     'Retail Price',
+        #     'Product/Item Description',
+        #     'Color',
+        #     'Size',
+        #     'Pack Size',
+        #     'Pack Size UOM',
+        #     'Number of Inner Packs',
+        #     'Number of Pcs per Inner Pack',
+        #     'Store #',
+        #     'Qty per Store #',
+        #     'Record Type',
+        #     'PO purpose',
+        #     'PO Type',
+        #     'Contract Number',
+        #     'Currency',
+        #     'Ship Status',
+        #     'Letter of Credit',
+        #     'Vendor #',
+        #     'Division #',
+        #     'Cust Acct #',
+        #     'Customer Order #',
+        #     'Promo #',
+        #     'Ticket Description',
+        #     'Other Info / #s',
+        #     'Frt Terms',
+        #     'Carrier Service Level',
+        #     'Payment Terms %',
+        #     'Payment Terms Disc Due Date',
+        #     'Payment Terms Disc Days Due',
+        #     'Payment Terms Net Due Date',
+        #     'Payment Terms Net Days',
+        #     'Payment Terms Disc Amt',
+        #     'Payment Terms Desc',
+        #     'Contact Phone',
+        #     'Contact Fax',
+        #     'Contact Email',
+        #     'Allow/Charge Type',
+        #     'Allow/Charge Service',
+        #     'Allow/Charge Amt',
+        #     'Allow/Charge %',
+        #     'Allow/Charge Rate',
+        #     'Allow/Charge Qty',
+        #     'Allow/Charge Desc',
+        #     'Ship To Name',
+        #     'Ship To Address 1',
+        #     'Ship To Address 2',
+        #     'Ship To City',
+        #     'Ship To State',
+        #     'Ship to Zip',
+        #     'Ship To Country',
+        #     'Ship To Contact',
+        #     'Bill To Name',
+        #     'Bill To Address 1',
+        #     'Bill To Address 2',
+        #     'Bill To City',
+        #     'Bill To State',
+        #     'Bill To Zip',
+        #     'Bill To Country',
+        #     'Bill To Contact',
+        #     'Buying Party Name',
+        #     'Buying Party Location',
+        #     'Buying Party Address 1',
+        #     'Buying Party Address 2',
+        #     'Buying Party City',
+        #     'Buying Party State',
+        #     'Buying Party Zip',
+        #     'Buying Party Country',
+        #     'Buying Party Contact',
+        #     'Ultimate Location',
+        #     'Notes/Comments',
+        #     'Ship To Additional Name',
+        #     'Ship To Additional Name 2',
+        #     'Bill To Additional Name',
+        #     'Bill To Additional Name 2',
+        #     'Buyer Additional Name',
+        #     'Buyer Additional Name 2',
+        #     'GTIN',
+        #     'PO Total Amount',
+        #     'PO Total Weight ',
+        #     'PO Total UOM ',
+        #     'Shipping account number',
+        #     'Mark for Name',
+        #     'Mark for Address 1',
+        #     'Mark for Address 2',
+        #     'Mark for City',
+        #     'Mark for State',
+        #     'Mark for Postal',
+        #     'Mark for Country',
+        #     'Shipping Container Code',
+        #     'National Drug Code',
+        #     'Expiration Date',
+        #     'Dist',
+        #     'Scheduled Quantity',
+        #     'Scheduled Qty UOM',
+        #     'Required By Date',
+        #     'Must Arrive By',
+        #     'Entire Shipment',
+        #     'Agreement Number',
+        #     'Additional Vendor Part #',
+        #     'Buyer Part Number',
+        #     'Carrier Details Special Handling',
+        #     'Restrictions/Conditions'
+        # ]
+        # if os.path.isfile("sales_origin.xlsx"):
+        #     os.remove("sales_origin.xlsx")
+        # book = xlsxwriter.Workbook("sales_origin.xlsx")
+        # sheet = book.add_worksheet("cont_excel")
+        # # keys = list(sales_import[0].keys())
+        # for idx, header in enumerate(field_names):
+        #     sheet.write(0, idx, header)
 
-        book.close()
+        # book.close()
 
-        book = load_workbook("sales_origin.xlsx")
-        sheet = book.get_sheet_by_name("cont_excel")
-        # print(keys, type(keys[0]))
-        # print("*****")
-        # print(field_names, type(field_names[0]))
-        for num, dic in enumerate(matching_res):
-            keys = list(dic.keys())
+        # book = load_workbook("sales_origin.xlsx")
+        # sheet = book.get_sheet_by_name("cont_excel")
+        # # print(keys, type(keys[0]))
+        # # print("*****")
+        # # print(field_names, type(field_names[0]))
+        # for num, dic in enumerate(matching_res):
+        #     keys = list(dic.keys())
 
-            for i in range(len(dic[keys[0]])):
-                temp = []
+        #     for i in range(len(dic[keys[0]])):
+        #         temp = []
 
-                for key in field_names:
-                    if key in keys:
-                        temp.append(dic[key][i])
-                    else:
-                        temp.append("")
+        #         for key in field_names:
+        #             if key in keys:
+        #                 temp.append(dic[key][i])
+        #             else:
+        #                 temp.append("")
 
-                sheet.append(temp)
+        #         sheet.append(temp)
 
-        output = Path(__file__).resolve().parent.parent.parent / f'sales_origin.xlsx'
+        # output = Path(__file__).resolve().parent.parent.parent / f'sales_origin.xlsx'
         
-        book.save(filename = output)
+        # book.save(filename = output)
 
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
     # def requiredFields(self, matching_res):
@@ -455,23 +455,13 @@ class SalesImport_Generator:
     #     return addition
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
-        # paths = []
-        # for file in data:
-        #     # res = self.uploadFile(file)
-        #     path = self.path
-        #     paths.append(path)
-        #     filename = self.filename
-        print(self.filenames, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         filename = self.filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
-                    # print("**********")
-                    # print(temp)
-                    # print(temp.values[0])
-                    # print("**********")
+
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -479,6 +469,7 @@ class SalesImport_Generator:
                     
                     else:
                         nums = re.sub(r"[a-zA-Z]", "", temp.values[0]).replace(" ", "").split(",")
+
                         try:
                             invoice["Pack Size UOM"][i] = nums[0]
                             invoice["Number of Pcs per Inner Pack"][i] = nums[1]
@@ -508,7 +499,6 @@ class SalesImport_Generator:
                 )
 
             temp_item_details.append({})
-
             for key in self.item_keys:
                 temp_item_details[i].update(
                     {
@@ -584,8 +574,6 @@ class SalesImport_Generator:
                     }
                 )
 
-        print(customer_name, header_details, item_details)
-
         res = [customer_name, header_details, item_details]
         with open(Path(__file__).resolve().parent.parent.parent / f'process/views/{filename}.json', 'w') as f:
             json.dump(res, f)
@@ -605,12 +593,6 @@ class SalesImport_Generator:
         client = gspread.authorize(creds_with_scope)
         self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
         
-        # paths = []
-        # for file in data:
-        #     # res = self.uploadFile(file)
-        #     path = self.path
-        #     paths.append(path)
-        #     filename = self.filename
         path = self.paths[0]
         filename = self.filenames[0]
         sku_match = {}
@@ -658,39 +640,39 @@ class SalesImport_Generator:
 
         field_names = json.load(f)
 
-        # generate excel output file
-        if os.path.isfile("SalesImport.xlsx"):
-            os.remove("SalesImport.xlsx")
-        book = xlsxwriter.Workbook("SalesImport.xlsx")
-        sheet = book.add_worksheet("cont_excel")
-        # keys = list(sales_import[0].keys())
-        for idx, header in enumerate(field_names):
-            sheet.write(0, idx, header)
+        # # generate excel output file
+        # if os.path.isfile("SalesImport.xlsx"):
+        #     os.remove("SalesImport.xlsx")
+        # book = xlsxwriter.Workbook("SalesImport.xlsx")
+        # sheet = book.add_worksheet("cont_excel")
+        # # keys = list(sales_import[0].keys())
+        # for idx, header in enumerate(field_names):
+        #     sheet.write(0, idx, header)
 
-        book.close()
+        # book.close()
 
-        book = load_workbook("SalesImport.xlsx")
-        sheet = book.get_sheet_by_name("cont_excel")
-        # print(keys, type(keys[0]))
-        # print("*****")
-        # print(field_names, type(field_names[0]))
-        for num, dic in enumerate(sales_import):
-            keys = list(dic.keys())
+        # book = load_workbook("SalesImport.xlsx")
+        # sheet = book.get_sheet_by_name("cont_excel")
+        # # print(keys, type(keys[0]))
+        # # print("*****")
+        # # print(field_names, type(field_names[0]))
+        # for num, dic in enumerate(sales_import):
+        #     keys = list(dic.keys())
 
-            for i in range(len(dic[keys[0]])):
-                temp = []
+        #     for i in range(len(dic[keys[0]])):
+        #         temp = []
 
-                for key in field_names:
-                    if key in keys:
-                        temp.append(dic[key][i])
-                    else:
-                        temp.append("")
+        #         for key in field_names:
+        #             if key in keys:
+        #                 temp.append(dic[key][i])
+        #             else:
+        #                 temp.append("")
 
-                sheet.append(temp)
+        #         sheet.append(temp)
 
-        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
+        # output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
         
-        book.save(filename = output)
+        # book.save(filename = output)
         df = pd.read_excel(output)
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
@@ -783,25 +765,9 @@ class SalesImport_Generator:
                 res.append(temp)
 
         for i, liveline_num in enumerate(Inumbers):
-            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             cells = worksheet.range(f"A{liveline_num + 2}:BG{liveline_num + 2}")
             for j, e in enumerate(cells):
                 e.value = res[i][j]
-            print("--------------------------------------------------------------")
             worksheet.update_cells(cells)
-        # for invoice in res:
-        #     for i, invoice_number in enumerate(Inumbers):
-        #         print(i)
-        #         if invoice[2] == invoice_number:
-        #             cells = worksheet.range(f"A{i + 1}:BG{i + 1}")
-        #             for j, e in enumerate(cells):
-        #                 e.value = invoice[j]
-
-        #             worksheet.update_cells(cells)
-
-        # worksheet.update(f'{leng + 1}:{leng + len(res)}', res)
-
-        # write_sheet = self.spreadsheet.get_worksheet(7)
-        # write_sheet.update(f'{1}:{2}', [[leng + len(res)]])
 
         print("Success Live Addition!!!")

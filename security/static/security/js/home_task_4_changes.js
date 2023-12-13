@@ -3,8 +3,7 @@
 // console.clear();
 ('use strict');
 
-var st3_headerDetails = null;
-var st3_itemDetails = null;
+
 // Drag and drop - single or multiple image files
 // https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
 // https://codepen.io/joezimjs/pen/yPWQbd?editors=1000
@@ -152,49 +151,6 @@ var st3_itemDetails = null;
   }
 
 })();
-
-function customerPODetails(selector, data_index){
-
-    data_header = st3_headerDetails
-    data_item = st3_itemDetails
-
-    const keys_header = Object.keys(data_header[0])
-    const keys_item = Object.keys(data_item[0])
-    const element = $(selector)
-
-    let content = `
-      <div class="row">
-        <div class="col-md-4 col-sm-12">
-          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[data_index][keys_header[0]][0]}</span></p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-12">
-          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[data_index][keys_header[2]][0]}</span></p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-12">
-          <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[data_index][keys_header[4]][0]}</span></p>
-          </div>
-        </div>
-      </div>
-    `
-    content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
-    content += "<thead><tr class='bg-light-gray'>"
-    const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
-    content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
-    content += "</tr></thead><tbody>"
-
-    for (let j = 0; j < data_item[data_index]["Buyers Catalog or Stock Keeping #"].length; j++){
-      content += "<tr>"
-      content += keys_item.map((key, index) => `<td>${data_item[data_index][key][j]}</td>`).join("")
-      content += "</tr>"
-        }
-
-    element.html(content)
-  }
 
 var terms_opt = '';
 
@@ -345,73 +301,84 @@ $(document).ready(function() {
   }
 
   function buildTable(data_header, data_item, selector, single=true) {
-
-    console.log("*******  data_header ::: ", data_header)
     const keys_header = Object.keys(data_header[0])
-    console.log("******* keys_header ::: ", keys_header)
     const keys_item = Object.keys(data_item[0])
-    console.log("******* keys_item ::: ", keys_item)
     const element = $(selector)
-    console.log("******* element ::: ", element)
     const input_len = data_header.length
-    console.log("******* data_header.length ::: ", data_header.length)
-    console.log("******* st3_headerDetails ::: ", st3_headerDetails)
-
-    if (data_header == null){
-        data_header = st3_headerDetails
-    }
-
-    if (data_item == null){
-        data_item = st3_itemDetails
-    }
-
-    let tmpHtml = '';
-      for (let x = 0; x < data_header.length; x++) {
-          for (let j = 0; j < data_header[x][keys_header[0]].length; j++) {
-            tmpHtml += `<div class="w-100 d-flex p-4 customer-item" onClick="customerPODetails('${selector}', ${x})">
-              <div class="w-50px d-flex justify-center pt-3">
-                <i class="fas fs-20px fa-address-card"></i>
-              </div>
-              <div class="flex-1">
-                <div class="w-100">
-                <p class="mb-0">
-                  <strong>Customer PO:</strong>
-                  <span class="text-info">${data_header[x][keys_header[0]][j]}</span>
-                </p>
-                <p class="mb-0">selector
-                  PO Date:
-                  <span class="text-info">${data_header[x][keys_header[1]][j]}</span>
-                </p>
-                <p class="mb-0">
-                  Ship Date:
-                  <span class="text-info">${data_header[x][keys_header[3]][j]}</span>
-                </p>
-                <p class="mb-0">
-                  PO Total:
-                  <span class="text-info">${Number(data_header[x][keys_header[6]][j]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
-                </p>
-                </div>
-              </div>
-            </div>`
-          }
+    if (single) {
+      $("#step_3_customer_info").html(`
+      <div class="w-100 d-flex p-4 customer-item">
+        <div class="w-50px d-flex justify-center pt-3">
+          <i class="fas fs-20px fa-address-card"></i>
+        </div>
+        <div class="flex-1">
+          <div class="w-100">
+          <p class="mb-0">
+            <strong>Customer PO:</strong>
+            <span class="text-info">${data_header[0]["PO#"][0]}</span>
+          </p>
+          <p class="mb-0">
+            PO Date:
+            <span class="text-info">${data_header[0]["PO Date"][0]}</span>
+          </p>
+          <p class="mb-0">
+            Ship Date:
+            <span class="text-info">${data_header[0]["Ship Date"][0]}</span>
+          </p>
+          <p class="mb-0">
+            PO Total:
+            <span class="text-info">${Number(data_header[0]["PO Total"][0]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+          </p>
+          </div>
+        </div>
+      </div>
+      `);
+    } else {
+      let tmpHtml = '';
+      for (let j = 0; j < data_header[0][keys_header[0]].length; j++) {
+        tmpHtml += `<div class="w-100 d-flex p-4 customer-item">
+          <div class="w-50px d-flex justify-center pt-3">
+            <i class="fas fs-20px fa-address-card"></i>
+          </div>
+          <div class="flex-1">
+            <div class="w-100">
+            <p class="mb-0">
+              <strong>Customer PO:</strong>
+              <span class="text-info">${data_header[0][keys_header[0]][j]}</span>
+            </p>
+            <p class="mb-0">
+              PO Date:
+              <span class="text-info">${data_header[0][keys_header[1]][j]}</span>
+            </p>
+            <p class="mb-0">
+              Ship Date:
+              <span class="text-info">${data_header[0][keys_header[3]][j]}</span>
+            </p>
+            <p class="mb-0">
+              PO Total:
+              <span class="text-info">${Number(data_header[0][keys_header[6]][j]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+            </p>
+            </div>
+          </div>
+        </div>`
       }
       $("#step_3_customer_info").html(tmpHtml);
-    data_index = 0;
+    }
     let content = `
       <div class="row">
         <div class="col-md-4 col-sm-12">
           <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[data_index][keys_header[0]][0]}</span></p>
+            <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[0][keys_header[0]][0]}</span></p>
           </div>
         </div>
         <div class="col-md-4 col-sm-12">
           <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[data_index][keys_header[2]][0]}</span></p>
+            <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[0][keys_header[2]][0]}</span></p>
           </div>
         </div>
         <div class="col-md-4 col-sm-12">
           <div class="w-100 border rounded h-50px d-flex items-center pl-3">
-            <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[data_index][keys_header[4]][0]}</span></p>
+            <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[0][keys_header[4]][0]}</span></p>
           </div>
         </div>
       </div>
@@ -456,7 +423,7 @@ $(document).ready(function() {
           content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
           content += "</tr>"
         }
-
+          
         // content += "<tr>"
         // content += keys_item.map((key) => `<td>${data_item[i][key]}</td>`)
         // content += "</tr>"
@@ -493,7 +460,8 @@ $(document).ready(function() {
   }
 
   function displayTable(data, selector, selector1, options, termRsOptions, data3, locations, data5) {
-    const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
+//    const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
+    const keys = ["Customer SKU", "Creative Kids SKU", "Product/Item Description", "PO Unit of Measure", "Fulfillment Location", "Cin7 Style"]
     console.log(data5, "data5")
     const customername = data5
     const customernameoptions = customername==="Pepco"?"<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select class='w-75 form-select'><option>${customername}</option></select>`
@@ -546,6 +514,7 @@ $(document).ready(function() {
     console.log(data, "_____")
     const table_len = data.length
     const sku_keyname = customerStyle(customername)
+    console.log("****************** sku_keyname :::  ", sku_keyname)
     var tables = `
   
     <thead>
@@ -571,7 +540,8 @@ $(document).ready(function() {
             <tr >
               ${
                 keys.map(key => {
-                  if (key === "Vendor Style from OMS_equal") {
+//                  if (key === "Vendor Style from OMS_equal") {
+                  if (key === "Cin7 Style") {
                     try {
                       var selectedValue = data3[data[i][sku_keyname][index]][2]
                       var determinevalue = data3[data[i][sku_keyname][index]][2]
@@ -583,7 +553,8 @@ $(document).ready(function() {
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==selectedValue) !== -1
                     return `<td contenteditable="true"><select class="form-select step-2-vendor-style" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
-                  else if (key === "Unit of Measure") {
+//                  else if (key === "Unit of Measure") {
+                  else if (key === "PO Unit of Measure") {
                     try {
                       var selectedValue = data3[data[i][sku_keyname][index]][0]
                       var determinevalue = data3[data[i][sku_keyname][index]][2]
@@ -593,9 +564,10 @@ $(document).ready(function() {
                       var determinevalue = data3[data[i][sku_keyname][index]]
                     }
                     const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
+                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
                   }
-                  else if (key === "StockLocation") {
+//                  else if (key === "StockLocation") {
+                  else if (key === "Fulfillment Location") {
                     try {
                       var selectedValue = data3[data[i][sku_keyname][index]][1]
                       var determinevalue = data3[data[i][sku_keyname][index]][2]
@@ -622,24 +594,38 @@ $(document).ready(function() {
 
   function getTableData(selector) {
     var tableData = {};
-    const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
+    const columnMapper = new Map([
+      ['Customer SKU', 'Buyers Catalog or Stock Keeping #'],
+      ['Creative Kids SKU', 'Vendor Style'],
+      ['Product/Item Description', 'Product/Item Description'],
+      ['PO Unit of Measure', 'Unit of Measure'],
+      ['Fulfillment Location', 'StockLocation'],
+      ['Cin7 Style', 'Vendor Style from OMS_equal'],
+
+    ]);
+//    const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
+    const keys = ["Customer SKU", "Creative Kids SKU", "Product/Item Description", "PO Unit of Measure", "Fulfillment Location", "Cin7 Style"]
     let hasValue = []
 
     $(`${selector} tbody tr`).each(function() {
       $(this).find('td').each(function(columnIndex, cell) {
         var headerText = keys[columnIndex];
+        var origHeaderText = columnMapper.get(headerText);
         let value = $(cell).text()
-        if (headerText === "Vendor Style from OMS_equal") {
+//        if (headerText === "Vendor Style from OMS_equal") {
+        if (headerText === "Cin7 Style") {
           value = cell.children[0]?.value
           hasValue.push(cell.children[0]?.getAttribute("data-hasvalue"))
           if (!value) value = ""
-          headerText = "Vendor Style from OMS_equal"
+//          headerText = "Vendor Style from OMS_equal"
         }
-        if (headerText === "Unit of Measure") {
+//        if (headerText === "Unit of Measure") {
+        if (headerText === "PO Unit of Measure") {
           value = cell.children[0]?.value
           if (!value) value = ""
         }
-        if (headerText === "StockLocation") {
+//        if (headerText === "StockLocation") {
+        if (headerText === "Fulfillment Location") {
           value = cell.children[0]?.value
           if (!value) value = ""
         }
@@ -666,7 +652,7 @@ $(document).ready(function() {
       contentType: false,
       success: function(response) {
         let { data1, data2, data3, data4, data5 } = response
-        console.log(data1, "_____")
+        console.log("********************************* response ::: ",response, "*********************************")
         data1 = JSON.parse(data1)
         data2 = JSON.parse(data2)
         data3 = JSON.parse(data3.replace(/NaN/g, '\"\"'))
@@ -838,9 +824,7 @@ $(document).ready(function() {
         const [_customername, headerDetails, itemDetails] = JSON.parse(response.res)
         // $(".review-stepper .customername").html(_customername);
         $(".modal-backdrop.fade.show").remove()
-        st3_headerDetails = headerDetails;
-        st3_itemDetails = itemDetails;
-        buildTable(headerDetails, itemDetails, "#view_details", single=false)
+        buildTable(headerDetails, itemDetails, "#view_details")
         document.getElementById('loader2').classList.toggle('d-none');
         // buildTable(itemDetails[0], "#item-details")
         // buildTable(headerDetails[0], "#header-details", true)
@@ -878,8 +862,6 @@ $(document).ready(function() {
       },
       error: function(xhr, status, error) {
         if (xhr.status === 400) {
-          // document.getElementById('csv-container').classList.toggle('d-none');
-          // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
           // document.getElementById('csv-container').classList.toggle('d-none');
           // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
           document.getElementById('loader3').classList.toggle('d-none');

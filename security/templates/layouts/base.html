@@ -72,8 +72,14 @@
                 <div data-i18n="Chat">POconversion</div>
               </a>
             </li>
+          </ul>
+          <ul class="menu-inner py-1 d-flex justify-content-end">
             <li class="menu-item">
-              <a href="{% url 'securityauth:signin' %}" class="menu-link">
+              <!-- <a href="{% url 'securityauth:signin' %}" class="menu-link">
+                <i class="menu-icon fas fa-right-from-bracket text-light-blue"></i>
+                <div data-i18n="Chat">Log out</div>
+              </a> -->
+              <a href="{% url 'securityauth:signin' %}" class="menu-link" data-toggle="modal" data-target="#logoutModal">
                 <i class="menu-icon fas fa-right-from-bracket text-light-blue"></i>
                 <div data-i18n="Chat">Log out</div>
               </a>
@@ -81,6 +87,23 @@
           </ul>
         </aside>
         <!-- / Menu -->
+
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius: 5px;">
+          <div class="modal-dialog modal-dialog-centered" role="document" style="justify-content: center;">
+              <div class="modal-content" style="width: 35%;">
+                  <div class="modal-header" style="border-bottom: none !important;">
+                      <h5 class="modal-title" id="exampleModalLabel">Logout from Status?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-footer" style="border-top: none !important;">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 6px;">Cancel</button>
+                      <a href="{% url 'securityauth:signin' %}" class="btn btn-primary logoutButton" style="border-radius: 6px; color: white !important; background-color: #007bff !important;">Yes, log out</a>
+                  </div>
+              </div>
+          </div>
+        </div>
 
         <!-- Layout container -->
         <div class="layout-page">
@@ -132,30 +155,31 @@
     <!-- / Layout wrapper -->
 
     <!-- Core JS -->
-    <script src="{% static 'security/vendor/libs/jquery/jquery.js' %}"></script>
-    <script src="{% static 'security/vendor/libs/popper/popper.js' %}"></script>
-    <script src="{% static 'security/vendor/libs/toastr/toastr.js' %}"></script>
-    <script src="{% static 'security/vendor/js/bootstrap.js' %}"></script>
+        <!-- Core JS -->
+        <script src="{% static 'security/vendor/libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'security/vendor/libs/popper/popper.js' %}"></script>
+        <script src="{% static 'security/vendor/libs/toastr/toastr.js' %}"></script>
+        <script src="{% static 'security/vendor/js/bootstrap.js' %}"></script>
+        
+        <script src="{% static 'security/vendor/js/menu.js' %}"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- endbuild -->
     
-    <script src="{% static 'security/vendor/js/menu.js' %}"></script>
-    <!-- endbuild -->
-
-    <!-- Vendors JS -->
-
-    <!-- Main JS -->
-    <script src="{% static 'security/js/main.js' %}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
-    <script src="{% static 'security/js/home.js' %}"></script>
-    {% comment %} <script src="{% static 'security/js/history.js' %}"></script> {% endcomment %}
-    {% comment %} <script src="{% static 'security/js/history.js' %}"></script> {% endcomment %}
-    <script src="https://kit.fontawesome.com/c84a4c5774.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" >
+        <!-- Vendors JS -->
+    
+        <!-- Main JS -->
+        <script src="{% static 'security/js/main.js' %}"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
+        <script src="{% static 'security/js/home.js' %}"></script>
+        {% comment %} <script src="{% static 'security/js/history.js' %}"></script> {% endcomment %}
+        <script src="https://kit.fontawesome.com/c84a4c5774.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" >
     <script type="text/javascript">
         {
           let sideBar = document.querySelector('.home-side-bar');

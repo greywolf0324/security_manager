@@ -674,6 +674,7 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"] = {}
                 content = page.extract_tables()
                 PO_page = page.within_bbox(self.PO_coordinates)
+                bill_to_page = page.within_bbox([page.search("Bill To")[0]['x0'], page.search("Bill To")[0]['top'], page.search("Bill To")[0]['x0'] + 150, page.search("PO Initiated")[0]['top']])
                 
                 res[f"PDF{k}"][f"page{page_num}"]["Purchase Order"] = PO_page.extract_text_simple().split("Purchase Order: ")[1]
                 res[f"PDF{k}"][f"page{page_num}"]["PO First Ship Date"] = content[0][0][4]
@@ -696,12 +697,18 @@ class Family_Dollar_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"]["Total Master Cases Ordered"] = content[3][1][13]
                 res[f"PDF{k}"][f"page{page_num}"]["Total First Cost"] = content[3][1][14]
                 res[f"PDF{k}"][f"page{page_num}"]["RMS Retail Price"] = content[3][1][15]
+                res[f"PDF{k}"][f"page{page_num}"]["Comments"] = content[0][6][8]
+                res[f"PDF{k}"][f"page{page_num}"]["bt_name"] = bill_to_page.extract_text().split("\n")[1]
+                res[f"PDF{k}"][f"page{page_num}"]["add_1"] = bill_to_page.extract_text().split("\n")[2]
+                res[f"PDF{k}"][f"page{page_num}"]["city"] = bill_to_page.extract_text().split("\n")[3].split(", ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["state"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[0]
+                res[f"PDF{k}"][f"page{page_num}"]["zip"] = bill_to_page.extract_text().split("\n")[3].split(", ")[1].split(" ")[1]
                 
         return res
 
 class Gabes_Parsing:
     def __init__(self, customer_name) -> None:
-        # self.O_coordinates = [261.0, 41, 362.51695, 55]
+        self.O_coordinates = [261.0, 41, 362.51695, 55]
         self.S_coordinates = [256.0, 65, 366.0, 145]
         self.P_coordinates = [3.0, 181, 555.77734, 193]
         self.p_v_lines = [3.0, 55.57422, 242.89456, 371.7969, 555.77734]
@@ -717,9 +724,9 @@ class Gabes_Parsing:
 
             for page_num, page in enumerate(pdf.pages):
                 if page_num == 0:
-                    O_page = page.within_bbox([page.search("Order Date")[0]['x0'] - 5, page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x1'] + 40, page.search("Order Date")[0]['bottom']])
-                    S_page = page.within_bbox([page.search("Ship To:")[0]['x0'], page.search("Ship To:")[0]['top'], page.search("Ship To:")[0]['x1'] + 60, page.search("Ship Via")[0]['top']])
-                    P_page = page.within_bbox([page.search("Freight")[0]['x0'], page.search("Freight")[0]['bottom'], page.width, page.search("Internal Item #")[0]['top']])
+                    O_page = page.within_bbox(self.O_coordinates)
+                    S_page = page.within_bbox(self.S_coordinates)
+                    P_page = page.within_bbox(self.P_coordinates)
                     P_content = P_page.extract_table(dict(
                                     explicit_vertical_lines = [page.search("Freight")[0]['x0'], page.search("Ship Date")[0]['x0'], page.search("Ship Date")[0]['x1'] + 5, page.search("Cancel Date")[0]['x1'], page.width],
                                     explicit_horizontal_lines =  [page.search("Freight")[0]['bottom'], page.search("Internal Item")[0]['top']]
@@ -728,15 +735,9 @@ class Gabes_Parsing:
                     comment_text = page.within_bbox([0, page.search("Vendor:")[0]['top'], page.search("Purchase Order")[0]['x0'], page.search("Ship Via")[0]['top']]).extract_text()
                     ship_to_text = page.within_bbox([page.search("Purchase Order")[0]['x0'], page.search("Vendor:")[0]['top'], page.width, page.search("Ship Via")[0]['top']]).extract_text()
                     
-                    print(bill_to_text.split("\n"))
-                    print("======")
-                    print(comment_text)
-                    print("======")
-                    print(ship_to_text.split("\n"))
-
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
-                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.within_bbox([page.search("Order Date")[0]['x0'], page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x0'] + 150, page.search("Order Date")[0]['bottom']]).extract_text().split("Order Date ")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.extract_text_simple().split("Order Date ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["PO"] = page.extract_text_simple().split("\n")[0].split("Purchase Order ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["Ship To"] = S_page.extract_text_simple().replace("\xa0", "")
                     res[f"PDF{k}"][f"page{page_num}"]["Ship Date"] = P_content[0][1]
@@ -748,18 +749,7 @@ class Gabes_Parsing:
                     res[f"PDF{k}"][f"page{page_num}"]["Description"] = page.extract_tables()[0][6][7].split("\n")
                     res[f"PDF{k}"][f"page{page_num}"]["Unit Cost"] = page.extract_tables()[0][6][10].split("\n")
                     res[f"PDF{k}"][f"page{page_num}"]["Total Cost"] = page.extract_tables()[0][7][-1]
-                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_name"] = bill_to_text.split("\n")[0]
-                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_add"] = bill_to_text.split("\n")[1]
-                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_city"] = bill_to_text.split("\n")[2].split(", ")[0]
-                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_state"] = bill_to_text.split("\n")[2].split(", ")[1].split(" ")[0]
-                    res[f"PDF{k}"][f"page{page_num}"]["bill_to_zip"] = bill_to_text.split("\n")[2].split(", ")[1].split(" ")[1]
-                    res[f"PDF{k}"][f"page{page_num}"]["comment"] = comment_text
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_name"] = ship_to_text.split("\n")[1]
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_add_1"] = ship_to_text.split("\n")[2]
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_add_2"] = ship_to_text.split("\n")[3]
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_city"] = ship_to_text.split("\n")[4].split(", ")[0]
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_state"] = ship_to_text.split("\n")[4].split(", ")[1].split(" ")[0]
-                    res[f"PDF{k}"][f"page{page_num}"]["ship_to_zip"] = ship_to_text.split("\n")[4].split(", ")[1].split(" ")[1]
+        
         return res
     
   
