@@ -81,11 +81,36 @@
               </a> -->
               <a href="{% url 'securityauth:signin' %}" class="menu-link" data-toggle="modal" data-target="#logoutModal">
                 <i class="menu-icon fas fa-right-from-bracket text-light-blue"></i>
-                <div data-i18n="Chat">Log out</div>
+                <div id="logout" data-i18n="Chat">Log out</div>
               </a>
             </li>
           </ul>
         </aside>
+
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" style="max-width: 500px;">
+            <div class="modal-content">
+              <div class="modal-header border-bottom border-1" style="border-color: #e1e1e1;">
+                <h5 class="modal-title d-flex align-items-center" id="logoutModalLabel">
+                  <i class="menu-icon fas fa-right-from-bracket text-light-blue" style="font-size: 20px; margin-right: 10px;"></i> <span class="modal_logout_title">   Logout</span> 
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span id="modal_logout_close" aria-hidden="true" style="font-size: 40px;">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row justify-content-center align-items-center" style="margin-bottom: 15px;">
+                  <i class="menu-icon fas fa-right-from-bracket text-light-blue" style="font-size: 50px; color: red; text-align: center;"></i>
+                </div>
+                <div style="font-size: 20px; text-align: center;">Are you sure you want to exit the system?</div>
+              </div>
+              <div class="modal-footer border-top border-1" style="border-color: #e1e1e1; padding-bottom: 10px;">
+                <button type="button" id ="modal_logout_cancel" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <a href="{% url 'securityauth:signin' %}" class="btn btn-outline-danger">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- / Menu -->
 
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius: 5px;">
@@ -205,6 +230,13 @@
           if(ele.href == window.location.href) {
             $(ele).addClass('active');
           }
+        });
+        $('#logout').click(function() {
+          $('#logoutModal').modal('show');
+        });
+
+        $("#modal_logout_cancel, #modal_logout_close").click(function() {
+          $('#logoutModal').modal('hide');
         })
       });
     </script>

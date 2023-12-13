@@ -245,6 +245,9 @@ body {
     border-top: 1px solid #D9D9D9 !important;
 }
 
+#step_3_customer_info:hover {
+    cursor: pointer;
+}
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container{
         max-width: 1780px !important;
@@ -286,7 +289,7 @@ body {
 }
 
 .table-separate-tr>tbody>tr>td, .table-separate-tr>thead>tr>th {
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .text-light-blue {
