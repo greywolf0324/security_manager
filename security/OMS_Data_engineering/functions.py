@@ -640,39 +640,39 @@ class SalesImport_Generator:
 
         field_names = json.load(f)
 
-        # # generate excel output file
-        # if os.path.isfile("SalesImport.xlsx"):
-        #     os.remove("SalesImport.xlsx")
-        # book = xlsxwriter.Workbook("SalesImport.xlsx")
-        # sheet = book.add_worksheet("cont_excel")
-        # # keys = list(sales_import[0].keys())
-        # for idx, header in enumerate(field_names):
-        #     sheet.write(0, idx, header)
+        # generate excel output file
+        if os.path.isfile("SalesImport.xlsx"):
+            os.remove("SalesImport.xlsx")
+        book = xlsxwriter.Workbook("SalesImport.xlsx")
+        sheet = book.add_worksheet("cont_excel")
+        # keys = list(sales_import[0].keys())
+        for idx, header in enumerate(field_names):
+            sheet.write(0, idx, header)
 
-        # book.close()
+        book.close()
 
-        # book = load_workbook("SalesImport.xlsx")
-        # sheet = book.get_sheet_by_name("cont_excel")
-        # # print(keys, type(keys[0]))
-        # # print("*****")
-        # # print(field_names, type(field_names[0]))
-        # for num, dic in enumerate(sales_import):
-        #     keys = list(dic.keys())
+        book = load_workbook("SalesImport.xlsx")
+        sheet = book.get_sheet_by_name("cont_excel")
+        # print(keys, type(keys[0]))
+        # print("*****")
+        # print(field_names, type(field_names[0]))
+        for num, dic in enumerate(sales_import):
+            keys = list(dic.keys())
 
-        #     for i in range(len(dic[keys[0]])):
-        #         temp = []
+            for i in range(len(dic[keys[0]])):
+                temp = []
 
-        #         for key in field_names:
-        #             if key in keys:
-        #                 temp.append(dic[key][i])
-        #             else:
-        #                 temp.append("")
+                for key in field_names:
+                    if key in keys:
+                        temp.append(dic[key][i])
+                    else:
+                        temp.append("")
 
-        #         sheet.append(temp)
+                sheet.append(temp)
 
-        # output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
+        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
         
-        # book.save(filename = output)
+        book.save(filename = output)
         df = pd.read_excel(output)
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
