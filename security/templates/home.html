@@ -1,63 +1,118 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-  <div id= "homecontainer"class="container-fluid mt-4">
-    <div class="stepper" id="stepper" style="margin-top: 40px;">
-      <div class="steps-container">
-        <div class="steps">
-          <div class="step" icon="fa fa-pencil-alt" id="1">
-            <div class="step-title">
-              <span class="step-number">01</span>
-              <div class="step-text">Upload Files</div>
+  <div class="stepper p-0" id="stepper">
+    <div class="steps-container">
+      <div class="row steps">
+        <div class="col-md-3 col-12 mb-4 step" id="1">
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5 class="card-title mt-0 mb-1">Import Customer Order</h5>
+              <small class="text-muted">Step 1 - Select Customer and Upload Order</small>
+            </div>
+            <div class="card-body pt-2">
+              <div class="progress" style="height: 4px">
+                <div
+                  id="step_progress_1"
+                  class="progress-bar bg-success step-progress"
+                  role="progressbar"
+                  style="width: 50%"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
             </div>
           </div>
-          <div class="step" icon="fa fa-info-circle" id="2">
-            <div class="step-title">
-              <span class="step-number">02</span>
-              <div class="step-text">Customize Your Input</div>
+        </div>
+        <div class="col-md-3 col-12 mb-4 step" id="2">
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5 class="card-title mt-0 mb-1">Customer Order Mapping</h5>
+              <small class="text-muted">Step 2 - Select Matching Customer and Vendor SKU</small>
+            </div>
+            <div class="card-body pt-2">
+              <div class="progress" style="height: 4px">
+                <div
+                  id="step_progress_2"
+                  class="progress-bar step-progress"
+                  role="progressbar"
+                  style="width: 25%"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
             </div>
           </div>
-          <div class="step" icon="fa fa-book-reader" id="3">
-            <div class="step-title">
-              <span class="step-number">03</span>
-              <div class="step-text">Review</div>
+        </div>
+        <div class="col-md-3 col-12 mb-4 step" id="3">
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5 class="card-title mt-0 mb-1">Review Order</h5>
+              <small class="text-muted">Step 3 - Review Order Details</small>
+            </div>
+            <div class="card-body pt-2">
+              <div class="progress" style="height: 4px">
+                <div
+                  id="step_progress_3"
+                  class="progress-bar bg-warning step-progress"
+                  role="progressbar"
+                  style="width: 25%"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
             </div>
           </div>
-          <div class="step" icon="fa fa-download" id="4">
-            <div class="step-title">
-              <span class="step-number">04</span>
-              <div class="step-text">Download</div>
+        </div>
+        <div class="col-md-3 col-12 mb-4 step" id="4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5 class="card-title mt-0 mb-1">Download Order</h5>
+              <small class="text-muted">Step 4 - Download Order</small>
+            </div>
+            <div class="card-body pt-2">
+              <div class="progress" style="height: 4px">
+                <div
+                  id="step_progress_4"
+                  class="progress-bar bg-success step-progress"
+                  role="progressbar"
+                  style="width: 25%"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="stepper-content-container">
-        <div class="stepper-content fade-in" stepper-label="1">
-          <form class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9;" id="data-form">
-            {% csrf_token %}
-            <fieldset class="upload_dropZone text-center mb-3 p-4">
-          
-              <!-- <legend class="visually-hidden mt-3">Upload your data</legend> -->
-          
-              <!-- <svg class="upload_svg" width="60" height="60" aria-hidden="true">
-                <use href="#icon-imageUpload"></use>
-              </svg>
-           -->
-              <p class="medium my-2 fw-bold my-5" style="cursor: pointer;"> Drop files here or click to upload.</p>
-          
-              <input id="upload_image_background" name="data" data-post-name="image_background" data-post-url="https://someplace.com/image/uploads/backgrounds/" class="position-absolute invisible" multiple type="file" accept=".pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv" />
-          
-              <label class="btn btn-upload mb-3" for="upload_image_background">Choose file(s)</label>
-          
-              <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
-          
-            </fieldset>
+    </div>
+    <div class="stepper-content-container">
+      <div class="stepper-content fade-in" stepper-label="1">
+        <div class="card h-content">
+          <div class="card-body">
+            <form class="w-100 h-100" id="data-form">
+              {% csrf_token %}
+              <label for="upload_image_background" class="w-100">
+                <fieldset class="upload_dropZone text-center mb-3 p-4 bg-transparent flex justify-center items-center" style="cursor: pointer;">
+            
+                  <i class="fas fs-40px fa-upload text-gray"></i>
+                  <p class="medium fw-bold mt-2 mb-0 text-gray"> Drop files here or click to upload.</p>
+                  
+                  <input id="upload_image_background" name="data" data-post-name="image_background" data-post-url="https://someplace.com/image/uploads/backgrounds/" class="position-absolute invisible" multiple type="file" accept=".pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv" />
+    
+                  <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
+              
+                </fieldset>
+                <div style="text-align:center">
+                  <button id="clear-my-files" type="button" class="btn btn-outline-dark waves-effect">Clear</button>
+                </div>
+              </label>
 
-            <div class="my-2">
-              <div class="my-3 d-flex justify-content-center">
-                <button type="button" id="clear-my-files" class="btn btn-info">Clear My Files</button>
-              </div>
-              <div class="row">
+              <div class="w-100 my-2">
                 <div class="col-6">
                   <label class="form-label" style="font-size: 18px; font-weight: bold;">Customer Name</label>
                   <style>
@@ -66,9 +121,6 @@
                         overflow-y: auto;
                       }
                   </style>
-                  <script>
-                    
-                  </script>
                   <select class="form-select" id="customername" name="customername">
                     <option value="Buc-ee's">Buc-ee's</option>
                     <option value="Pepco">Pepco</option>
@@ -103,119 +155,149 @@
                   </select>
                 </div>
               </div>
-            </div>
-
-            <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-info btn-next" style=""  onclick="processStepper.navigate('2')" id="first-step-next">Next</button>
-            </div>
-          </form>
-        </div>
-        <div class="stepper-content fade-in" stepper-label="2" id="additional-uom" style="position: relative;">
-          
-          <div class="w-100 h-100 overflow-y-auto overflow-x-hidden" style="padding: 30px 10px; background: #f9f9f9;">
-            <div id="loader1" class="w-100 d-none justify-content-center" style="display: flex;">
-              <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
+    
+              <div class="my-20px col-12 d-flex flex-row-reverse">
+                <button id="first-step-next" type="button" onclick="processStepper.navigate('2')" class="btn btn-outline-dark waves-effect btn-next">Next</button>
               </div>
-              <h5 class="ms-3 text-primary">Creating View...</h5>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="stepper-content fade-in" stepper-label="2" id="additional-uom" style="position: relative;">
+        <div id="loader1" class="w-100 d-none justify-content-center" style="display: flex;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+          </div>
+          <h5 class="ms-3 text-primary">Creating View...</h5>
+        </div>
+        <div id="step_2_content" class="row d-none">
+          <div class="col-md-9 col-sm-12">
+            <div class="card h-content">
+              <div class="card-header border-b pb-2">
+                <h5 class="card-title my-0" id="customize_box_title">&nbsp;</h5>
+              </div>
+              <div class="card-body pt-4">
+                <div id="loader1" class="w-100 d-none justify-content-center" style="display: flex;">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only"></span>
+                  </div>
+                  <h5 class="ms-3 text-primary">Creating View...</h5>
+                </div>
+                <div class="overflow-auto mb-5">
+                  {% comment %} <p class="text-muted mt-3 mb-2">Items Details</p> {% endcomment %}
+                  <div class="table table-striped border rounded d-none">
+                    <table id="table-view" class="table table-striped">
+                    </table>  
+                  </div>
+                </div>
+              </div>
             </div>
-            <div >
-              <div id="table-header-view" >
-                <!-- <div class="row px-5 py-3">
-                  <div class="col-lg-6">
-                    <div class="fw-bold">Customer Name From P0: <span class="text-danger">Walmart Us</span></div>
+          </div>
+          <div class="col-md-3 col-sm-12 h-content">
+            <div class="card h-content">
+              <div class="card-body p-0">
+                <div class="w-100 d-flex border-b p-4">
+                  <div class="w-50px d-flex justify-center items-center">
+                    <i class="fas fs-20px fa-address-card"></i>
                   </div>
-                  <div class="col-lg-6">
-                    <div class="row fw-bold">
-                      <div class="col-lg-4 text-start">
-                        Customer Name Options: 
-                      </div>
-                      <div class="col-lg-8">
-                        <select class="w-75">
-                          <option value="default">default</option>
-                        </select>
-                      </div>                      
-                    </div>                    
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="fw-bold">Terms From PO: <span class="text-danger">20</span></div>                    
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="row fw-bold">
-                      <div class="col-lg-4 text-start">
-                        Terms Options From OMS: 
-                      </div>
-                      <div class="col-lg-8">
-                        <select class="w-75">
-                          <option value="default">default</option>
-                        </select>
-                      </div>                      
+                  <div class="flex-1">
+                    <div class="w-100">
+                      <p class="mb-0">
+                        <strong>Customer Name:</strong>
+                        <span id="customer_name" class="text-info"></span>
+                      </p>
+                      <p class="mb-0" id="customer_desc">Customer Name in Cin7</p>
                     </div>
                   </div>
-                </div> -->
-              </div>
-              <div class="border rounded overflow-auto d-none" style="height: calc(100vh - 500px);">
-                <table id="table-view" class="table table-striped">
-                </table>
+                </div>
+                <div class="w-100 d-flex p-4 pb-2">
+                  <div class="w-50px d-flex justify-center items-center">
+                    <i class="fas fs-20px fa-calendar"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="w-100">
+                      <p class="mb-0">
+                        <strong>Terms:</strong>
+                        <span id="customer_term" class="text-info"></span>
+                      </p>
+                      <p class="mb-0" id="customer_term_desc">Customer Terms in Cin7</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100 d-flex justify-center pb-4" id="customer_term_select"></div>
               </div>
             </div>
-            
-            
           </div>
-          <div class="d-flex justify-content-end" style="position: absolute; right: 5px; bottom: 22px;">
-            <button type="button" class="btn btn-info py-1" style="padding: 10px 15px; font-size: 15px;" onclick="processStepper.navigate('1')" id="">Prev</button>
-            <button type="button" class="btn btn-info py-1" style="padding: 10px 15px; font-size: 15px;" id="openDialogButton" data-bs-toggle="modal" data-bs-target="#myModal">Next</button>
-          </div>
-        </div>
-
-        <div class="stepper-content fade-in" stepper-label="3" style="background: #f9f9f9;">
-          <div class="w-100 review-stepper py-3">
-            <div id="loader2" class="w-100 d-none justify-content-center" style="display: flex;">
-              <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
-              </div>
-              <h5 class="ms-3 text-primary">Loading...</h5>
-            </div>
-            <h3><span class="customername" style="font-size: 40px; color: darkslategray;"></span></h3>
-            <div id = "view_details"></div>
-            <!-- <h4 class="mt-3 mb-2">Header Details</h4>
-            <table id="header-details" class="table table-bordered"></table>
-            <h4 class="mt-3 mb-2">item Details</h4>
-            <table id="item-details" class="table table-bordered"></table> -->
-            <div class="d-flex justify-content-end mt-3">
-              <button type="button" class="btn btn-info py-1" style="padding:10px 15px; font-size: 15px;"   onclick="processStepper.navigate('2')">Prev</button>
-              <button type="button" class="btn btn-info py-1"  style="padding:10px 15px; font-size: 15px;" id="final-step" onclick="processStepper.navigate('4')">Next</button>
-            </div>
+          <div class="col-12 d-flex flex-row-reverse mt-2 pt-5 mt-5">
+            <button id="openDialogButton" type="button" class="btn btn-outline-dark waves-effect" data-bs-toggle="modal" data-bs-target="#myModal">Next</button>
+            <button type="button" onclick="processStepper.navigate('1')" class="btn btn-outline-dark waves-effect">Prev</button>
           </div>
         </div>
+      </div>
 
-        <div class="stepper-content fade-in" stepper-label="4">
-          <div class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9;">
-            <div class="d-flex justify-content-between">
-              <legend>Here is your result</legend>
-              <div class="export_buttons">
-                <a href="" id="download-output" download class="btn btn-link" style="text-decoration: none;"><i class="fa fa-download" style="font-size:24px; color: green;"></i><span class="download-text">Download</span></a>
-                <button type="submit" class="btn btn-link" id="sheet-exporter" style="text-decoration: none;" ><i class="far fa-file-excel" style="font-size:24px;  color: green;"></i><span class="download-text">Export to Google Sheet</span></button>
+      <div class="stepper-content fade-in" stepper-label="3" style="background: #f9f9f9;">
+        <div class="w-100 review-stepper py-3">
+          <div id="loader2" class="w-100 d-none justify-content-center" style="display: flex;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <h5 class="ms-3 text-primary">Loading...</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-9 col-sm-12">
+              <div class="card h-content">
+                {% comment %} <div class="card-header border-b pb-2">
+                  <h5 class="card-title my-0 customername">Customer Order Mapping</h5>
+                </div> {% endcomment %}
+                <div class="card-body pt-2 overflow-y-auto" style="height: 600px;">
+                  <div id="view_details">
+                  </div>
+                </div>
+                <div class="card-body pt-2">
+                  <div class="col-12 d-flex flex-row-reverse mt-2">
+                    <button id="final-step" type="button" onclick="processStepper.navigate('4')" class="btn btn-outline-dark waves-effect">Next</button>
+                    <button type="button" onclick="processStepper.navigate('2')" class="btn btn-outline-dark waves-effect">Prev</button>
+                  </div>
+                </div>
               </div>
-              
             </div>
-            <div id="csv-container" class="table-responsive mt-3">
-              <h5 class="text-success">Click Download button to download your result</h5>
-            </div>
-            <div id="loader3" class="w-100 d-none justify-content-center" style="display: flex;">
-              <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
+            <div class="col-md-3 col-sm-12">
+              <div class="card h-content">
+                <div class="card-body p-0 overflow-y-auto" id="step_3_customer_info"  style="height: 600px;">
+                </div>
               </div>
-              <h5 class="ms-3 text-primary">Generating...</h5>
-            </div>
-            <div class="d-flex justify-content-end mt-3 prev-button">
-              <button type="button" class="btn btn-info py-1" style="padding:10px 15px; font-size: 15px;" onclick="processStepper.navigate('3')">Prev</button>
             </div>
           </div>
         </div>
       </div>
-      
+
+      <div class="stepper-content fade-in" stepper-label="4">
+        <div id="loader3" class="w-100 d-none justify-content-center" style="display: flex;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+          </div>
+          <h5 class="ms-3 text-primary">Generating...</h5>
+        </div>
+        <div class="card h-content d-none" id="step_4_content">
+          <div class="card-body min-h-400px">
+            <div class="d-flex flex-column justify-space-between items-center">
+              <img src="static/security/image/success.png" class="mt-60px" width="150" heigh="150">
+              <div class="mt-5">
+                <a href="" id="download-output" download class="btn btn-outline-dark waves-effect"><i class="fa fa-download" style="font-size:24px;"></i><span class="download-text">Download</span></a>
+                <button type="submit" class="btn btn-outline-dark waves-effect" id="sheet-exporter" style="text-decoration: none;" ><i class="far fa-file-excel" style="font-size:24px;"></i><span class="download-text">Export to Google Sheet</span></button>
+              </div>
+            </div>
+            <!-- <div class="d-flex justify-content-end mt-3 prev-button">
+              <button type="button" onclick="processStepper.navigate('3')" class="btn btn-outline-dark waves-effect">Prev</button>
+            </div> -->
+          </div>
+          <div class="d-flex justify-content-end mt-3 prev-button">
+            <button type="button" onclick="processStepper.navigate('3')" class="btn btn-outline-dark waves-effect">Prev</button>
+          </div>
+        </div>
+      </div>
     </div>
+    
   </div>
 
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -227,17 +309,16 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-              <table id="modaltable" class="table table-bordered"></table>
-                <p>These are first productions for our site and for this customer.
-                  Do you want to use them to auto-fill for further times?</p>
-                <table id="newmodaltable" class="table table-bordered"></table>
+            <div class="modal-body overflow-y-scroll max-h-660px custom-scroll-box">
+              <table id="modaltable" class="table"></table>
+              <p class="mt-3 fw-500 text-black">These are first productions for our site and for this customer.
+                Do you want to use them to auto-fill for further times?</p>
+              <table id="newmodaltable" class="table"></table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="NextButton">Next</button>
+                <button type="button" class="btn btn-outline-dark waves-effect" id="NextButton">Next</button>
             </div>
-
         </div>
     </div>
   </div>
@@ -257,27 +338,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="liveIgnore">Ignore</button>
-                <button type="button" class="btn btn-primary" id="liveAccept">Accept</button>
+                <button type="button" class="btn btn-outline-dark waves-effect" id="liveAccept">Accept</button>
             </div>
 
         </div>
     </div>
   </div>
-
-  <script>
-      // Add click event to the fieldset
-      const fieldset = document.querySelector(".upload_dropZone");
-      fieldset.addEventListener("click", function() {
-          const fileInput = document.getElementById("upload_image_background");
-          fileInput.click();
-      });
-  </script>
-
-  <style>
-      /* Hide the "Choose file(s)" button */
-      .btn-upload {
-          display: none;
-      }
-  </style>
-
 {% endblock %}

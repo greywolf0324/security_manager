@@ -1,7 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-<head>
+
+<html class="light-style layout-navbar-fixed layout-menu-fixed layout-menu-collapsed">
+  <head>
     <title>History Page</title>
     <link rel="stylesheet" type="text/css" href="{% static 'security/css/home.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cdbootstrap/css/bootstrap.min.css"/>
@@ -13,138 +14,172 @@
     <link href="https://www.cssscript.com/demo/sticky.css" rel="stylesheet" type="text/css">
     <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-    
-   <!-- <nav class="navbar navbar-expand-lg navbar-vertical navbar-light bg-light border-right p-4 border" id="sidebarNav">
-      <button class="navbar-toggler" type="button" data-toggle="collapse-home" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse-home navbar-collapse-home align-content-stretch flex-wrap" id="navbarSupportedContent">
-          <ul class="navbar-nav flex-column w-100">
-              <li class="nav-item active w-100">
-                  <a class="nav-link" href="#" data-toggle="collapse-home" data-target="#navDashboard" aria-expanded="false" aria-controls="navDashboard">
-                      <i class="fa fa-server mr-2" style=" color:white"></i>Dashboard   
-                      <span class="d-block ml-auto">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                              <polyline points="6 9 12 15 18 9"></polyline>
-                          </svg>
-                      </span>
-                  </a>
-                  <div id="navDashboard" class="collapse-home show" data-parent="#sidebarNav">
-                      <ul class="nav flex-column">
-                          <li class="nav-item">
-                              <a class="nav-link" href="{% url 'security:home' %}"><i class="fas fa-home color:white"></i>Home</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="{% url 'security:POconversion' %}"><i class="fas fa-home color:white"></i>POconversion</a>
-                          </li>
-                      </ul>
-                  </div>
-              </li>
-          </ul>
-      </div>
-   </nav> -->
-   <div class="home-side-bar">
-    <div class="logo-name-wrapper">
-      <div class="logo-name">
-        <img src="{% static 'security/image/logo.png' %}" width="50px">
-        <span class="logo-name__name">Dashboard</span>
-      </div>
-      <button class="logo-name__button">
-        <i
-          class="bx bx-arrow-from-right logo-name__icon"
-          id="logo-name__icon" style="color: white;"
-        ></i>
-      </button>
-    </div>
 
-    <ul class="features-list d-flex d-flex flex-column justify-content-between" style="padding-left: 3px; height: 87vh;">
-      <div>
-        <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'security:home' %}">
-          <li class="features-item draft">
-              <i class="fas fa-home" style="font-size: 20px; color:white"></i>
-              <span class="features-item-text">Home</span>
-          </li>
-        </a>
+    <!-- Favicon -->
+    {% comment %} <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" /> {% endcomment %}
 
-        <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'security:POconversion' %}">
-            <li class="features-item draft">
-                <i class="fas fa-shopping-cart" style="font-size: 20px; color:white"></i>
-                <span class="features-item-text">POconversion</span>
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'security/vendor/fonts/fontawesome.css' %}" />
+    <link rel="stylesheet" href="{% static 'security/vendor/fonts/tabler-icons.css' %}" />
+    <link rel="stylesheet" href="{% static 'security/vendor/fonts/flag-icons.css' %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'security/vendor/css/rtl/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'security/vendor/css/rtl/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'security/vendor/libs/toastr/toastr.css' %}" />
+    <link rel="stylesheet" href="{% static 'security/css/demo.css' %}" />
+    <link rel="stylesheet" href="{% static 'security/css/custom.css' %}">
+
+    <!-- Helpers -->
+    <script src="{% static 'security/vendor/js/helpers.js' %}"></script>
+
+    <script src="{% static 'security/js/config.js' %}"></script>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a href="{% url 'security:home' %}" class="app-brand-link logo-name-wrapper m-0">
+              <span class="app-brand-logo demo">
+                <img src="{% static 'security/image/logo.png' %}" width="46" heigh="46">
+              </span>
+              {% comment %} <span class="app-brand-text demo menu-text fw-bold">Dashboard</span> {% endcomment %}
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-none">
+              <i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
+              <i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
+            </a>
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            <li class="menu-item">
+              <a href="{% url 'security:home' %}" class="menu-link">
+                <i class="menu-icon fa-icons fa fas fa-gauge text-light-blue"></i>
+                <div data-i18n="Email">Home</div>
+              </a>
             </li>
-        </a>
-      </div>
-      <div>
-        <a class="home-side-bar-link" style="text-decoration: none;" href="{% url 'securityauth:signin' %}">
-          <li class="features-item draft">
-              
-              <i class='fas fa-sign-out-alt' style="font-size: 20px; color: white;"></i>
-              <span class="features-item-text">Log out</span>
-          </li>
-        </a>
-      </div>
-    </ul>
+            <li class="menu-item">
+              <a href="{% url 'security:POconversion' %}" class="menu-link">
+                <i class="menu-icon fa-icons fas fa-briefcase text-light-blue"></i>
+                <div data-i18n="Chat">POconversion</div>
+              </a>
+            </li>
+          </ul>
+          <ul class="menu-inner py-1 d-flex justify-content-end">
+            <li class="menu-item">
+              <!-- <a href="{% url 'securityauth:signin' %}" class="menu-link">
+                <i class="menu-icon fas fa-right-from-bracket text-light-blue"></i>
+                <div data-i18n="Chat">Log out</div>
+              </a> -->
+              <a href="{% url 'securityauth:signin' %}" class="menu-link" data-toggle="modal" data-target="#logoutModal">
+                <i class="menu-icon fas fa-right-from-bracket text-light-blue"></i>
+                <div data-i18n="Chat">Log out</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <!-- / Menu -->
 
-    <!-- <a class="home-side-bar-link" style="text-decoration: none; position: absolute;bottom: 25px;" href="{% url 'securityauth:signin' %}">
-        <li class="features-item draft">
-            
-            <i class='fas fa-sign-out-alt' style="font-size: 24px; margin-left: 14px; margin-top: 5px; color: white;"></i>
-            <span class="features-item-text">Log out</span>
-        </li>
-    </a> -->
-  </div>
-
-
-     <div class="home-contain" style="background-color: #f1f1f1;">
-        
-         <nav  class="navbar navbar-expand-lg navbar-light bg-light" style="display: flex; position: fixed ; width: inherit;">
-            <button type="button" id="sidebarCollapse" class="btn ">
-                <i class="fas fa-align-left"></i>
-                
-              </button>
-              <div class="topnav"> 
-                <a class="navbar-brand" href="{% url 'security:home' %}"><span class="overview-text">Dashboard</span></a>
-                <a class="navbar-brand" href="{% url 'security:history' %}" style="display: flex; align-items: center;"><i class="fa fa-history" style="font-size:20px; margin-right: 10px; color:black"></i><span class="history-text"> History</span></a>
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius: 5px;">
+          <div class="modal-dialog modal-dialog-centered" role="document" style="justify-content: center;">
+              <div class="modal-content" style="width: 35%;">
+                  <div class="modal-header" style="border-bottom: none !important;">
+                      <h5 class="modal-title" id="exampleModalLabel">Logout from Status?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-footer" style="border-top: none !important;">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 6px;">Cancel</button>
+                      <a href="{% url 'securityauth:signin' %}" class="btn btn-primary logoutButton" style="border-radius: 6px; color: white !important; background-color: #007bff !important;">Yes, log out</a>
+                  </div>
               </div>
-             
-             
-         </nav>
-       
-       <div id="homecontain" style="background-color: #f1f1f1; margin-top: 40px;  ">
-         {% block content %}
-         {% endblock content %}
-       </div>
-       <div id="historycontain" style="background-color: #f1f1f1;">
-        {% block history_content %}
-        {% endblock history_content %}
-       </div>
-     </div>
-     
+          </div>
+        </div>
 
-     
-  
-       
-    
-    
-    
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
-    <script src="{% static 'security/js/home.js' %}"></script>
-    <script src="{% static 'security/js/history.js' %}"></script>
-    <script src="https://kit.fontawesome.com/c84a4c5774.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" >
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar"
+          >
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="ti ti-menu-2 ti-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- Search -->
+              <a href="{% url 'security:home' %}" class="navbar-nav align-items-center fs-20px text-dark-gray">
+                Dashboard
+              </a>
+              <!-- /Search -->
+
+              <a class="navbar-brand" href="{% url 'security:history' %}" style="display: flex; align-items: center;"><span class="history-text"> History</span></a>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              {% block content %}
+              {% endblock content %}
+            </div>
+            <div id="historycontain" style="background-color: #f1f1f1;">
+              {% block history_content %}
+              {% endblock history_content %}
+            </div>
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- Core JS -->
+        <!-- Core JS -->
+        <script src="{% static 'security/vendor/libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'security/vendor/libs/popper/popper.js' %}"></script>
+        <script src="{% static 'security/vendor/libs/toastr/toastr.js' %}"></script>
+        <script src="{% static 'security/vendor/js/bootstrap.js' %}"></script>
+        
+        <script src="{% static 'security/vendor/js/menu.js' %}"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- endbuild -->
+    
+        <!-- Vendors JS -->
+    
+        <!-- Main JS -->
+        <script src="{% static 'security/js/main.js' %}"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
+        <script src="{% static 'security/js/home.js' %}"></script>
+        {% comment %} <script src="{% static 'security/js/history.js' %}"></script> {% endcomment %}
+        <script src="https://kit.fontawesome.com/c84a4c5774.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" >
     <script type="text/javascript">
         {
           let sideBar = document.querySelector('.home-side-bar');
@@ -163,8 +198,17 @@
             }
           };
         }
-      </script>
+    </script>
+    <script>
+      $(document).ready(function() {
+        $("#layout-menu ul a.menu-link").each((index, ele) => {
+          if(ele.href == window.location.href) {
+            $(ele).addClass('active');
+          }
+        })
+      });
+    </script>
     {% block scripts %}
     {% endblock scripts %}
-</body>
+  </body>
 </html>

@@ -1,168 +1,146 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-
-<div style="margin: 15px">
-  <div class="row" style="align-items: end; margin: 0;">
-  <div class="row" style="margin: 0; background-color: white; border-radius: 4px;">
-    <div class="d-flex custom-select1 col-2 mt-4 align-items-start px-0">
-      <input type="checkbox" class="col-1" id="check-customer" name="check-customer" value="customer">
-      <div class="col-11">
-        <label for="selectOption">Customer Name</label>
-        <select id="selectOption-customer">
-            <option value="All">All</option>
-            <option value="Buc-ee's">Buc-ee's</option>
-            <option value="Pepco">Pepco</option>
-            <option value = "Poundland">Poundland</option>
-            <option value = "Walgreens">Walgreens</option>
-            <option value = "Dollarama">Dollarama</option>
-            <option value = "Family Dollar">Family Dollar</option>
-            <option value = "Gabe's">Gabe's</option>
-            <option value = "TEDI">TEDI</option>
-            <option value = "Big Lots Stores">Big Lots Stores</option>
-            <option value = "Walmart">Walmart</option>
-            <option value = "TARGET">TARGET</option>
-            <option value = "Ollies">Ollies</option>
-            <option value = "Five Below">Five Below</option>
-            <option value = "CVS">CVS</option>
-            <option value = "Meijers">Meijers</option>
-            <option value = "MICHAELS">MICHAELS</option>
-            <option value = "Fred Meyer">Fred Meyer</option>
-            <option value = "Tar Heel Trading">Tar Heel Trading</option>
-        </select>
-      </div>
-    </div>
-    <div class="d-flex custom-select1 col-2 mt-4 align-items-start px-0">
-      <input type="checkbox" class="col-1" id="check-user" name="check-user" value="username">
-      <div class="col-11">
-        <label for="selectOption">User Name</label>
-        <select id="selectOption-user">
-            <option value="All">All</option>
-            <option value="johngrey0324">johngrey0324</option>
-            <option value="simon">simon</option>
-            <option value="johngrey">johngrey</option>
-            <option value="lucy">lucy</option>
-            <option value="melody">melody</option>
-            <option value="elaine">elaine</option>
-            <option value="jasmine">jasmine</option>
-
-        </select>
-      </div>
-    </div>
-    <div class="col-2 d-flex align-items-start px-0 custom-date mt-4">
-      <input type="checkbox" class="col-1" id="check-creationdate" name="check-creationdate" value="creationdate">
-      <div class="col-11 flex-column">  
-        <label>Creation Date</label>
-          <div class="date-style">
-            <div class="custom-select-date">
-              <label for="selectOption">Start Date</label>
-              <input type="date" id="creatStartDate" name="startDate">
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="w-100">
+          <div class="w-100 d-flex">
+            <div class="w-10-pro px-20px">
+              <input type="checkbox" class="d-none" id="check-customer" name="check-customer" value="customer">
+              <label for="selectOption" class="form-label">Customer Name</label>
+              <select id="selectOption-customer" class="form-select">
+                <option value="All">All</option>
+                <option value="Buc-ee's">Buc-ee's</option>
+                <option value="Pepco">Pepco</option>
+                <option value = "Poundland">Poundland</option>
+                <option value = "Walgreens">Walgreens</option>
+                <option value = "Dollarama">Dollarama</option>
+                <option value = "Family Dollar">Family Dollar</option>
+                <option value = "Gabe's">Gabe's</option>
+                <option value = "TEDI">TEDI</option>
+                <option value = "Big Lots Stores">Big Lots Stores</option>
+                <option value = "Walmart">Walmart</option>
+                <option value = "TARGET">TARGET</option>
+                <option value = "Ollies">Ollies</option>
+                <option value = "Five Below">Five Below</option>
+                <option value = "CVS">CVS</option>
+                <option value = "Meijers">Meijers</option>
+                <option value = "MICHAELS">MICHAELS</option>
+                <option value = "Fred Meyer">Fred Meyer</option>
+                <option value = "Tar Heel Trading">Tar Heel Trading</option>
+              </select>
             </div>
-            <div class="custom-select-date">
-              <label for="selectOption">End Date</label>
-              <input type="date" id="creatEndDate" name="endDate">
+            <div class="w-10-pro px-20px">
+              <input type="checkbox" class="d-none" id="check-user" name="check-user" value="username">
+              <label for="selectOption" class="form-label">User Name</label>
+              <select id="selectOption-user" class="form-select">
+                <option value="All">All</option>
+                <option value="johngrey0324">johngrey0324</option>
+                <option value="simon">simon</option>
+                <option value="johngrey">johngrey</option>
+                <option value="lucy">lucy</option>
+                <option value="melody">melody</option>
+                <option value="elaine">elaine</option>
+                <option value="jasmine">jasmine</option>
+              </select>
+            </div>
+            <div class="w-25-pro px-20px">
+              <input type="checkbox" class="d-none" id="check-creationdate" name="check-creationdate" value="creationdate">
+              <label class="form-label">Creation Date</label>
+              <div class="row">
+                <div class="col-6">
+                  <input type="date" id="creatStartDate" name="startDate" class="form-control">
+                </div>
+                <div class="col-6">
+                  <input type="date" id="creatEndDate" name="endDate" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="w-25-pro px-20px">
+              <input type="checkbox" class="d-none" id="check-podate" name="check-podate" value="podate">
+              <label class="form-label">PO Date</label>
+              <div class="row">
+                <div class="col-6">
+                  <input type="date" id="poStartDate" name="startDate" class="form-control">
+                </div>
+                <div class="col-6">
+                  <input type="date" id="poEndDate" name="endDate" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="w-30-pro px-20px">
+              <div class="w-100 d-flex items-end h-100 pb-1 flex-wrap justify-center gap-5">
+                <button class="btn btn-outline-dark waves-effect mr-0 btn-sm md-flex-1" type="button" id="filterButton">
+                  <i class="fa fa-filter" style="font-size:15px"></i> Filter
+                </button>
+                <button class="btn btn-outline-dark waves-effect mr-0 btn-sm md-flex-1" type="button" id="refreshButton" onclick="refreshPage()">
+                  <i class="fa fa-refresh" style="font-size:15px"></i> Clear
+                </button>
+              </div>
             </div>
           </div>
-      </div>
-    </div>
-    <div class="col-2 d-flex align-items-start px-0 custom-date mt-4">
-      <input type="checkbox" class="col-1" id="check-podate" name="check-podate" value="podate">
-      <div class="col-11 flex-column">
-        <label>PO Date</label>
-        <div class="date-style">
-          <div class="custom-select-date">
-            <label for="selectOption">Start Date</label>
-            <input type="date" id="poStartDate" name="startDate">
+          <div class="row mt-4 table-responsive text-nowrap" style="margin: 0; background-color: white; border-radius: 4px;" >
+            <table class="table" id="history">
+              <thead>
+                <tr class="bg-light-gray">
+                  {% comment %} <th style="width: 5%;"><input type="checkbox" id="masterCheckbox" name="checkbox" onchange="toggleCheckboxes(this)"></th> {% endcomment %}
+                  <th width="10%" onclick="sortTable(1)" class="sortable-column">Customer Name <span id="sortSymbol1" class="order-symbol">&#x02191;</span></th>
+                  <th width="10%" onclick="sortTable(2)" class="sortable-column">User Name <span id="sortSymbol2" class="order-symbol">&#x02191;</span></th>
+                  <th width="25%" onclick="sortTable(3)" class="sortable-column">Creation Date <span id="sortSymbol3" class="order-symbol">&#x02191;</span></th>
+                  <th width="25%" onclick="sortTable(4)" class="sortable-column" style="padding-left: 40px;">PO Date <span id="sortSymbol4" class="order-symbol">&#x02191;</span></th>
+                  <th width="30%"></th>
+                </tr>
+              </thead>
+        
+              {% if histories != "empty" %}
+              <tbody>
+                {% for history in histories %}
+                <tr class="table-row" data-customer-name="{{ history.0 }}" data-user-name="{{ history.1 }}" data-creation-date="{{ history.2 }}" data-po-date="{{ history.3 }}">
+                  {% comment %} <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()" data-creation-date="{{ history.2 }}"></td> {% endcomment %}
+                  <td>{{ history.0 }}</td>
+                  <td>{{ history.1 }}</td>
+                  <td>{{ history.2 }}</td>
+                  <td style="padding-left: 40px;">{{ history.3 }}</td>
+                  <td class="text-center">
+                    <div class="w-100 d-flex gap-1 flex-row-reverse">
+                      <form method="post">
+                        {% csrf_token %}
+                        <a type="submit" class="btn btn-outline-primary border-0 waves-effect mr-0" href="{% url 'security:history_view' history.2 %}"
+                          id="history_viewer"><i class="fas fa-eye fs-20px"></i>View</a>
+                      </form>
+                      <button class="btn btn-outline-primary waves-effect mr-0">
+                        <i class="fas fa-download fs-20px"></i>
+                        ODownload
+                      </button>
+                      <button class="btn btn-outline-primary waves-effect mr-0">
+                        <i class="fas fa-download fs-20px"></i>
+                        IDownload
+                      </button>
+                    </div>
+                  </td>
+        
+                </tr>
+                {% endfor %}
+              </tbody>
+              {% endif %}
+            </table>
           </div>
-          <div class="custom-select-date">
-            <label for="selectOption">End Date</label>
-            <input type="date" id="poEndDate" name="endDate">
+          <div class="row mt-5">
+            <div class="col-10"></div>
+            <div class="col-2 d-flex align-items-end justify-content-start ps-5 ">
+              <form method="post" class="delete-form">
+                {% csrf_token %}
+                <button class="btn btn-danger text-white rounded" id="deleteButton">
+                  <i class="fa fa-trash"></i><span style="font-size: 16px; font-weight: bold;">Delete</span> 
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="flex-column col-2" style="position: relative;">
-      <div id="toastContainer" class="filter-message">
-      </div>
-
-      <div style="margin-top: 22px;">
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="filterButton">
-          <i class="fa fa-filter" style="font-size:15px"></i> Filter
-        </button>
-      </div>
-      <div style="margin-top: 22px;">
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="button" id="refreshButton" onclick="refreshPage()">
-          <i class="fa fa-refresh" style="font-size:15px"></i> Clear
-        </button>
-      </div>
-    </div>
-
-  </div>
-  <div class="row mt-4" style="margin: 0; background-color: white; border-radius: 4px;" >
-    
-    <style>
-      #history thead, #history tbody tr {
-          display: table;
-          width: 100%;
-          table-layout: fixed;
-      }
-      #history tbody {
-          height: calc(100vh - 448px);
-          table-layout: fixed;
-          overflow: auto;
-          display: block;
-          width: 100%;
-      }
-      .container{
-        max-width: 1324px !important;
-      }
-    </style>
-    <table class="table" id="history">
-      <thead>
-        <tr>
-          <th style="width: 5%;"><input type="checkbox" id="masterCheckbox" name="checkbox" onchange="toggleCheckboxes(this)"></th>
-          <th onclick="sortTable(1)" class="sortable-column">Customer Name <span id="sortSymbol1" class="order-symbol">&#x02191;</span></th>
-          <th onclick="sortTable(2)" class="sortable-column">User Name <span id="sortSymbol2" class="order-symbol">&#x02191;</span></th>
-          <th onclick="sortTable(3)" class="sortable-column">Creation Date <span id="sortSymbol3" class="order-symbol">&#x02191;</span></th>
-          <th onclick="sortTable(4)" class="sortable-column" style="padding-left: 40px;">PO Date <span id="sortSymbol4" class="order-symbol">&#x02191;</span></th>
-          <th></th>
-        </tr>
-      </thead>
-
-      {% if histories != "empty" %}
-      <tbody>
-        {% for history in histories %}
-        <tr class="table-row" data-customer-name="{{ history.0 }}" data-user-name="{{ history.1 }}" data-creation-date="{{ history.2 }}" data-po-date="{{ history.3 }}">
-          <td style="width: 5%;"><input type="checkbox" class="subCheckbox" id="checkbox" name="checkbox" onchange="updateMasterCheckbox()" data-creation-date="{{ history.2 }}"></td>
-          <td>{{ history.0 }}</td>
-          <td>{{ history.1 }}</td>
-          <td>{{ history.2 }}</td>
-          <td style="padding-left: 40px;">{{ history.3 }}</td>
-          <td class="text-center">
-            <form method="post">
-              {% csrf_token %}
-              <a type="submit" class="btn btn-primary" href="{% url 'security:history_view' history.2 %}"
-                id="history_viewer">View</a>
-            </form>
-          </td>
-
-        </tr>
-        {% endfor %}
-      </tbody>
-      {% endif %}
-    </table>
-  </div>
-  <div class="black-line" style = "width: 100%; height: 7px; background-color: darkslategray"></div>
-  <div class="row mt-5">
-      <div class="col-10"></div>
-      <div class="col-2 d-flex align-items-end justify-content-start ps-5 ">
-          <form method="post" class="delete-form">
-            {% csrf_token %}
-            <button class="btn btn-danger text-white rounded" id="deleteButton">
-              <i class="fa fa-trash"></i><span style="font-size: 16px; font-weight: bold;">Delete</span> 
-            </button>
-          </form>
-      </div>
   </div>
 </div>
 
@@ -387,8 +365,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
 </script>
 
-
-  {% endblock %}
+{% endblock %}
