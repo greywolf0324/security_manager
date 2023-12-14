@@ -245,8 +245,6 @@ class PO_Match_BUCEE_PDF(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
         
         return output
     
@@ -402,8 +400,6 @@ class PO_Match_PEPCO(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -591,8 +587,6 @@ class PO_Match_PEPCO_Add(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
         return output
     
 class PO_Match_Walgreens:
@@ -640,8 +634,6 @@ class PO_Match_Walgreens:
                 elif key == "Cancel Date":
                     content[key] = dates[1]
                     
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -891,8 +883,6 @@ class PO_Match_Dollarama(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -1253,8 +1243,6 @@ class PO_Match_Gabes(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
 
@@ -1396,8 +1384,6 @@ class PO_Match_TEDI(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
 
@@ -1596,8 +1582,6 @@ class PO_Match_Ollies(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -1753,8 +1737,6 @@ class PO_Match_ORBICO(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
 
@@ -1878,8 +1860,6 @@ class PO_Match_EXCEL(PO_Match):
     
     def match_final(self, PO_res):
         if len(PO_res[0].keys()) > 100:
-            df = pd.DataFrame(PO_res[0])
-            df.to_excel("sales_origin.xlsx")
             return PO_res
         else:
             # get PO_res keys
@@ -1906,8 +1886,6 @@ class PO_Match_EXCEL(PO_Match):
                     if key not in self.PO_inherited:
                         del item[key]
 
-            df = pd.DataFrame(PO_res[0])
-            df.to_excel("sales_origin.xlsx")
 
             return PO_res
 class PO_Match_CVS(PO_Match):
@@ -2078,8 +2056,6 @@ class PO_Match_CVS(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
         
-        df = pd.DataFrame(PO_res[0])
-        df.to_excel("sales_origin.xlsx")
 
         return PO_res
     
@@ -2257,8 +2233,6 @@ class PO_Match_GiantTiger(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -2381,8 +2355,6 @@ class PO_Match_HOBBYlobby(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
     
@@ -2512,7 +2484,5 @@ class PO_Match_Lekia(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
-        df = pd.DataFrame(output[0])
-        df.to_excel("sales_origin.xlsx")
 
         return output
