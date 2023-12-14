@@ -240,17 +240,17 @@
         </div>
       </div>
 
-      <div class="stepper-content fade-in" stepper-label="3" style="background: #f9f9f9;">
-        <div class="w-100 review-stepper py-3">
+      <div class="stepper-content fade-in" stepper-label="3" style="background: #f9f9f9; height: 100%;">
+        <div class="w-100 review-stepper py-3" style="height: 100%;">
           <div id="loader2" class="w-100 d-none justify-content-center" style="display: flex;">
             <div class="spinner-border text-primary" role="status">
               <span class="sr-only"></span>
             </div>
             <h5 class="ms-3 text-primary">Loading...</h5>
           </div>
-          <div class="row">
+          <div class="row" style="height: 100%;">
             <div class="col-md-9 col-sm-12">
-              <div class="card h-content">
+              <div class="card">
                 {% comment %} <div class="card-header border-b pb-2">
                   <h5 class="card-title my-0 customername">Customer Order Mapping</h5>
                 </div> {% endcomment %}
@@ -258,7 +258,7 @@
                   <div id="view_details">
                   </div>
                 </div>
-                <div class="card-body pt-2">
+                <div class="my-3 pt-2">
                   <div class="col-12 d-flex flex-row-reverse mt-2">
                     <button id="final-step" type="button" onclick="processStepper.navigate('4')" class="btn btn-outline-dark waves-effect">Next</button>
                     <button type="button" onclick="processStepper.navigate('2')" class="btn btn-outline-dark waves-effect">Prev</button>
@@ -276,14 +276,14 @@
         </div>
       </div>
 
-      <div class="stepper-content fade-in" stepper-label="4">
+      <div class="stepper-content fade-in" stepper-label="4" style="height: 100%;">
         <div id="loader3" class="w-100 d-none justify-content-center" style="display: flex;">
           <div class="spinner-border text-primary" role="status">
             <span class="sr-only"></span>
           </div>
           <h5 class="ms-3 text-primary">Generating...</h5>
         </div>
-        <div class="card h-content d-none" id="step_4_content">
+        <div class="card d-none" id="step_4_content" style="height: 100%;">
           <div class="card-body min-h-400px">
             <div class="d-flex flex-column justify-space-between items-center">
               <img src="static/security/image/success.png" class="mt-60px" width="150" heigh="150">
@@ -297,7 +297,7 @@
             </div> -->
           </div>
           <div class="d-flex justify-content-end mt-3 prev-button">
-            <button type="button" onclick="processStepper.navigate('3')" class="btn btn-outline-dark waves-effect">Prev</button>
+            <button type="button" onclick="processStepper.navigate('3')" class="btn btn-outline-dark waves-effect" style="margin-bottom: 25px;">Prev</button>
           </div>
         </div>
       </div>

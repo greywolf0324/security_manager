@@ -135,7 +135,7 @@
           <!-- Navbar -->
 
           <nav
-            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            class="layout-navbar mx-3 mt-3 navbar navbar-expand-xl align-items-center bg-navbar-theme"
             id="layout-navbar"
           >
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -146,7 +146,7 @@
 
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               <!-- Search -->
-              <a href="{% url 'security:home' %}" class="navbar-nav align-items-center fs-20px text-dark-gray">
+              <a href="{% url 'security:home' %}" class="navbar-nav align-items-center fs-20px text-dark-gray" style="padding-left: 20px;">
                 Dashboard
               </a>
               <!-- /Search -->
@@ -161,7 +161,7 @@
           <div class="content-wrapper">
             <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="mx-3 flex-grow-1 container-p-y">
               {% block content %}
               {% endblock content %}
             </div>
