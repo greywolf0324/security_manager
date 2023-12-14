@@ -135,7 +135,7 @@ def history(request):
     
   for file in glob("*.csv"):
     if file[:-3] in view_filename_paths:
-      paths.append(str(path) + "/" + file)
+      paths.append(str(path) + "\\" + file)
 
   new_histories = []
   creation_dates = []
