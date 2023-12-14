@@ -617,6 +617,9 @@ class Dollarama_Parsing:
                 P_page = page.within_bbox(self.P_bbox)
                 U_page = page.within_bbox(self.U_bbox)
                 D_page = page.within_bbox(self.D_bbox)
+                ISI_page = page.within_bbox([page.search("Import Special")[0]['x0'], page.search("Import Special")[0]['top'], page.search("Assortment")[0]['x0'], page.search("Import Special")[0]['top'] + 100])
+                AD_page = page.within_bbox([page.search("Assortment")[0]['x0'],  page.search("Assortment")[0]['top'],  page.search("Dollarama Internal")[0]['x0'] - 10, page.search("Assortment")[0]['top'] + 100])
+                Comment_page = page.within_bbox([page.search("Artwork Requirements")[0]['x0'], page.search("Artwork Requirements")[0]['bottom'] + 20, page.search("Season")[0]['x0'] - 20, page.search("Artwork Requirements")[0]['bottom'] + 80])
 
                 self.length = len(table_1) - 2
                 for key in self.keys:
@@ -655,6 +658,9 @@ class Dollarama_Parsing:
                 res[f"PDF{k}"][f"page{page_num}"]["Artwork Requirements"] = "Dollarama"
                 res[f"PDF{k}"][f"page{page_num}"]["Season"] = D_page.extract_text().split("\n")[3].split("Dollarama")[1][1:]
                 res[f"PDF{k}"][f"page{page_num}"]["Retail"] = page.extract_text().split("\n")[35].split("> ")[1]
+                res[f"PDF{k}"][f"page{page_num}"]["ISI"] = ISI_page.extract_text().split("\n")[1]
+                res[f"PDF{k}"][f"page{page_num}"]["AD"] = "\n".join(AD_page.extract_text().split("\n")[1:])
+                res[f"PDF{k}"][f"page{page_num}"]["comment"] = Comment_page.extract_text()
 
         return res
     
