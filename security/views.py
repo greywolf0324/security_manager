@@ -221,8 +221,20 @@ def history_viewer(request, creation_date):
       dic.append(tem_dic)
     
     itemdetails.append(dic)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print(itemdetails, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    response_data = {
+        'customername': customername,
+        'headerkeys': headerkeys,
+        'itemkeys': itemkeys,
+        'headerDetails' : headerdetails,
+        'itemDetails': itemdetails
+    }
 
-  return render(request, 'history_view.html', {'customername': customername, "headerkeys": headerkeys, "itemkeys": itemkeys, "details": zip(headerdetails, itemdetails)})
+    return JsonResponse(response_data)
+
+
+  # return render(request, 'history_view.html', {'customername': customername, "headerkeys": headerkeys, "itemkeys": itemkeys, "details": zip(headerdetails, itemdetails)})
 
 @login_required
 def history_deletion(request):
