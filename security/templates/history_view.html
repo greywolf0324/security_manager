@@ -1,52 +1,196 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-    <div class= "mt-5 mb-5" style="background-color: white; width: 95%;" >
-        {% for detail in details %}
-            <div class="mb-5">
-                <div class="black-line" style = "width: 100%; height: 7px; background-color: darkslategray;"></div>
-                <h4 class="mt-3 mb-2">Header Details</h4>
-                <table class="table table-bordered" id="item-headerdetail-table">
-                    <thead>
-                        <tr>
-                            {% for key in headerkeys %}
-                                <th>{{ key }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {% for value in detail.0 %}
-                                <th>{{ value }}</th>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-                <h4 class="mt-3 mb-2">Item Details</h4>
-                <table class="table table-bordered" id="item-details-table">
-                    <thead>
-                        <tr>
-                            {% for key in itemkeys %}
-                                <th>{{ key }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for line in detail.1 %}
-                            <tr>
-                                {% for value in line %}
-                                    <th>{{ value }}</th>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endfor %}
+    <div class="mt-3 mb-5 mx-0 row" style="background-color: white; width: 100%; height: 100%;">
         
+        <div class="col-md-9 col-sm-12" style="padding-left: 0px; height: 100%;">
+            <div class="card">
+                <div class="card-body pt-2 overflow-y-auto">
+                    <div id="history_detail">
 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12" style="padding-right: 0px; height: 100%;">
+            <div class="card">
+                <div class="card-body p-0 overflow-y-auto" id="history_info">
+                    
+                </div>
+            </div>
+        </div>
     </div>
+
 <script>
     console.log("{{ test }}")
+</script>
+<script>
+    var history_headerDetails = null;
+    var history_itemDetails = null;
+    var headerkeys = "{{ headerkeys|escapejs }}";
+    var itemkeys = "{{ itemkeys|escapejs }}";
+    var headerdetails = "{{ headerdetails|escapejs }}";
+    var itemdetails = "{{ itemdetails|escapejs }}";
+    history_headerDetails = headerdetails;
+    history_itemDetails = itemdetails;
+    history_headerkeys = headerkeys;
+    history_itemkeys = itemkeys;
+
+    historyBuildTable(headerkeys, itemkeys, headerdetails, itemdetails, "#history_detail", single=false)
+    function historyBuildTable(headerkeys, itemkeys, headerdetails, itemdetails, selector, single=true) {
+        var data_header = [];
+        var keys_item = [];
+        var data_item = [];
+        var correctedStr = headerdetails.replace(/'/g, '"');
+        var correctedItemkeysStr = itemkeys.replace(/'/g, '"');
+        var correctedItemdetailssStr = itemdetails.replace(/'/g, '"');
+        data_header = JSON.parse(correctedStr);
+        keys_item = JSON.parse(correctedItemkeysStr);
+        data_item = JSON.parse(correctedItemdetailssStr);
+        const element = document.querySelector(selector);
+
+        let tmpHtml = '';
+            for (let j = 0; j < data_header.length; j++) {
+                tmpHtml += `<div class="w-100 d-flex p-4 customer-item" onClick="historyCustomerPODetails('${selector}', ${j})">
+                <div class="w-50px d-flex justify-center pt-3">
+                    <i class="fas fs-20px fa-address-card"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="w-100">
+                    <p class="mb-0">
+                    <strong>Customer PO:</strong>
+                    <span class="text-info">${data_header[j][0]}</span>
+                    </p>
+                    <p class="mb-0">selector
+                    PO Date:
+                    <span class="text-info">${data_header[j][1]}</span>
+                    </p>
+                    <p class="mb-0">
+                    Ship Date:
+                    <span class="text-info">${data_header[j][3]}</span>
+                    </p>
+                    <p class="mb-0">
+                    PO Total:
+                    <span class="text-info">${Number(data_header[j][6]).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+                    </p>
+                    </div>
+                </div>
+                </div>`
+            }
+        document.getElementById("history_info").innerHTML = tmpHtml;
+        data_index = 0;
+        let content = `
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[data_index][0]}</span></p>
+            </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[data_index][2]}</span></p>
+            </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[data_index][4]}</span></p>
+            </div>
+            </div>
+        </div>
+        `
+        content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
+        content += "<thead><tr class='bg-light-gray'>"
+        const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
+        content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
+        content += "</tr></thead><tbody>"
+        // for (let i = 0; i < data_header.length; i++) {
+            
+        if (single) {
+            for (let j = 0; j < data_item[0].length; j++){
+                let data_row = data_item[0][j];
+                content += "<tr>"
+                for (let k = 0; k < keys_item.length; k++) {
+                    content += `<td>${data_row[k]}</td>`;
+                }
+                content += "</tr>";
+            }
+        } else {
+            for (let j = 0; j < data_item[0].length; j++){
+                
+                let data_row = data_item[0][j];
+                
+                content += "<tr>"
+                for (let k = 0; k < keys_item.length; k++) {
+                    content += `<td>${data_row[k]}</td>`;
+                }
+                content += "</tr>";
+            }
+        }
+        // }
+        element.innerHTML = content;
+
+        }
+    
+    function historyCustomerPODetails(selector, data_index){
+        headerdetails1 = history_headerDetails;
+        itemdetails1 = history_itemDetails;
+        itemkeys1 = history_itemkeys;
+        var data_header = [];
+        var keys_item = [];
+        var data_item = [];
+        var correctedStr = headerdetails1.replace(/'/g, '"');
+        var correctedItemkeysStr = itemkeys1.replace(/'/g, '"');
+        var correctedItemdetailssStr = itemdetails1.replace(/'/g, '"');
+        data_header = JSON.parse(correctedStr);
+        keys_item = JSON.parse(correctedItemkeysStr);
+        data_item = JSON.parse(correctedItemdetailssStr);
+        console.log("data_index", data_index);
+        console.log("keys_item", keys_item);
+        console.log("keyitemlength",keys_item.length)
+        console.log("data_header", data_header);
+        console.log("data_item", data_item);
+        const element = document.querySelector(selector);
+
+        let content = `
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Customer PO: </strong><span class="text-info">${data_header[data_index][0]}</span></p>
+            </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Dept: </strong><span class="text-info">${data_header[data_index][2]}</span></p>
+            </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+            <div class="w-100 border rounded h-50px d-flex items-center pl-3">
+                <p class="mb-0"><strong>Cancel Date: </strong><span class="text-info">${data_header[data_index][4]}</span></p>
+            </div>
+            </div>
+        </div>
+        `
+        content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
+        content += "<thead><tr class='bg-light-gray'>"
+        const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
+        content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
+        content += "</tr></thead><tbody>"
+
+        // for (let j = 0; j < data_item[data_index].length; j++){
+        // content += "<tr>"
+        // content += keys_item.map((key, index) => `<td>${data_item[data_index][key][j]}</td>`).join("")
+        // content += "</tr>"
+        //     }
+            for (let j = 0; j < data_item[data_index].length; j++){
+                let data_row = data_item[data_index][j];
+                console.log("data_indexdata", data_row)
+                content += "<tr>"
+                for (let k = 0; k < keys_item.length; k++) {
+                    content += `<td>${data_row[k]}</td>`;
+                }
+                content += "</tr>";
+            }
+        element.innerHTML = content;
+}
 </script>
 {% endblock %}
