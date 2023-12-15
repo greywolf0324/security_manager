@@ -878,6 +878,14 @@ class Ollies_Parsing:
             cropped_page = pdf.pages[0].within_bbox([pdf.pages[0].search("PO#")[0]['x0'], pdf.pages[0].search("PO#")[0]['top'], pdf.pages[0].search("PO#")[0]['x0'] + 300, pdf.pages[0].search("Approved by")[0]['bottom']])
             crop = cropped_page.extract_text().split("\n")
 
+            page = pdf.pages[0]
+            b_cropage = page.within_bbox([page.search("Bill To:")[0]['x0'], page.search("Bill To:")[0]['top'], page.search("Order Dt")[0]['x0'], page.search("Ship To")[0]['top']])
+            s_cropage = page.within_bbox([page.search("Bill To:")[0]['x0'], page.search("Ship To")[0]['top'], page.search("Order Dt")[0]['x0'], page.search("Buyer:")[0]['top']])
+            n_cropage = page.within_bbox([page.search("Bill To:")[0]['x0'] - 5, page.search("NOTES:")[0]['top'], page.search("Order Dt")[0]['x0'], page.search("NOTES:")[0]['top'] + 25])
+
+            res[f"PDF{k}"][f"page{page_num}"]["BT"] = b_cropage.extract_text()
+            res[f"PDF{k}"][f"page{page_num}"]["ST"] = s_cropage.extract_text()
+            res[f"PDF{k}"][f"page{page_num}"]["NT"] = n_cropage.extract_text()
             res[f"PDF{k}"][f"page{page_num}"]["PO#"] = crop[0].split("PO#: ")[1]
             res[f"PDF{k}"][f"page{page_num}"]["Vendor#"] = crop[5].split("Vendor#: ")[1]
             res[f"PDF{k}"][f"page{page_num}"]["Order Dt"] = crop[7].split("Order Dt: ")[1]

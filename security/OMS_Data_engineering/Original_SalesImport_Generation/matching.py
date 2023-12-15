@@ -1428,6 +1428,19 @@ class PO_Match_Ollies(PO_Match):
             "Product/Item Description": "description",
             "PO Total Amount": "Total - unit",
             # "PO Total Weight": "",
+            "Ship To Address 1": "ST",
+            "Ship To Address 2": "ST",
+            "Ship To City": "ST",
+            "Ship To State": "ST",
+            "Ship to Zip": "ST",
+            "Ship To Country": "ST",
+            "Bill To Name": "BT",
+            "Bill To Address 1": "BT",
+            "Bill To Address 2": "BT",
+            "Bill To City": "BT",
+            "Bill To State": "BT",
+            "Bill To Zip": "BT",
+            "Notes/Comments": "NT"
         }
 
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
@@ -1556,6 +1569,90 @@ class PO_Match_Ollies(PO_Match):
 
                 for _ in range(self.length - 1):
                     input[key].append(input[self.pair[key]])
+
+                del input[self.pair[key]]
+
+            elif key == "Notes/Comments":
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+                del input[self.pair[key]]
+
+            elif key == "Ship To Address 1":
+                input[key] = [input[self.pair[key]].split("\n")[0].split("Ship To: ")[1]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Ship To Address 2": 
+                input[key] = [input[self.pair[key]].split("\n")[1]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Ship To City":
+                input[key] = [input[self.pair[key]].split("\n")[2].split(", ")[0]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Ship To State": 
+                input[key] = [input[self.pair[key]].split("\n")[2].split(", ")[1].split(" ")[0]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Ship to Zip":
+                input[key] = [input[self.pair[key]].split("\n")[2].split(", ")[1].split(" ")[1]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Ship To Country":
+                input[key] =[input[self.pair[key]].split("\n")[3]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+                del input[self.pair[key]]
+
+            elif key == "Bill To Name":
+                input[key] = [input[self.pair[key]].split("\n")[1]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Bill To Address 1":
+                input[key] = [input[self.pair[key]].split("\n")[2]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Bill To Address 2":
+                input[key] = [input[self.pair[key]].split("\n")[3]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Bill To City":
+                input[key] = [input[self.pair[key]].split("\n")[4].split(", ")[0]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Bill To State":
+                input[key] = [input[self.pair[key]].split("\n")[4].split(", ")[1].split(" ")[0]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+            elif key == "Bill To Zip":
+                input[key] = [input[self.pair[key]].split("\n")[4].split(", ")[1].split(" ")[1]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
 
                 del input[self.pair[key]]
 
