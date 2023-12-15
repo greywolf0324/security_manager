@@ -11,7 +11,7 @@ var st3_itemDetails = null;
 (function () {
 
   'use strict';
-  
+
   // Four objects of interest: drop zones, input elements, gallery elements, and the files.
   // dataRefs = {files: [image files], input: element ref, gallery: element ref}
 
@@ -28,7 +28,7 @@ var st3_itemDetails = null;
 
   const highlight = event =>
     event.target.classList.add('highlight');
-  
+
   const unhighlight = event =>
     event.target.classList.remove('highlight');
 
@@ -36,7 +36,7 @@ var st3_itemDetails = null;
     const zone = element.closest('.upload_dropZone') || false;
     const gallery = zone.querySelector('.upload_gallery') || false;
     const input = zone.querySelector('input[type="file"]') || false;
-    return {input: input, gallery: gallery};
+    return { input: input, gallery: gallery };
   }
 
   const handleDrop = event => {
@@ -86,7 +86,7 @@ var st3_itemDetails = null;
 
   // No 'image/gif' or PDF or webp allowed here, but it's up to your use case.
   // Double checks the input "accept" attribute
-  const isImageFile = file => 
+  const isImageFile = file =>
     ['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type);
 
 
@@ -95,7 +95,7 @@ var st3_itemDetails = null;
     for (const file of dataRefs.files) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onloadend = function() {
+      reader.onloadend = function () {
         let img = document.createElement('div');
         img.className = 'upload_img mt-2';
         img.setAttribute('alt', file.name);
@@ -153,16 +153,23 @@ var st3_itemDetails = null;
 
 })();
 
-function customerPODetails(selector, data_index){
+function customerPODetails(selector, data_index) {
 
-    data_header = st3_headerDetails
-    data_item = st3_itemDetails
+  const liElements = document.querySelectorAll(".customer-item");
+  liElements.forEach(function (el) {
+    el.classList.remove("select_active");
+  });
 
-    const keys_header = Object.keys(data_header[0])
-    const keys_item = Object.keys(data_item[0])
-    const element = $(selector)
+  liElements[data_index].classList.add("select_active")
 
-    let content = `
+  data_header = st3_headerDetails
+  data_item = st3_itemDetails
+
+  const keys_header = Object.keys(data_header[0])
+  const keys_item = Object.keys(data_item[0])
+  const element = $(selector)
+
+  let content = `
       <div class="row">
         <div class="col-md-4 col-sm-12">
           <div class="w-100 border rounded h-50px d-flex items-center pl-3">
@@ -181,24 +188,24 @@ function customerPODetails(selector, data_index){
         </div>
       </div>
     `
-    content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
-    content += "<thead><tr class='bg-light-gray'>"
-    const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
-    content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
-    content += "</tr></thead><tbody>"
+  content += '<div class="table overflow-x-auto mt-3"><table class="table table-separate-tr">'
+  content += "<thead><tr class='bg-light-gray'>"
+  const thLabels = ["Customer SKU", "UPC", "Creative Kids SKU", "Retail Price", "PO UOM", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Units Per Case Pack", "Units Per Inner Pack", "Inner Pack Quantity", "Price Total Amount"]
+  content += keys_item.map((key, id) => `<th>${thLabels[id]}</th>`).join("")
+  content += "</tr></thead><tbody>"
 
-    for (let j = 0; j < data_item[data_index]["Buyers Catalog or Stock Keeping #"].length; j++){
-      content += "<tr>"
-      content += keys_item.map((key, index) => `<td>${data_item[data_index][key][j]}</td>`).join("")
-      content += "</tr>"
-        }
-
-    element.html(content)
+  for (let j = 0; j < data_item[data_index]["Buyers Catalog or Stock Keeping #"].length; j++) {
+    content += "<tr>"
+    content += keys_item.map((key, index) => `<td>${data_item[data_index][key][j]}</td>`).join("")
+    content += "</tr>"
   }
+
+  element.html(content)
+}
 
 var terms_opt = '';
 
-function getvalue(element){
+function getvalue(element) {
   terms_opt = element.value
 }
 
@@ -207,64 +214,64 @@ const processStepper = new CDB.Stepper(stepper);
 
 const termsOptionsFromOMS = (term) => {
   const options = [' T/T against BL Copy',
-   '0 Days',
-   '105 Days',
-   '120 Days',
-   '15 Days',
-   '2% 30 Net 31',
-   '25% Deposit - 75% Against BOL',
-   '30 Days',
-   '30% Deposit - 70% Against BOL',
-   '30% Deposit - 70% Before Shipment',
-   '45 Days',
-   '50% Deposit - 50% Net 30 Days',
-   '50% Deposit - 50% Upon Goods Pick Up',
-   '60 Days',
-   '75 Days',
-   '90 Days',
-   'Letter of Credit']
-   console.log(term, "term")
-  return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option ===  term?"selected":""}>${option}</option>`)}</select>`
+    '0 Days',
+    '105 Days',
+    '120 Days',
+    '15 Days',
+    '2% 30 Net 31',
+    '25% Deposit - 75% Against BOL',
+    '30 Days',
+    '30% Deposit - 70% Against BOL',
+    '30% Deposit - 70% Before Shipment',
+    '45 Days',
+    '50% Deposit - 50% Net 30 Days',
+    '50% Deposit - 50% Upon Goods Pick Up',
+    '60 Days',
+    '75 Days',
+    '90 Days',
+    'Letter of Credit']
+  console.log(term, "term")
+  return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option === term ? "selected" : ""}>${option}</option>`)}</select>`
 }
 
 const term_options = [' T/T against BL Copy',
-   '0 Days',
-   '105 Days',
-   '120 Days',
-   '15 Days',
-   '2% 30 Net 31',
-   '25% Deposit - 75% Against BOL',
-   '30 Days',
-   '30% Deposit - 70% Against BOL',
-   '30% Deposit - 70% Before Shipment',
-   '45 Days',
-   '50% Deposit - 50% Net 30 Days',
-   '50% Deposit - 50% Upon Goods Pick Up',
-   '60 Days',
-   '75 Days',
-   '90 Days',
-   'Letter of Credit']
+  '0 Days',
+  '105 Days',
+  '120 Days',
+  '15 Days',
+  '2% 30 Net 31',
+  '25% Deposit - 75% Against BOL',
+  '30 Days',
+  '30% Deposit - 70% Against BOL',
+  '30% Deposit - 70% Before Shipment',
+  '45 Days',
+  '50% Deposit - 50% Net 30 Days',
+  '50% Deposit - 50% Upon Goods Pick Up',
+  '60 Days',
+  '75 Days',
+  '90 Days',
+  'Letter of Credit']
 
-   function sortSelect(user_select) {
-    console.log(user_select, "++++++")
-    var tmpAry = new Array();
-    for (var i=0;i<user_select.options.length;i++) {
-        tmpAry[i] = new Array();
-        tmpAry[i][0] = user_select.options[i].text;
-        tmpAry[i][1] = user_select.options[i].value;
-    }
-    tmpAry.sort();
-    console.log(tmpAry, "++_+_+_+_+_+")
-    while (user_select.options.length > 0) {
-        user_select.options[0] = null;
-    }
-    console.log(user_select, "!!!!!!!")
-    for (var i=0;i<tmpAry.length;i++) {
-        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
-        user_select.options[i] = op;
-    }
-    console.log(user_select, "___")
-    return;
+function sortSelect(user_select) {
+  console.log(user_select, "++++++")
+  var tmpAry = new Array();
+  for (var i = 0; i < user_select.options.length; i++) {
+    tmpAry[i] = new Array();
+    tmpAry[i][0] = user_select.options[i].text;
+    tmpAry[i][1] = user_select.options[i].value;
+  }
+  tmpAry.sort();
+  console.log(tmpAry, "++_+_+_+_+_+")
+  while (user_select.options.length > 0) {
+    user_select.options[0] = null;
+  }
+  console.log(user_select, "!!!!!!!")
+  for (var i = 0; i < tmpAry.length; i++) {
+    var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+    user_select.options[i] = op;
+  }
+  console.log(user_select, "___")
+  return;
 }
 var user_select = document.getElementById("customername")
 sortSelect(user_select)
@@ -274,39 +281,39 @@ sortSelect(user_select)
 // user_options.forEach(function(option) {
 //   user_select.appendChild(option)
 // })
-   
-$(document).ready(function() {
-  
+
+$(document).ready(function () {
+
 
   var uomList = document.getElementById("uom-list")
   var inventoryList = document.getElementById("inventory-list")
   var paymentTerm = document.getElementById("payment-term")
   var originalData = "";
-  var savedata=""
+  var savedata = ""
   let isMatched = false
   $('#sidebarCollapse').on('click', function () {
     $('#sidebarNav').toggleClass('active');
   });
 
-  
-    $('#customername').select2({
-      dropdownCssClass: 'custom-dropdown',
-      // Add other Select2 configuration options as needed
-    });
 
-  $("#customername").change(function() {
+  $('#customername').select2({
+    dropdownCssClass: 'custom-dropdown',
+    // Add other Select2 configuration options as needed
+  });
+
+  $("#customername").change(function () {
     if ($(this).val() === "Pepco") $("#currency-selector").show()
     else $("#currency-selector").hide()
   });
 
-  $("#clear-my-files").click(function() {
+  $("#clear-my-files").click(function () {
     $("#upload_image_background").val("")
     $(".upload_gallery").html("")
   })
-  
+
   function generateTable(selectedOption) {
     // Clear the existing table content
-    const customernameoptions = customername==="Buc-ee's"?"<select><option>Buc-ee's</option></select>":"<select><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>"
+    const customernameoptions = customername === "Buc-ee's" ? "<select><option>Buc-ee's</option></select>" : "<select><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>"
     $('#customselect').empty();
 
     // Generate the table rows based on the selected option
@@ -321,7 +328,7 @@ $(document).ready(function() {
   generateTable($('#customselect').val());
 
   // Generate the table when the select value changes
-  $('#customselect').on('change', function() {
+  $('#customselect').on('change', function () {
     var selectedOption = $(this).val();
     generateTable(selectedOption);
   });
@@ -341,10 +348,13 @@ $(document).ready(function() {
       "MICHAELS",
       "Fred Meyer",
     ];
-    return styles.includes(name)?"Vendor Style":"Buyers Catalog or Stock Keeping #"
+    return styles.includes(name) ? "Vendor Style" : "Buyers Catalog or Stock Keeping #"
   }
 
-  function buildTable(data_header, data_item, selector, single=true) {
+  function buildTable(data_header, data_item, selector, single = true) {
+
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!", selector)
 
     console.log("*******  data_header ::: ", data_header)
     const keys_header = Object.keys(data_header[0])
@@ -357,18 +367,18 @@ $(document).ready(function() {
     console.log("******* data_header.length ::: ", data_header.length)
     console.log("******* st3_headerDetails ::: ", st3_headerDetails)
 
-    if (data_header == null){
-        data_header = st3_headerDetails
+    if (data_header == null) {
+      data_header = st3_headerDetails
     }
 
-    if (data_item == null){
-        data_item = st3_itemDetails
+    if (data_item == null) {
+      data_item = st3_itemDetails
     }
-
+    
     let tmpHtml = '';
-      for (let x = 0; x < data_header.length; x++) {
-          for (let j = 0; j < data_header[x][keys_header[0]].length; j++) {
-            tmpHtml += `<div class="w-100 d-flex p-4 customer-item" onClick="customerPODetails('${selector}', ${x})">
+    for (let x = 0; x < data_header.length; x++) {
+      for (let j = 0; j < data_header[x][keys_header[0]].length; j++) {
+        tmpHtml += `<div class="w-100 d-flex p-4 customer-item" onClick="customerPODetails('${selector}', ${x})">
               <div class="w-50px d-flex justify-center pt-3">
                 <i class="fas fs-20px fa-address-card"></i>
               </div>
@@ -393,9 +403,13 @@ $(document).ready(function() {
                 </div>
               </div>
             </div>`
-          }
       }
-      $("#step_3_customer_info").html(tmpHtml);
+    }
+
+    
+
+    $("#step_3_customer_info").html(tmpHtml);
+    
     data_index = 0;
     let content = `
       <div class="row">
@@ -451,7 +465,7 @@ $(document).ready(function() {
       // content += "</tr></thead><tbody>"
 
       if (single) {
-        for (let j = 0; j < data_item[i]["Buyers Catalog or Stock Keeping #"].length; j++){
+        for (let j = 0; j < data_item[i]["Buyers Catalog or Stock Keeping #"].length; j++) {
           content += "<tr>"
           content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
           content += "</tr>"
@@ -461,15 +475,16 @@ $(document).ready(function() {
         // content += keys_item.map((key) => `<td>${data_item[i][key]}</td>`)
         // content += "</tr>"
       } else {
-          for (let j = 0; j < data_item[i][keys_item[0]].length; j++) {
-            content += "<tr>"
-            content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
-            content += "</tr>"
-          }
+        for (let j = 0; j < data_item[i][keys_item[0]].length; j++) {
+          content += "<tr>"
+          content += keys_item.map((key, index) => `<td>${data_item[i][key][j]}</td>`).join("")
+          content += "</tr>"
+        }
       }
       // content += '</tbody></table></div>'
     }
-    element.html(content)
+    element.html(content);
+    customerPODetails(selector, 0);
     // =======================
     // const keys = Object.keys(data)
     // const elemen = $(selector)
@@ -496,9 +511,9 @@ $(document).ready(function() {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
     console.log(data5, "data5")
     const customername = data5
-    const customernameoptions = customername==="Pepco"?"<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>":`<select class='w-75 form-select'><option>${customername}</option></select>`
-    
-    var termsfrompo = data[0]["Payment Terms Net Days"][0]||""
+    const customernameoptions = customername === "Pepco" ? "<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>" : `<select class='w-75 form-select'><option>${customername}</option></select>`
+
+    var termsfrompo = data[0]["Payment Terms Net Days"][0] || ""
     // if (termsfrompo !== ""){
     //   for (var key in term_options) {
     //     console.log(term_options[key], termsfrompo, "++++++++++++++++++++++++++")
@@ -511,7 +526,7 @@ $(document).ready(function() {
     $("#customer_name").html(customername);
     $("#customer_term").html(termsfrompo + " Days");
     $("#customer_term_select").html(termsOptionsFromOMS(termRsOptions));
-    
+
     // var head1 = `<div class="table table-striped border rounded">
     //               <div class="row mx-0">
     //                 <div class="col-lg-6 border-b border-r d-flex items-center">
@@ -550,69 +565,66 @@ $(document).ready(function() {
   
     <thead>
       <tr>
-        ${
-          keys.map(key => `<th>${key}</th>`)
-        }
+        ${keys.map(key => `<th>${key}</th>`)
+      }
       </tr>
     </thead><tbody>
     `;
     let temp = {}
-    for(var i = 0;i<data.length;i++){
+    for (var i = 0; i < data.length; i++) {
       console.log(data[0], "+++++ ")
       console.log(keys[0], "_____")
       tables += `
     
     
-      ${
-        [...Array(data[i][keys[0]].length)].map((_, index) => {
-          if (temp[data[i][sku_keyname][index]]) return ""
-          temp[data[i][sku_keyname][index]] = true
-          return index && `   
+      ${[...Array(data[i][keys[0]].length)].map((_, index) => {
+        if (temp[data[i][sku_keyname][index]]) return ""
+        temp[data[i][sku_keyname][index]] = true
+        return index && `   
             <tr >
-              ${
-                keys.map(key => {
-                  if (key === "Vendor Style from OMS_equal") {
-                    try {
-                      var selectedValue = data3[data[i][sku_keyname][index]][2]
-                      var determinevalue = data3[data[i][sku_keyname][index]][2]
-                  }
-                    catch{
-                      var selectedValue = data3[data[i][sku_keyname][index]]
-                      var determinevalue = data3[data[i][sku_keyname][index]]
-                    }
-                    const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==selectedValue) !== -1
-                    return `<td contenteditable="true"><select class="form-select step-2-vendor-style" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
-                  }
-                  else if (key === "Unit of Measure") {
-                    try {
-                      var selectedValue = data3[data[i][sku_keyname][index]][0]
-                      var determinevalue = data3[data[i][sku_keyname][index]][2]
-                    }
-                    catch{
-                      var selectedValue = data3[data[i][sku_keyname][index]]
-                      var determinevalue = data3[data[i][sku_keyname][index]]
-                    }
-                    const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
-                  }
-                  else if (key === "StockLocation") {
-                    try {
-                      var selectedValue = data3[data[i][sku_keyname][index]][1]
-                      var determinevalue = data3[data[i][sku_keyname][index]][2]
-                  }
-                    catch{
-                      var selectedValue = data3[data[i][sku_keyname][index]]
-                      var determinevalue = data3[data[i][sku_keyname][index]]
-                    }
-                    const hasValue = options["sku_options"][i][index - 1].findIndex(v => v==determinevalue) !== -1
-                    return `<td contenteditable="true"><select class="form-select" ${hasValue?"disabled":""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option==selectedValue?"selected":""}>${option}</option>`)}</select></td>`;
-                  }
-                  return `<td contenteditable="true">${data[i][key][index]}</td>`;
-                })
-              }
-            </tr>`
+              ${keys.map(key => {
+          if (key === "Vendor Style from OMS_equal") {
+            try {
+              var selectedValue = data3[data[i][sku_keyname][index]][2]
+              var determinevalue = data3[data[i][sku_keyname][index]][2]
+            }
+            catch {
+              var selectedValue = data3[data[i][sku_keyname][index]]
+              var determinevalue = data3[data[i][sku_keyname][index]]
+            }
+            const hasValue = options["sku_options"][i][index - 1].findIndex(v => v == selectedValue) !== -1
+            return `<td contenteditable="true"><select class="form-select step-2-vendor-style" ${hasValue ? "disabled" : ""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option == selectedValue ? "selected" : ""}>${option}</option>`)}</select></td>`;
+          }
+          else if (key === "Unit of Measure") {
+            try {
+              var selectedValue = data3[data[i][sku_keyname][index]][0]
+              var determinevalue = data3[data[i][sku_keyname][index]][2]
+            }
+            catch {
+              var selectedValue = data3[data[i][sku_keyname][index]]
+              var determinevalue = data3[data[i][sku_keyname][index]]
+            }
+            const hasValue = options["sku_options"][i][index - 1].findIndex(v => v == determinevalue) !== -1
+            return `<td contenteditable="true"><select class="form-select" ${hasValue ? "disabled" : ""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select UOM</option>${options["uom_options"][i][index - 1].map(option => `<option value="${option}" ${option == selectedValue ? "selected" : ""}>${option}</option>`)}</select></td>`;
+          }
+          else if (key === "StockLocation") {
+            try {
+              var selectedValue = data3[data[i][sku_keyname][index]][1]
+              var determinevalue = data3[data[i][sku_keyname][index]][2]
+            }
+            catch {
+              var selectedValue = data3[data[i][sku_keyname][index]]
+              var determinevalue = data3[data[i][sku_keyname][index]]
+            }
+            const hasValue = options["sku_options"][i][index - 1].findIndex(v => v == determinevalue) !== -1
+            return `<td contenteditable="true"><select class="form-select" ${hasValue ? "disabled" : ""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select StockLocation</option>${options["location_options"][i][index - 1].map(option => `<option value="${option}" ${option == selectedValue ? "selected" : ""}>${option}</option>`)}</select></td>`;
+          }
+          return `<td contenteditable="true">${data[i][key][index]}</td>`;
         })
-      }
+          }
+            </tr>`
+      })
+        }
   `
     }
     tables += '</tbody>'
@@ -625,8 +637,8 @@ $(document).ready(function() {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
     let hasValue = []
 
-    $(`${selector} tbody tr`).each(function() {
-      $(this).find('td').each(function(columnIndex, cell) {
+    $(`${selector} tbody tr`).each(function () {
+      $(this).find('td').each(function (columnIndex, cell) {
         var headerText = keys[columnIndex];
         let value = $(cell).text()
         if (headerText === "Vendor Style from OMS_equal") {
@@ -650,10 +662,10 @@ $(document).ready(function() {
     return [tableData, hasValue]
   }
 
-  $("#savebutton").click(function() {
+  $("#savebutton").click(function () {
     // const [customInputs] = getTableData("#table-view")
   })
-  $("#first-step-next").click(function() {
+  $("#first-step-next").click(function () {
     $(".step-progress").css('width', '25%');
     $("#step_progress_1").css('width', '100%');
     var formData = new FormData($('#data-form')[0]);
@@ -664,7 +676,7 @@ $(document).ready(function() {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(response) {
+      success: function (response) {
         let { data1, data2, data3, data4, data5 } = response
         console.log(data1, "_____")
         data1 = JSON.parse(data1)
@@ -673,7 +685,7 @@ $(document).ready(function() {
         data4 = JSON.parse(data4)
         data5 = JSON.parse(data5)
         originalData = data1
-        savedata= data3
+        savedata = data3
         len = data2.OMS_Inventory_List.length
         uom = ["Each", "Case"]
         locat = ["FOB", "Houston Warehouse", "MFAL", "Arrow Mill"]
@@ -683,19 +695,19 @@ $(document).ready(function() {
         for (let i = 0; i < data2.OMS_Inventory_List.length; i++) {
           uoms.push([])
           locations.push([])
-          for (let j = 0; j < data2.OMS_Inventory_List[i].length; j++){
+          for (let j = 0; j < data2.OMS_Inventory_List[i].length; j++) {
             uoms[i].push(uom)
             locations[i].push(locat)
           }
-          
+
         }
         $("#customize_box_title").html(data5)
         document.getElementById('step_2_content').classList.toggle('d-none');
-        displayTable(data1, "#table-view", "#table-header-view", {"sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations}, data2.OMS_Payment_term, data3, data4, data5)
+        displayTable(data1, "#table-view", "#table-header-view", { "sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations }, data2.OMS_Payment_term, data3, data4, data5)
         document.getElementById('loader1').classList.toggle('d-none');
         let isCompleted = true
         $(".step-2-vendor-style").each((id, ele) => {
-          if(!ele.value) {
+          if (!ele.value) {
             isCompleted = false;
             return;
           }
@@ -706,15 +718,15 @@ $(document).ready(function() {
           $("#step_progress_2").css('width', '50%');
         }
       },
-      error: function(xhr, status, error) {
-          $('#message').text('Error uploading files: ' + error);
+      error: function (xhr, status, error) {
+        $('#message').text('Error uploading files: ' + error);
       }
     });
   })
   $(".step-2-vendor-style").change(() => {
     let isCompleted = true
     $(".step-2-vendor-style").each((id, ele) => {
-      if(!ele.value) {
+      if (!ele.value) {
         isCompleted = false;
         return;
       }
@@ -723,22 +735,22 @@ $(document).ready(function() {
       $("#step_progress_2").css('width', '75%');
     }
   });
-  $("#openDialogButton").click(function() {
-    
-    data=savedata
-    inputdata=getTableData("#table-view")
+  $("#openDialogButton").click(function () {
+
+    data = savedata
+    inputdata = getTableData("#table-view")
     const customername = $("#customername").val();
     const keyname = customerStyle(customername)
     const [inputs, hasValue] = inputdata
     var table = '<table>'
     var newtable = '<table>'
-   
+
     table += `<thead><tr class="bg-light-gray"><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th></tr></thead>`;
     table += '<tbody>';
     newtable += `<thead><tr class="bg-light-gray"><th>${keyname}</th><th>Unit of Measure</th><th>StockLocation</th><th>Vendor Style from OMS_equal</th></tr></thead>`;
     newtable += '<tbody>';
-    
-    hasValue.forEach(function(v, index) {
+
+    hasValue.forEach(function (v, index) {
       const key = inputs[keyname][index]
       const value1 = inputs["Unit of Measure"][index]
       const value2 = inputs["StockLocation"][index]
@@ -748,27 +760,27 @@ $(document).ready(function() {
       else
         newtable += '<tr><td>' + key + '</td><td>' + value1 + '</td><td>' + value2 + '</td><td>' + value3 + '</td></tr>';
     })
-    
+
 
     table += '</tbody></table>';
     newtable += '</tbody></table>';
     $("#modaltable").html(table)
     $("#newmodaltable").html(newtable)
-    
+
   });
-  $("#openDialogButton").click(function(event) {
+  $("#openDialogButton").click(function (event) {
     openDialog();
   });
 
   function openDialog() {
-      $("#myModal").modal("show");
+    $("#myModal").modal("show");
   }
   function closeDialog() {
     // Perform actions to close the dialog
     $("#myModal").modal("hide");
   }
 
-  function buildFinalForm() { 
+  function buildFinalForm() {
     var formData = new FormData($('#data-form')[0]);
     const keyname = customerStyle()
     const [customInputs] = getTableData("#table-view")
@@ -781,32 +793,32 @@ $(document).ready(function() {
     }
     const clonedArray = JSON.parse(JSON.stringify(originalData))
 
-    originalData.forEach(data => {      
+    originalData.forEach(data => {
       const customerHeader = [...data[keyname]];
-      data["Vendor Style"] = data[keyname].map((vs,index) => {
+      data["Vendor Style"] = data[keyname].map((vs, index) => {
         const idx = customInputs[keyname].findIndex(v => v == vs)
-        return index?customInputs["Vendor Style from OMS_equal"][idx]:""
+        return index ? customInputs["Vendor Style from OMS_equal"][idx] : ""
       })
 
-      data["Unit of Measure"] = customerHeader.map((vs,index) => {
+      data["Unit of Measure"] = customerHeader.map((vs, index) => {
         const idx = customInputs[keyname].findIndex(v => v == vs)
-        return index?customInputs["Unit of Measure"][idx]:""
+        return index ? customInputs["Unit of Measure"][idx] : ""
       })
-      data["StockLocation"] = customerHeader.map((vs,index) => {
+      data["StockLocation"] = customerHeader.map((vs, index) => {
         const idx = customInputs[keyname].findIndex(v => v == vs)
-        return index?customInputs["StockLocation"][idx]:""
+        return index ? customInputs["StockLocation"][idx] : ""
       })
     })
 
     formData.append("input", JSON.stringify(originalData))
     var termsOptions = ''
 
-    if (terms_opt != ''){
-      termsOptions = $(".terms-options").map(function() {
+    if (terms_opt != '') {
+      termsOptions = $(".terms-options").map(function () {
         return $(this).val();
       }).get();
     }
-    else{
+    else {
       termsOptions = [$("#default-terms").text()]
     }
     // termsOptions = $(".terms-options").map(function() {
@@ -815,15 +827,15 @@ $(document).ready(function() {
 
     formData.append("termOptions", JSON.stringify(termsOptions))
     originalData = clonedArray
-    
+
     return formData
   }
 
-  
 
 
 
-  $('#NextButton').click(function() {
+
+  $('#NextButton').click(function () {
     const formData = buildFinalForm()
     processStepper.navigate('3')
     closeDialog()
@@ -834,13 +846,13 @@ $(document).ready(function() {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(response) {
+      success: function (response) {
         const [_customername, headerDetails, itemDetails] = JSON.parse(response.res)
         // $(".review-stepper .customername").html(_customername);
         $(".modal-backdrop.fade.show").remove()
         st3_headerDetails = headerDetails;
         st3_itemDetails = itemDetails;
-        buildTable(headerDetails, itemDetails, "#view_details", single=false)
+        buildTable(headerDetails, itemDetails, "#view_details", single = false)
         document.getElementById('loader2').classList.toggle('d-none');
         // buildTable(itemDetails[0], "#item-details")
         // buildTable(headerDetails[0], "#header-details", true)
@@ -849,12 +861,12 @@ $(document).ready(function() {
         $("#step_progress_2").css('width', '100%');
         $("#step_progress_3").css('width', '75%');
       },
-      error: function(xhr, status, error) {
+      error: function (xhr, status, error) {
       }
     })
   });
 
-  $('#final-step').click(function() {
+  $('#final-step').click(function () {
     const formData = buildFinalForm()
     // document.getElementById('csv-container').classList.toggle('d-none');
     document.getElementById('loader3').classList.toggle('d-none');
@@ -864,7 +876,7 @@ $(document).ready(function() {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(response) {
+      success: function (response) {
         $("#download-output").attr('href', `/download-file/${response.id}`)
         // document.getElementById('csv-container').classList.toggle('d-none');
         // document.getElementById('csv-container').innerHTML = `<h5 class="text-success">Click Download button to download your result</h5>`;
@@ -876,7 +888,7 @@ $(document).ready(function() {
         $("#step_progress_3").css('width', '100%');
         $("#step_progress_4").css('width', '75%');
       },
-      error: function(xhr, status, error) {
+      error: function (xhr, status, error) {
         if (xhr.status === 400) {
           // document.getElementById('csv-container').classList.toggle('d-none');
           // document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
@@ -895,15 +907,15 @@ $(document).ready(function() {
     // Perform actions to close the dialog
     $("#liveModal").modal("hide");
   }
-  
-  $('#sheet-exporter').click(function() {
-    
+
+  $('#sheet-exporter').click(function () {
+
     // document.getElementById('csv-container').classList.toggle('d-none');
     // document.getElementById('loader2').classList.toggle('d-none');
     openliveDialog();
     // window.open("/export-file")
   });
-  $('#liveAccept').click(function() {
+  $('#liveAccept').click(function () {
     const formData = buildFinalForm()
     $.ajax({
       url: '/export-doubleUpdate',
@@ -911,10 +923,10 @@ $(document).ready(function() {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(response) {
+      success: function (response) {
 
       },
-      error: function(xhr, status, error) {
+      error: function (xhr, status, error) {
         if (xhr.status === 400) {
           document.getElementById('csv-container').classList.toggle('d-none');
           document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
@@ -929,7 +941,7 @@ $(document).ready(function() {
   //   closeliveDialog()
   // })
 
-  $('#liveIgnore').click(function() {
+  $('#liveIgnore').click(function () {
     const formData = buildFinalForm()
     $.ajax({
       url: '/export-doubleIgnore',
@@ -937,10 +949,10 @@ $(document).ready(function() {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(response) {
+      success: function (response) {
 
       },
-      error: function(xhr, status, error) {
+      error: function (xhr, status, error) {
         if (xhr.status === 400) {
           document.getElementById('csv-container').classList.toggle('d-none');
           document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
