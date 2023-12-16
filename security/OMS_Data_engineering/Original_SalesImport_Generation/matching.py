@@ -11,8 +11,8 @@
 # "Product/Item Description": "",
 # "PO Total Amount": "",
 # "PO Total Weight": "",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+
 import json
 import re
 import pandas as pd
