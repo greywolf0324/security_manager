@@ -287,6 +287,7 @@ class PO_Match_PEPCO(PO_Match):
             "Payment Terms Net Days": "Terms of payments",
             "Number of Inner Packs": "Pack multiplier",
             "Number of Pcs per Inner Pack": "ONE",
+            "Notes/Comments": "notes"
         }
         self.initial_part = {
             "PO Number": "",
@@ -353,6 +354,12 @@ class PO_Match_PEPCO(PO_Match):
                 del input[self.pair[key]]
             elif key == "Payment Terms Net Days":
                 input[key] = [input[self.pair[key]][1]]
+                input[key].append("")
+
+                del input[self.pair[key]]
+
+            elif key == "Notes/Comments":
+                input[key] = [input[self.pair[key]]]
                 input[key].append("")
 
                 del input[self.pair[key]]

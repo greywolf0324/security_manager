@@ -209,7 +209,6 @@ class PEPCO_Parsing:
 
             for page_num, page in enumerate(pdf.pages):
                 if page_num == 0:
-                    
 
                     content = page.extract_text_simple().split("\n")
                     if currency == "eur":
@@ -241,6 +240,12 @@ class PEPCO_Parsing:
                                 res[f"PDF{k}"][self.keys[i + 17]].insert(1, "")
                             else:
                                 res[f"PDF{k}"][self.keys[i + 17]].insert(0, "")
+
+                        temp = []
+
+                        temp.append(page.within_bbox([page.search("Supplier name")[0]['x0'], page.search("Supplier name")[0]['top'], page.width, page.search("Supplier name")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier name", "Supplier name:"))
+                        temp.append(page.within_bbox([page.search("Supplier ID")[0]['x0'], page.search("Supplier ID")[0]['top'], page.width, page.search("Supplier ID")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier ID", "Supplier ID:"))
+                        res[f"PDF{k}"]["notes"] = temp[0] + ";" + temp[1]
 
                     if currency == "usd":
                         #title - 1
@@ -330,27 +335,27 @@ class PEPCO_Parsing:
             
             
 
-        if os.path.isfile("OCR_res.xlsx"):
-            os.remove("OCR_res.xlsx")
-        book = xlsxwriter.Workbook("OCR_res.xlsx")
-        sheet = book.add_worksheet("cont_excel")
-        for idx, header in enumerate(self.keys):
-            sheet.write(0, idx, header)
-        sheet.write(0, len(self.keys), "total")
-        book.close()
+        # if os.path.isfile("OCR_res.xlsx"):
+        #     os.remove("OCR_res.xlsx")
+        # book = xlsxwriter.Workbook("OCR_res.xlsx")
+        # sheet = book.add_worksheet("cont_excel")
+        # for idx, header in enumerate(self.keys):
+        #     sheet.write(0, idx, header)
+        # sheet.write(0, len(self.keys), "total")
+        # book.close()
 
-        book = load_workbook("OCR_res.xlsx")
-        sheet = book.get_sheet_by_name("cont_excel")
-        for dic in res:
-            for i in range(2):
-                temp = []
-                for key in res[dic].keys():
-                    temp.append(res[dic][key][i])
+        # book = load_workbook("OCR_res.xlsx")
+        # sheet = book.get_sheet_by_name("cont_excel")
+        # for dic in res:
+        #     for i in range(2):
+        #         temp = []
+        #         for key in res[dic].keys():
+        #             temp.append(res[dic][key][i])
 
-                sheet.append(temp)
+        #         sheet.append(temp)
 
 
-        book.save(filename = "OCR_res.xlsx")
+        # book.save(filename = "OCR_res.xlsx")
 
         return res
     
