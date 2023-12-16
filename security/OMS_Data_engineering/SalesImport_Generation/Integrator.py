@@ -461,7 +461,7 @@ class Integrate_All:
             temp_comment = []
 
             # PO Date
-            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco"]:
+            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco", "Poundland"]:
                 temp_comment = ["PO Date: " + str(element["PO Date"][0])]
             
             # Dept #
@@ -490,14 +490,14 @@ class Integrate_All:
                 temp_comment[0] = temp_comment[0][:-2]
             
             # Product/Item Description
-            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Ollies"]:
+            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Ollies", "Poundland"]:
                 temp_comment[0] = temp_comment[0] + "\n"
                 temp_comment[0] = temp_comment[0] + "Product/Item Description: "
                 for item in element["Product/Item Description"][1:]:
                     temp_comment[0] = temp_comment[0] + str(item) + "; "
                 temp_comment[0] = temp_comment[0][:-2]
             
-            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco"]:
+            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco", "Poundland"]:
                 for _ in range(self.length - 1):
                     temp_comment.append("")
                 SalesImport[i].update(
@@ -510,7 +510,7 @@ class Integrate_All:
             temp_ = []
 
             # Ship Dates
-            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Five Below", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco"]:
+            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Five Below", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco", "Poundland"]:
                 temp_shippingnotes = ["Ship Dates: " + str(element["Ship Dates"][0])]
             
             # Cancel Date
@@ -539,7 +539,7 @@ class Integrate_All:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "Ticket Description: " + str(element["Ticket Description"][0])
 
             # Notes/Comments
-            if customer_name in ["Walmart", "Walgreens", "Five Below", "Dollarama", "Pepco"]:
+            if customer_name in ["Walmart", "Walgreens", "Five Below", "Dollarama", "Pepco", "Poundland"]:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "\n"
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "Notes/Comments: " + str(element["Notes/Comments"][0])
             
@@ -576,7 +576,7 @@ class Integrate_All:
                     temp_shippingnotes[0] = temp_shippingnotes[0] + str(item) + "; "
                 temp_shippingnotes[0] = temp_shippingnotes[0][:-2]
 
-            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Five Below", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco"]:
+            if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Five Below", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco", "Poundland"]:
                 for _ in range(self.length - 1):
                     temp_shippingnotes.append("")
                 

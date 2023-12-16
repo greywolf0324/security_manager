@@ -266,7 +266,6 @@ class SalesImport_Generator:
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
         
-        # print(len(list(matching_res[0].keys())))
         print(matching_res[0])
         # # Extract equal OMS
         print("==============================================================================================================")

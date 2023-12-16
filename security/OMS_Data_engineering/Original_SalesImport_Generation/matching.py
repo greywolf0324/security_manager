@@ -422,26 +422,17 @@ class PO_Match_PEPCO_Add(PO_Match):
             "Currency": "Cost price currency",#0
             "Unit Price": "Unit Cost price",#1
             "Qty Ordered": "Total Unit Qty",#1
-            # "Notes/Comments": "Comments",#1
+            "Notes/Comments": "Comments",#1
+            "Product/Item Description": "Desc",
             "PO Date": "Date of order creation",#0
             "Contact Email": "Buyer",
-            # "": "order_contact",
             "Buying Party Name": "invoice",
             "Buying Party Location": "invoice",
             "Buying Party Address 1": "invoice",
-            # "Buying Party Address 2"
             "Buying Party City": "invoice",
-            # "Buying Party State"
-            # "Buying Party Zip"
-            # "Buying Party Country"
-            # "Buying Party Contact"
             "Bill To Address 1": "deliver_to",
             "Bill To Address 2": "deliver_to",
             "Bill To City": "deliver_to",
-            # "Bill To State"
-            # "Bill To Zip"
-            # "Bill To Country"
-            # "Bill To Contact"
         }
 
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
@@ -568,6 +559,20 @@ class PO_Match_PEPCO_Add(PO_Match):
                 input[key].append("")
 
                 del input[self.pair[key]]
+            
+            elif key in "Product/Item Description": 
+                input[key] = [""]
+                input[key].append(input[self.pair[key]])
+
+                del input[self.pair[key]]
+            
+            elif key == "Notes/Comments": 
+                input[key] = [input[self.pair[key]]]
+                input[key].append("")
+
+                del input[self.pair[key]]
+            
+
             # elif key == "Ship Dates":
             # else:
             #     input[key] = [input[self.pair[key]][0]]

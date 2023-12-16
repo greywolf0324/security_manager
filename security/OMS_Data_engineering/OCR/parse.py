@@ -382,6 +382,9 @@ class PEPCO_Add_Parsing:
             deliver_page = page.within_bbox([page.search("Deliver to")[0]['x0'], page.search("Deliver to")[0]['top'], page.search("Delivery Date")[0]['x0'], page.search("Delivery Terms")[0]['top'], ])
             date_page = page.within_bbox([page.search("Date of order")[0]['x0'], page.search("Date of order")[0]['top'] - 1, page.width, page.search("Handover date")[0]['bottom']])
             product_page = page.within_bbox([0, page.search("Purchased Price")[0]['bottom'], page.width, page.search("Total Order Value")[0]['top']])
+            # shipto_page = page.within_bbox([page.search("Supplier details")[0]['x0'], page.search("Supplier details")[0]['bottom'], page.search("Registered")[0]["x0"], page.search("Delivery")[0]['top']])
+            comment_page = page.within_bbox([page.search("Comments")[0]['x0'], page.search("Comments")[0]['top'], page.width, page.search("Comments")[0]['bottom']])
+
             product_page_table = product_page.extract_tables(dict(
                 explicit_vertical_lines = [page.search("Purchased Price")[0]['x0'], page.search("Product No")[0]['x0'], page.search("Product No")[0]['x1'], page.search("Department")[0]['x0'] - 5, page.search("Cost price")[0]['x0'], page.search("Cost price")[0]['x1'], page.search("Cost price")[0]['x1'] + 50, page.search("Cost price")[0]['x1'] + 100, page.search("Total Case")[0]['x0'], page.search("Total Unit")[0]['x0'], page.search("Total Unit")[0]['x1']],
                 explicit_horizontal_lines = [0, page.search("Purchased Price")[0]['bottom'], page.width, page.search("Total Order Value")[0]['top']]
@@ -393,134 +396,16 @@ class PEPCO_Add_Parsing:
             res[f"PDF{k}"][f"page{page_num}"]["order_contact"] = contact_page.extract_text().split("\n")[3].split("Order Contact ")[1]
             res[f"PDF{k}"][f"page{page_num}"]["Handover date"] = date_page.extract_text().split("\n")[2].split("Handover date ")[1]
             res[f"PDF{k}"][f"page{page_num}"]["Sku"] = product_page_table[0][1][0]
+            res[f"PDF{k}"][f"page{page_num}"]["Desc"] = product_page_table[0][1][2]
             res[f"PDF{k}"][f"page{page_num}"]["Cost price currency"] = product_page_table[0][1][4]
             res[f"PDF{k}"][f"page{page_num}"]["Unit Cost price"] = product_page_table[0][1][5]
             res[f"PDF{k}"][f"page{page_num}"]["Total Unit Qty"] = product_page_table[0][1][-1]
-            # res[f"PDF{k}"][f"page{page_num}"]["Comments"]
+            res[f"PDF{k}"][f"page{page_num}"]["Comments"] = comment_page.extract_text()
             res[f"PDF{k}"][f"page{page_num}"]["Date of order creation"] = date_page.extract_text().split("\n")[0].split("Date of order ")[1]
             res[f"PDF{k}"][f"page{page_num}"]["invoice"] = invoice_page.extract_text().split("\n")[1:]
+            # res[f"PDF{k}"][f"page{page_num}"]["shipto"] = shipto_page.extract_text().split("\n")
             res[f"PDF{k}"][f"page{page_num}"]["deliver_to"] = deliver_page.extract_text().split("Deliver to ")[1].replace("\n", " ")
 
-        # res = {}
-
-        # for k, path in enumerate(paths):
-        #     res[f"PDF{k}"] = {}
-        #     pdf = pdfplumber.open(path)
-
-        #     for page_num, page in enumerate(pdf.pages):
-        #         if page_num == 0:
-        #             res[f"PDF{k}"] = {}
-
-        #             for key in self.keys:
-        #                 res[f"PDF{k}"].update({key: []})
-
-                    
-
-        #             content = (page.extract_text_simple()).split("\n")
-        #             if "Supplier detail" in content[8]:
-        #                 variable = 1
-        #             elif "Supplier detail" in content[7]:
-        #                 variable = 0
-                        
-        #             res[f"PDF{k}"]["Order Number"].append(content[1].split("Order Number")[1][1:])
-        #             res[f"PDF{k}"]["Supplier name"].append(content[variable + 8].split("Supplier name")[1].split("Terms of payment")[0][1:])
-        #             res[f"PDF{k}"]["Terms of payment"].append(content[variable + 8].split("Supplier name")[1].split("Terms of payment")[1][1:])
-        #             res[f"PDF{k}"]["Supplier number"].append(content[variable + 9].split("Supplier number")[1].split("Method of payment")[0][1:])
-        #             res[f"PDF{k}"]["Method of payment"].append(content[variable + 9].split("Supplier number")[1].split("Method of payment")[1][1:])
-        #             add_1 = content[variable + 10].split("Address")[1].split("Buyer")[0][1:]
-        #             add_2 = content[variable + 11]
-        #             add_3 = content[variable + 13]
-        #             res[f"PDF{k}"]["Address"].append("@".join([add_1, add_2, add_3]))
-        #             res[f"PDF{k}"]["Buyer"].append(content[variable + 10].split("Address")[1].split("Buyer")[1][1:])
-        #             res[f"PDF{k}"]["Order Contact"].append(content[variable + 12].split("Order Contact")[1][1:])
-        #             deliver_to_1 = content[variable + 15].split("Deliver to")[1][1:].split("Delivery Date")[0]
-        #             deliver_to_2 = content[variable + 16]
-        #             res[f"PDF{k}"]["Deliver to"].append("@".join([deliver_to_1, deliver_to_2]))
-        #             res[f"PDF{k}"]["Delivery Date"].append(content[variable + 15].split("Deliver to")[1][1:].split("Delivery Date")[1][1:])
-        #             res[f"PDF{k}"]["Delivery Terms"].append(content[variable + 17].split("Delivery Terms")[1][1:])
-        #             res[f"PDF{k}"]["Date of order creation"].append(content[variable + 18].split("Date of order")[1].replace(" ", ""))
-        #             res[f"PDF{k}"]["Handover date"].append(content[variable + 20].split("Handover date")[1].replace(" ", ""))
-                    
-        #             temp = content[variable + 25].split(" ")
-
-        #             for i, item in enumerate(temp):
-        #                 if item == '':
-        #                     temp.pop(i)
-
-        #             res[f"PDF{k}"]["Total Unit Qty"].append(temp[10])
-        #             res[f"PDF{k}"]["Total Case Qty"].append(temp[9])
-        #             res[f"PDF{k}"]["Case Quantity"].append(temp[8])
-        #             res[f"PDF{k}"]["Case Price"].append(temp[7])
-        #             res[f"PDF{k}"]["Unit Cost price"].append(temp[6])
-        #             res[f"PDF{k}"]["Cost price currency"].append(temp[5])
-        #             res[f"PDF{k}"]["Sku"].append(temp[0])
-        #             res[f"PDF{k}"]["Total Order Value"].append(content[30].replace(" ", ""))
-        #             res[f"PDF{k}"]["Comments"].append(content[31].split("Comments:")[1])
-        #             # res[f"PDF{k}"]["Vendor Product No"].append("")
-        #             # res[f"PDF{k}"]["Product Description"].append("")
-        #             # res[f"PDF{k}"]["Department"].append("")
-        #             res[f"PDF{k}"]["Department"].append("TOYS (PEPCO)")
-        #             product_desc_1 = temp[2]
-        #             product_no_1 = temp[1]
-        #             # product_desc_2 = 
-        #             if "Purchased" in content[22]:
-        #                 desc_var = 1
-        #             elif "Purchased" in content[21]:
-        #                 desc_var = 0
-                    
-        #             mixed_var = []
-        #             for i in range(4 - desc_var - 1):
-        #                 mixed_var.append(content[29 - i - 1])
-        #             if desc_var == 0:
-        #                 product_desc_4 = mixed_var[0]
-        #                 product_desc_3 = mixed_var[1]
-        #                 product_no_2 = re.findall(r"\d+", mixed_var[2])[0]
-        #                 product_desc_2 = mixed_var[2].replace(product_no_2, "")
-        #                 res[f"PDF{k}"]["Product Description"].append(" ".join([product_desc_1, product_desc_2, product_desc_3, product_desc_4]))
-        #                 res[f"PDF{k}"]["Vendor Product No"].append(" ".join([product_no_1, product_no_2]))
-
-
-        #             if desc_var == 1:
-        #                 product_desc_3 = mixed_var[0]
-        #                 try:
-        #                     product_no_2 = re.findall(r"\d+", mixed_var[1])[0]
-        #                 except:
-        #                     product_no_2 = ""
-        #                 product_desc_2 = mixed_var[1].replace(product_no_2, "")
-        #                 res[f"PDF{k}"]["Product Description"].append(" ".join([product_desc_1, product_desc_2, product_desc_3]))
-        #                 res[f"PDF{k}"]["Vendor Product No"].append(" ".join([product_no_1, product_no_2]))
-
-        #             #problems
-        #             invoice_1 = content[3].split("Poundland")[0]
-        #             address_1 = "Poundland" + content[3].split("Poundland")[1]
-        #             invoice_2 = content[4].split("Pattison")[0]
-        #             address_2 = "Pattison" + content[4].split("Pattison")[1]
-        #             invoice_3 = content[5].split("Walsall")[0]
-        #             address_3 = "Walsall"
-        #             address_4 = content[6]
-        #             res[f"PDF{k}"]["Invoice"].append(" ".join([invoice_1, invoice_2, invoice_3]))
-        #             res[f"PDF{k}"]["RegisteredAddress"].append(" ".join([address_1, address_2, address_3, address_4]))
-
-        # if os.path.isfile("OCR_res.xlsx"):
-        #     os.remove("OCR_res.xlsx")
-        # book = xlsxwriter.Workbook("OCR_res.xlsx")
-        # sheet = book.add_worksheet("cont_excel")
-        # for idx, header in enumerate(self.keys):
-        #     sheet.write(0, idx, header)
-        # sheet.write(0, len(self.keys), "total")
-        # book.close()
-
-        # book = load_workbook("OCR_res.xlsx")
-        # sheet = book.get_sheet_by_name("cont_excel")
-        # for dic in res:
-        #     for i in range(len(res[dic][list(res[dic].keys())[0]])):
-        #         temp = []
-        #         for key in res[dic].keys():
-        #             temp.append(res[dic][key][i])
-
-        #         sheet.append(temp)
-
-        # book.save(filename = "OCR_res.xlsx")
 
         return res
     
