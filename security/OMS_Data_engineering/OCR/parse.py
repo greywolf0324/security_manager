@@ -241,12 +241,6 @@ class PEPCO_Parsing:
                             else:
                                 res[f"PDF{k}"][self.keys[i + 17]].insert(0, "")
 
-                        temp = []
-
-                        temp.append(page.within_bbox([page.search("Supplier name")[0]['x0'], page.search("Supplier name")[0]['top'], page.width, page.search("Supplier name")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier name", "Supplier name:"))
-                        temp.append(page.within_bbox([page.search("Supplier ID")[0]['x0'], page.search("Supplier ID")[0]['top'], page.width, page.search("Supplier ID")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier ID", "Supplier ID:"))
-                        res[f"PDF{k}"]["notes"] = temp[0] + ";" + temp[1]
-
                     if currency == "usd":
                         #title - 1
                         for i in range(13):
@@ -282,6 +276,12 @@ class PEPCO_Parsing:
                                 res[f"PDF{k}"][self.keys[i + 17]].insert(0, "")
                         
                         res[f"PDF{k}"][self.keys[24]].insert(0, "")
+                    
+                    temp = []
+
+                    temp.append(page.within_bbox([page.search("Supplier name")[0]['x0'], page.search("Supplier name")[0]['top'], page.width, page.search("Supplier name")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier name", "Supplier name:"))
+                    temp.append(page.within_bbox([page.search("Supplier ID")[0]['x0'], page.search("Supplier ID")[0]['top'], page.width, page.search("Supplier ID")[0]['bottom'],]).extract_text().replace(".", "").replace("Supplier ID", "Supplier ID:"))
+                    res[f"PDF{k}"]["notes"] = temp[0] + ";" + temp[1]
 
                 if page_num == 1:
                     content = page.extract_text_simple().split("\n")
