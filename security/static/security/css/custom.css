@@ -252,6 +252,15 @@ body {
 #step_3_customer_info:hover {
     cursor: pointer;
 }
+
+#history_info>.customer-item:not(:first-child) {
+    border-top: 1px solid #D9D9D9 !important;
+}
+
+#history_info:hover {
+    cursor: pointer;
+}
+
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container{
         max-width: 1780px !important;
