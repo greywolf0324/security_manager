@@ -457,6 +457,16 @@ class Integrate_All:
                 }
             )
 
+            temp_tax = [""]
+            for _ in range(self.length - 1):
+                temp_tax.append(0)
+            SalesImport[i].update(
+                {
+                    "Tax": temp_tax
+                }
+            )
+
+
             #################################################################### Order Notes Addition ###################################################################
             temp_comment = []
 
