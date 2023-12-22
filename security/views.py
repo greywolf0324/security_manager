@@ -34,7 +34,7 @@ customer_list = [
     "Fred Meyer",
     "Tar Heel Trading",
     # "Giant Tiger",
-    # "Hobby Lobby",
+    "Hobby Lobby",
     # "Lekia",
 ]
 

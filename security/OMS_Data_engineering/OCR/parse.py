@@ -1157,6 +1157,14 @@ class HOBBYlobby_Parsing:
 
             po_cont = po_page.extract_text().split("\n")
 
+            s_page = po_page.within_bbox([0, po_page.search("Ship To: ")[0]['top'], po_page.width, po_page.search("Vendor:")[0]['top']])
+            p_cropage = product_page.within_bbox([page.search("SKU #")[0]['x0'], page.search("SKU #")[0]['top'], page.width, page.search("VENDOR#")[0]['top']])
+            table = p_cropage.extract_table(dict(
+                                                    explicit_vertical_lines = [page.search("SKU #")[0]['x0'], page.search("DESCRIPTION")[0]['x0'], page.search("SIZE")[0]['x0'], page.search("COLOR")[0]['x0'], page.search("ORIGIN")[0]['x0'], page.search("ORIGIN")[0]['x0'] + 100],
+                                                    explicit_horizontal_lines = [page.search("SKU #")[0]['top'], page.search("VENDOR#")[0]['top']]
+                                                ))
+            o_page = product_page.within_bbox([product_page.search("Order Date: ")[0]['x0'], product_page.search("Order Date: ")[0]['top'], product_page.search("Order Date: ")[0]['x0'] + 100, product_page.search("Order Date: ")[0]['bottom']])
+
             for line in po_cont:
                 if "Our Purchase Order#: " in line:
                     res[f"PDF{k}"][f"page{page_num}"]["Our Purchase Order#: "] = line.split("Our Purchase Order#: ")[1].replace(" ", "")
@@ -1191,7 +1199,13 @@ class HOBBYlobby_Parsing:
             res[f"PDF{k}"][f"page{page_num}"]["EXT COST"] = line_v.split("PRE-PRICE")[0].split("EXT COST:")[1].replace(" ", "")
             res[f"PDF{k}"][f"page{page_num}"]["PRE-PRICE"] = line_v.split("PRE-PRICE: ")[1].replace(" ", "")
             res[f"PDF{k}"][f"page{page_num}"]["QTY"] = line_q.split("U/M")[0].split("QTY: ")[1].replace(" ", "")
-
+            res[f"PDF{k}"][f"page{page_num}"]["DESC"] = table[1][1]
+            res[f"PDF{k}"][f"page{page_num}"]["shipto_Name"] = s_page.extract_text().split("\n")[0].split("Ship To: ")[1]
+            res[f"PDF{k}"][f"page{page_num}"]["shipto_Add"] = s_page.extract_text().split("\n")[1]
+            res[f"PDF{k}"][f"page{page_num}"]["shipto_City"] = s_page.extract_text().split("\n")[2].split(", ")[0]
+            res[f"PDF{k}"][f"page{page_num}"]["shipto_State"] = s_page.extract_text().split("\n")[2].split(", ")[1].split(" ")[0]
+            res[f"PDF{k}"][f"page{page_num}"]["shipto_Zip"] = s_page.extract_text().split(", ")[1].split(" ")[1]
+            res[f"PDF{k}"][f"page{page_num}"]["po_date"] = o_page.extract_text().split("Order Date: ")[1]
         return res
     
 class Lekia_Parsing:

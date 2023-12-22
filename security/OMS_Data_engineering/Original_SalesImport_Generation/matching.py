@@ -2351,7 +2351,7 @@ class PO_Match_HOBBYlobby(PO_Match):
         self.length = 2
         self.pair = {
             "PO Number": "Our Purchase Order#: ",
-            # "PO Date": "Order Date",
+            "PO Date": "po_date",
             "Ship Dates": "Ship Date: ",
             "Cancel Date": "Cancel Date: ",
             "Qty Ordered": "QTY",
@@ -2360,8 +2360,14 @@ class PO_Match_HOBBYlobby(PO_Match):
             "Buyers Catalog or Stock Keeping #": "SKU",
             # "UPC/EAN": "UPC Code",
             # "Vendor Style": "",
-            # "Product/Item Description": "Description",
+            "Product/Item Description": "DESC",
             "PO Total Amount": "EXT COST",
+            "Ship To Name": "shipto_Name",
+            "Ship To Address 1": "shipto_Add",
+            "Ship To City": "shipto_City",
+            "Ship To State": "shipto_State",
+            "Ship to Zip": "shipto_Zip"
+
             # "PO Total Weight": "",
         }
 
@@ -2439,6 +2445,21 @@ class PO_Match_HOBBYlobby(PO_Match):
 
                 for _ in range(self.length - 1):
                     input[key].append("")
+
+                del input[self.pair[key]]
+            
+            elif key in ["Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "PO Date"]:
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1):
+                    input[key].append("")
+
+                del input[self.pair[key]]
+            
+            elif key == "Product/Item Description":
+                input[key] = [""]
+
+                input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 

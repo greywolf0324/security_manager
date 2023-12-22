@@ -116,14 +116,18 @@ class SalesImport_Generator:
             "Tar Heel Trading": {
                 "parser": "EXCEL_Parsing",
                 "matcher": "PO_Match_EXCEL"
-            }
+            },
+            "Hobby Lobby": {
+                "parser": "HOBBYlobby_Parsing",
+                "matcher": "PO_Match_HOBBYlobby"
+            },
         }
 
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
         self.SKU_list = ["Buc-ee's", "Dollarama", "Family Dollar", "Gabe's", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer"]
-        self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger"]
+        self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby"]
 
         self.top_lis = ["PO Number", "PO Date", "Dept #", "Retailers PO", "Delivery Dates", "Ship Dates", "Ship To Location", "PO purpose", "PO Type", "Vendor #", "Payment Terms %", "Payment Terms Disc Days Due", "Payment Terms Desc", "Contact Phone", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Bill To Name", "Bill To Address 1", "Bill To City", "Bill To Zip", "Bill To Country", "PO Total Amount", "PO Total Weight ", "PO Total UOM "]
         self.all_mid_lis = ["PO Number", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "Product/Item Description", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "GTIN"]
@@ -266,7 +270,7 @@ class SalesImport_Generator:
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
         
-        print(matching_res[0])
+        # print(matching_res[0])
         # # Extract equal OMS
         print("==============================================================================================================")
         print("tracking equal things...")
