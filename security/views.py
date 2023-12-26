@@ -14,6 +14,8 @@ import asyncio
 
 # These are first productions for our site and for this customer.
 # Do you want to use them to auto-fill for further times?
+
+cash_ = []
 generator = SalesImport_Generator()
 customer_list = [
     "Buc-ee's",
@@ -70,6 +72,7 @@ def home(request):
 
 @login_required
 def viewer(request):
+  global cash_
   if request.method == 'POST':
     files = request.FILES.getlist('data')
     matching_res = json.loads(request.POST['input'])
@@ -79,7 +82,7 @@ def viewer(request):
       # res = generator.processFile(files, matching_res, {}, customername, termOptions)
     # if customername == "Pepco":
       # currency = request.POST['currency']
-    res = generator.res_viewer(files, matching_res, customername, termOptions)
+    res = generator.res_viewer(files, matching_res, customername, termOptions, cash_)
     if res == "fail":
       return JsonResponse({ "message": "You need to update database" }, status=400)
     return JsonResponse({ "res": json.dumps(res) }, status=200)
@@ -108,7 +111,9 @@ def parseUpload(request):
     
   else:
     res = generator.parseUpload(files, customer_name = customer_name)
-
+  
+  global cash_
+  cash_ = res[5]
   return JsonResponse({ "data1": json.dumps(res[0]), "data2": json.dumps(res[1]), "data3": json.dumps(res[2]), "data4": json.dumps(res[3]), "data5": json.dumps(res[4]) }, status=200)
 
 @login_required

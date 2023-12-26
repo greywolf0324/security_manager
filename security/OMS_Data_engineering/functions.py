@@ -459,15 +459,15 @@ class SalesImport_Generator:
         
         book.save(filename = output)
 
-        return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
+        return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name, filenames]
     # def requiredFields(self, matching_res):
     #     noticer = NOTICER()
     #     addition = noticer.getter(matching_res)
 
     #     return addition
 
-    def res_viewer(self, data, matching_res, customer_name = None, term = None):
-        filename = filenames[0]
+    def res_viewer(self, data, matching_res, customer_name = None, term = None, cash_ = None):
+        filename = cash_
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
             print("---", invoice["Vendor Style"], len(invoice[list(invoice.keys())[0]]))
