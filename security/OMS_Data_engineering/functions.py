@@ -226,22 +226,19 @@ class SalesImport_Generator:
         # print(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv")
         pd.DataFrame(db[0]).to_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index = False)
 
-    async def data_async_generator(data):
-        for file in data:
-            yield file
-
     async def uploadFile(self, data):
-        self.paths = []
-        data_async_generator()
-        async for file in data_async_generator(data):
-            
+        async def data_async_generator(data):
+            for file in data:
+                yield file
 
-        for file in data:
+        self.paths = []            
+
+        async for file in data_async_generator(data):
             current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             random_string = str(uuid.uuid4().hex)
             filename = f'{current_datetime}_{random_string}'
             print("--------------")
-            await self.filenames.append(filename)
+            self.filenames.append(filename)
             
             extension = file.name.split(".")[-1]
             path = Path(__file__).resolve().parent.parent.parent / f'process/inputs/{filename}.{extension}'
