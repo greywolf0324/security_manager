@@ -23,8 +23,6 @@ import gspread
 from .sheet_reader import frame_converter
 import asyncio
 
-filenames = []
-
 class SalesImport_Generator:
     def __init__(self) -> None:
         self.matching_dic = {
@@ -174,6 +172,7 @@ class SalesImport_Generator:
         self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
+        self.filenames = []
         # self.filename = None
         # self.path = None
 
@@ -227,20 +226,19 @@ class SalesImport_Generator:
         # print(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv")
         pd.DataFrame(db[0]).to_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index = False)
 
-    def uploadFile(self, data):
-        # async def data_async_generator(data):
-        #     for file in data:
-        #         yield file
+    async def uploadFile(self, data):
+        async def data_async_generator(data):
+            for file in data:
+                yield file
 
         self.paths = []            
-        global filenames
 
-        for file in data:
+        async for file in data_async_generator(data):
             current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             random_string = str(uuid.uuid4().hex)
             filename = f'{current_datetime}_{random_string}'
             print("--------------")
-            filenames.append(filename)
+            self.filenames.append(filename)
             
             extension = file.name.split(".")[-1]
             path = Path(__file__).resolve().parent.parent.parent / f'process/inputs/{filename}.{extension}'
@@ -261,7 +259,7 @@ class SalesImport_Generator:
         # customer_name = "Buc-ee's"
         # paths = []
         # for file in data:
-        self.uploadFile(data)
+        asyncio.run(self.uploadFile(data))
         paths = self.paths
             # paths.append(self.path)
 
@@ -466,8 +464,8 @@ class SalesImport_Generator:
 
     #     return addition
 
-    def res_viewer(self, data, matching_res, customer_name = None, term = None, cash_ = None):
-        filename = cash_
+    def res_viewer(self, data, matching_res, customer_name = None, term = None):
+        filename = self.filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
             print("---", invoice["Vendor Style"], len(invoice[list(invoice.keys())[0]]))
@@ -607,7 +605,7 @@ class SalesImport_Generator:
         self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
         
         path = self.paths[0]
-        filename = filenames[0]
+        filename = self.filenames[0]
         sku_match = {}
 
         if customer_name in self.SKU_list:
