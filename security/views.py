@@ -14,7 +14,6 @@ import asyncio
 
 # These are first productions for our site and for this customer.
 # Do you want to use them to auto-fill for further times?
-
 generator = SalesImport_Generator()
 customer_list = [
     "Buc-ee's",
@@ -109,7 +108,7 @@ def parseUpload(request):
     
   else:
     res = generator.parseUpload(files, customer_name = customer_name)
-  
+
   return JsonResponse({ "data1": json.dumps(res[0]), "data2": json.dumps(res[1]), "data3": json.dumps(res[2]), "data4": json.dumps(res[3]), "data5": json.dumps(res[4]) }, status=200)
 
 @login_required

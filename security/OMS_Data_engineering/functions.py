@@ -125,13 +125,11 @@ class SalesImport_Generator:
                 "matcher": "PO_Match_HOBBYlobby"
             },
         }
-
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
         self.SKU_list = ["Buc-ee's", "Dollarama", "Family Dollar", "Gabe's", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer"]
         self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby"]
-
         self.top_lis = ["PO Number", "PO Date", "Dept #", "Retailers PO", "Delivery Dates", "Ship Dates", "Ship To Location", "PO purpose", "PO Type", "Vendor #", "Payment Terms %", "Payment Terms Disc Days Due", "Payment Terms Desc", "Contact Phone", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Bill To Name", "Bill To Address 1", "Bill To City", "Bill To Zip", "Bill To Country", "PO Total Amount", "PO Total Weight ", "PO Total UOM "]
         self.all_mid_lis = ["PO Number", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "Product/Item Description", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "GTIN"]
         self.header_keys = {
@@ -181,7 +179,6 @@ class SalesImport_Generator:
         temp = []
         for item in list(input):
             temp.append(str(item))
-
         return temp
     
     def auto_matching_DB_viewer(self, customer_name):
@@ -231,17 +228,14 @@ class SalesImport_Generator:
         # async def data_async_generator(data):
         #     for file in data:
         #         yield file
-
         self.paths = []            
         global filenames
-
         for file in data:
             current_datetime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             random_string = str(uuid.uuid4().hex)
             filename = f'{current_datetime}_{random_string}'
             print("--------------")
             filenames.append(filename)
-            
             extension = file.name.split(".")[-1]
             path = Path(__file__).resolve().parent.parent.parent / f'process/inputs/{filename}.{extension}'
             self.paths.append(path)
@@ -249,14 +243,12 @@ class SalesImport_Generator:
             with open(path, 'wb') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
-
         # return [self.paths, self.filename]
     
     def parseUpload(self, data, customer_name = None, currency = None):
         print("==============================================================================================================")
         print("CustomerFields Updating...")
         customer_fields_updater()
-
         self.customer_name = customer_name
         # customer_name = "Buc-ee's"
         # paths = []
@@ -270,7 +262,6 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-
         # print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
@@ -285,16 +276,13 @@ class SalesImport_Generator:
         print("tracking equal things...")
         extract = Extractor()
         OMS_equal = extract.extractor(matching_res, customer_name, self.spreadsheet)
-
         self.auto_dic = AutoDB().DB_tester(customer_name, matching_res)
-
         print("==============================================================================================================")
         print("Displaying...")
         # print(self.auto_dic)
         # print(OMS_equal)
         if (self.customer_name == "Pepco" or self.customer_name == "Poundland") and matching_res[0]["Currency"][0] == "CNY":
                 self.customer_name = self.customer_name + " - RMB"
-
         else:
             if self.customer_name == "Pepco":
                 self.customer_name = self.customer_name + " - " + matching_res[0]["Currency"][0]
@@ -433,9 +421,7 @@ class SalesImport_Generator:
         # keys = list(sales_import[0].keys())
         for idx, header in enumerate(field_names):
             sheet.write(0, idx, header)
-
         book.close()
-
         book = load_workbook("sales_origin.xlsx")
         sheet = book.get_sheet_by_name("cont_excel")
         # print(keys, type(keys[0]))
@@ -443,27 +429,21 @@ class SalesImport_Generator:
         # print(field_names, type(field_names[0]))
         for num, dic in enumerate(matching_res):
             keys = list(dic.keys())
-
             for i in range(len(dic[keys[0]])):
                 temp = []
-
                 for key in field_names:
                     if key in keys:
                         temp.append(dic[key][i])
                     else:
                         temp.append("")
-
                 sheet.append(temp)
-
         output = Path(__file__).resolve().parent.parent.parent / f'sales_origin.xlsx'
         
         book.save(filename = output)
-
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
     # def requiredFields(self, matching_res):
     #     noticer = NOTICER()
     #     addition = noticer.getter(matching_res)
-
     #     return addition
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
@@ -474,7 +454,6 @@ class SalesImport_Generator:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
-
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -482,7 +461,6 @@ class SalesImport_Generator:
                     
                     else:
                         nums = re.sub(r"[a-zA-Z]", "", temp.values[0]).replace(" ", "").split(",")
-
                         try:
                             invoice["Pack Size UOM"][i] = nums[0]
                             invoice["Number of Pcs per Inner Pack"][i] = nums[1]
@@ -491,26 +469,21 @@ class SalesImport_Generator:
                             invoice["Pack Size UOM"][i] = nums[0]
                             invoice["Number of Pcs per Inner Pack"][i] = 1
                             invoice["Number of Inner Packs"][i] = int(int(float(invoice["Pack Size UOM"][i])) / int(float(invoice["Number of Pcs per Inner Pack"][i])))
-
         #Create View
         print("==============================================================================================================")
         print("Creating View...\n")
         # print(matching_res)
-
         header_details = []
         item_details = []
         temp_item_details = []
-
         for i in range(len(matching_res)):
             header_details.append({})
-
             for key in self.header_keys:
                 header_details[i].update(
                     {
                         key: []
                     }
                 )
-
             temp_item_details.append({})
             for key in self.item_keys:
                 temp_item_details[i].update(
@@ -518,25 +491,20 @@ class SalesImport_Generator:
                         key: []
                     }
                 )
-
         PO_total = []
-
         # print(matching_res[0])
         for i, invoice in enumerate(matching_res):
             PO_total.append(0)
-
             for key in self.item_keys:
                 if key == "Price Total Amount":
                     for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                         PO_total[i] += float(Decimal(str(float(invoice["Unit Price"][j + 1]))) * int(float(invoice["Qty Ordered"][j + 1])))
                         temp_item_details[i][key].append(float(Decimal(str(float(invoice["Unit Price"][j + 1]))) * int(float(invoice["Qty Ordered"][j + 1]))))
-
                 elif key == "Pack Size":
                     for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                         temp_item_details[i][key].append(1)
                     # for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                     #     temp_item_details[i][key].append(int(float(invoice["Qty Ordered"][j + 1])) / int(float(invoice["Pack Size UOM"][j + 1])))
-
                 elif key == "Quantity Ordered":
                     for item in invoice[self.item_keys[key]][1:]:
                         temp_item_details[i][key].append(int(float(item)))
@@ -544,7 +512,6 @@ class SalesImport_Generator:
                 elif key == "Number of Pcs per Case Pack":
                     for item in invoice[self.item_keys[key]][1:]:
                         temp_item_details[i][key].append(item)
-
                 elif key == "Total Case Pack Qty":
                     if invoice[self.item_keys["Unit Of Measure"]][1] == "Case":
                         for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
@@ -573,25 +540,20 @@ class SalesImport_Generator:
                 
                 elif key == "PO Total":
                     header_details[i][key].append(PO_total[i])
-
                 else: 
                     header_details[i][key].append(invoice[self.header_keys[key]][0])
-
         for i in range(len(matching_res)):
             item_details.append({})
-
             for key in self.input_item_keys:
                 item_details[i].update(
                     {
                         key: temp_item_details[i][key]
                     }
                 )
-
         res = [customer_name, header_details, item_details]
         with open(Path(__file__).resolve().parent.parent.parent / f'process/views/{filename}.json', 'w') as f:
             json.dump(res, f)
         
-
         # print("printing item_details...")
         # print(header_details)
         # print(item_details)
@@ -605,7 +567,7 @@ class SalesImport_Generator:
         creds_with_scope = credentials.with_scopes(scope)
         client = gspread.authorize(creds_with_scope)
         self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
-        
+
         path = self.paths[0]
         filename = filenames[0]
         sku_match = {}
@@ -628,17 +590,14 @@ class SalesImport_Generator:
                         }
                     )
             
-
         #DB_Updater: Update automatching DB
         print("==============================================================================================================")
         print("updating Auto matching DB ...")
         # print(sku_match)
         AutoDB().auto_DB_updater(sku_match, customer_name)
-
         # Integration_Add : Generate SalesImport
         print("==============================================================================================================")
         print("Integrating...")
-
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
         print("==============================================================================================================")
@@ -646,13 +605,10 @@ class SalesImport_Generator:
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
                 
-
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
-
         field_names = json.load(f)
-
         # generate excel output file
         if os.path.isfile("SalesImport.xlsx"):
             os.remove("SalesImport.xlsx")
@@ -661,72 +617,55 @@ class SalesImport_Generator:
         # keys = list(sales_import[0].keys())
         for idx, header in enumerate(field_names):
             sheet.write(0, idx, header)
-
         book.close()
-
         book = load_workbook("SalesImport.xlsx")
         sheet = book.get_sheet_by_name("cont_excel")
-
         for _, dic in enumerate(sales_import):
             keys = list(dic.keys())
-
             for i in range(len(dic[keys[0]])):
                 temp = []
-
                 for key in field_names:
                     if key in keys:
                         temp.append(dic[key][i])
                     else:
                         temp.append("")
-
                 sheet.append(temp)
-
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
         
         book.save(filename = output)
         df = pd.read_excel(output)
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
-
         return [path, output]
-
     def live_save(self, matching_res, customername, terms):
         worksheet = self.spreadsheet.get_worksheet(6)
         leng = int(self.spreadsheet.get_worksheet(7).get_values()[0][0])
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
-
         #Getting Invoice Numbers
         dt = worksheet.get_all_records()
         Inumbers = []
-
         for invoice in dt:
             Inumbers.append(invoice["InvoiceNumber*"])
-
         integrator = Integrate_All(customer_name=customername)
         sales_import = integrator.Integrate_final(matching_res, customername, terms, self.spreadsheet)
-
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-
         field_names = json.load(f)
         
         Ignore_invoice_nums = []
         Ignore_invoices = []
-
         res = []
         for dic in sales_import:
             if dic["InvoiceNumber*"][0] in Inumbers:
                 Ignore_invoice_nums.append(dic["InvoiceNumber*"][0])
                 Ignore_invoices.append(dic)
                 continue
-
             length = len(dic[list(dic.keys())[0]])
             keys = list(dic.keys())
             for i in range(length):
                 temp = []
-
                 for key in field_names:
                     if key in keys:
                         temp.append(str(dic[key][i]))
@@ -734,13 +673,10 @@ class SalesImport_Generator:
                         temp.append("")
                 
                 res.append(temp)
-
         worksheet.update(f'{leng + 1}:{leng + len(res)}', res)
-
         write_sheet = self.spreadsheet.get_worksheet(7)
         write_sheet.update(f'{1}:{2}', [[leng + len(res)]])
         print("success!!!!!!!!!!!!!!!")
-
         return [Ignore_invoices, sales_import, Ignore_invoice_nums]
     
     def live_addition(self, Ignore_invoices, sales_import, invoice_nums):
@@ -750,23 +686,18 @@ class SalesImport_Generator:
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-
         field_names = json.load(f)
         dt = worksheet.get_all_records()
         Inumbers = []
-
         for i, invoice in enumerate(dt):
             if invoice["InvoiceNumber*"] in invoice_nums:
                 Inumbers.append(i)
-
         res = []
         for dic in Ignore_invoices:
             length = len(dic[list(dic.keys())[0]])
             keys = list(dic.keys())
-
             for i in range(length):
                 temp = []
-
                 for key in field_names:
                     if key in keys:
                         temp.append(str(dic[key][i]))
@@ -774,11 +705,9 @@ class SalesImport_Generator:
                         temp.append("")
                 
                 res.append(temp)
-
         for i, liveline_num in enumerate(Inumbers):
             cells = worksheet.range(f"A{liveline_num + 2}:BG{liveline_num + 2}")
             for j, e in enumerate(cells):
                 e.value = res[i][j]
             worksheet.update_cells(cells)
-
         print("Success Live Addition!!!")
