@@ -679,7 +679,7 @@ $(document).ready(function () {
       success: function (response) {
         let { data1, data2, data3, data4, data5 } = response
         console.log(data1, "_____")
-        data1 = JSON.parse(data1)
+        data1 = JSON.parse(data1.replace(/NaN/g, '\"\"'))
         data2 = JSON.parse(data2)
         data3 = JSON.parse(data3.replace(/NaN/g, '\"\"'))
         data4 = JSON.parse(data4)

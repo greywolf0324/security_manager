@@ -65,8 +65,8 @@ class SalesImport_Generator:
             #     "matcher": "PO_Match_THE_WORKS"
             # },
             "Walmart": {
-                "parser": "Walmart_Parsing",
-                "matcher": "PO_Match_Walmart"
+                "parser": "EXCEL_Parsing",
+                "matcher": "PO_Match_EXCEL"
             },
             "Ollies": {
                 "parser": "Ollies_Parsing",
@@ -158,9 +158,6 @@ class SalesImport_Generator:
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
         
-        # self.spreadsheet = None
-        # self.inventory_matching = None
-        
         # self.inventory_matching = pd.read_csv(Path(__file__).resolve().parent / "config/OMS_DB/OMS_InventoryList.csv", index_col = False)
         f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
         google_json = json.load(f)
@@ -250,14 +247,10 @@ class SalesImport_Generator:
         print("CustomerFields Updating...")
         customer_fields_updater()
         self.customer_name = customer_name
-        # customer_name = "Buc-ee's"
-        # paths = []
-        # for file in data:
         self.uploadFile(data)
         paths = self.paths
             # paths.append(self.path)
 
-        # OCR: PDF parsing
         print("==============================================================================================================")
         print("On PDF parsing...")
         parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
@@ -270,7 +263,7 @@ class SalesImport_Generator:
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
         
-        # print(matching_res[0])
+        print(matching_res[0])
         # # Extract equal OMS
         print("==============================================================================================================")
         print("tracking equal things...")
@@ -454,6 +447,7 @@ class SalesImport_Generator:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
+                    print("==",temp)
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -492,14 +486,17 @@ class SalesImport_Generator:
                     }
                 )
         PO_total = []
-        # print(matching_res[0])
+        print(matching_res[0])
         for i, invoice in enumerate(matching_res):
             PO_total.append(0)
             for key in self.item_keys:
                 if key == "Price Total Amount":
                     for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
-                        PO_total[i] += float(Decimal(str(float(invoice["Unit Price"][j + 1]))) * int(float(invoice["Qty Ordered"][j + 1])))
-                        temp_item_details[i][key].append(float(Decimal(str(float(invoice["Unit Price"][j + 1]))) * int(float(invoice["Qty Ordered"][j + 1]))))
+                        try:
+                            PO_total[i] += float(Decimal(str(float(invoice["Unit Price"][j + 1]))) * int(float(invoice["Qty Ordered"][j + 1])))
+                        except:
+                            PO_total[i] += float(Decimal(str(float(invoice["Unit Price"][1]))) * int(float(invoice["Qty Ordered"][j + 1])))
+                        temp_item_details[i][key].append(float(Decimal(str(float(invoice["Unit Price"][1]))) * int(float(invoice["Qty Ordered"][j + 1]))))
                 elif key == "Pack Size":
                     for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                         temp_item_details[i][key].append(1)
@@ -600,6 +597,7 @@ class SalesImport_Generator:
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
+        print(sales_import)
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()

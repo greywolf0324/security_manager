@@ -12,7 +12,7 @@ class SalesImport_Updater:
         updated_salesimport = []
 
         for invoice_num, invoice in enumerate(sales_import):
-            
+            # print(invoice)
 
             if len(set(invoice["StockLocation"][1:])) == 1:
                 updated_salesimport.append({})
