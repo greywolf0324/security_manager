@@ -270,6 +270,7 @@ class SalesImport_Generator:
         extract = Extractor()
         OMS_equal = extract.extractor(matching_res, customer_name, self.spreadsheet)
         self.auto_dic = AutoDB().DB_tester(customer_name, matching_res)
+
         print("==============================================================================================================")
         print("Displaying...")
         # print(self.auto_dic)
@@ -463,7 +464,7 @@ class SalesImport_Generator:
                             invoice["Pack Size UOM"][i] = nums[0]
                             invoice["Number of Pcs per Inner Pack"][i] = 1
                             invoice["Number of Inner Packs"][i] = int(int(float(invoice["Pack Size UOM"][i])) / int(float(invoice["Number of Pcs per Inner Pack"][i])))
-        #Create View
+
         print("==============================================================================================================")
         print("Creating View...\n")
         # print(matching_res)
@@ -587,17 +588,15 @@ class SalesImport_Generator:
                         }
                     )
             
-        #DB_Updater: Update automatching DB
         print("==============================================================================================================")
         print("updating Auto matching DB ...")
-        # print(sku_match)
         AutoDB().auto_DB_updater(sku_match, customer_name)
-        # Integration_Add : Generate SalesImport
+
         print("==============================================================================================================")
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-        print(sales_import)
+
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
@@ -607,7 +606,7 @@ class SalesImport_Generator:
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
         field_names = json.load(f)
-        # generate excel output file
+
         if os.path.isfile("SalesImport.xlsx"):
             os.remove("SalesImport.xlsx")
         book = xlsxwriter.Workbook("SalesImport.xlsx")
