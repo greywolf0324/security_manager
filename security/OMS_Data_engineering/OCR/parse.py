@@ -9,126 +9,126 @@ import math
 
 
 # PDF Parsing for Bucee's
-class BUCEE_Parsing_PDF:
-    def __init__(self) -> None:
-        self.keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL', 'PO Date:', 'Requested Delivery Date:', 'Requested Ship Date:', 'Cancel Date:', 'Delivery Window:', 'Shipping Window:', 'Vendor #:', 'Department #:', 'Freight Terms:', 'Preferred Carrier:', 'Terms Type', 'Terms Basis:', 'Terms Disc\n%:', 'Disc. Due Date:', 'Disc. Days:', 'Net Due Date:', 'Net Days:', 'Description:', 'TYPE', 'SERVICE TYPE', 'PERCENT', 'RATE', 'QTY_', 'UOM_', 'DESCRIPTION', 'AMOUNT', 'Total Qty:', 'Weight:', 'Volume:', 'Purchase Order Total:', '280.80', 'Order #', "PO_currency", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Buying Party Name"]
+# class BUCEE_Parsing_PDF:
+#     def __init__(self) -> None:
+#         self.keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL', 'PO Date:', 'Requested Delivery Date:', 'Requested Ship Date:', 'Cancel Date:', 'Delivery Window:', 'Shipping Window:', 'Vendor #:', 'Department #:', 'Freight Terms:', 'Preferred Carrier:', 'Terms Type', 'Terms Basis:', 'Terms Disc\n%:', 'Disc. Due Date:', 'Disc. Days:', 'Net Due Date:', 'Net Days:', 'Description:', 'TYPE', 'SERVICE TYPE', 'PERCENT', 'RATE', 'QTY_', 'UOM_', 'DESCRIPTION', 'AMOUNT', 'Total Qty:', 'Weight:', 'Volume:', 'Purchase Order Total:', '280.80', 'Order #', "PO_currency", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Buying Party Name"]
 
 
-    def re_fun(self, str_input: str) -> dict:
-        if str_input == None:
-            return None
-        loc = str_input.rfind(":")
-        left, right = str_input[:loc] + str_input[loc], (str_input[loc:])[1:]
+#     def re_fun(self, str_input: str) -> dict:
+#         if str_input == None:
+#             return None
+#         loc = str_input.rfind(":")
+#         left, right = str_input[:loc] + str_input[loc], (str_input[loc:])[1:]
         
-        return {left: right}
+#         return {left: right}
     
-    def PO_parser(self, paths: list, currency):
-        #this function will generate PO table
-        res = {}
+#     def PO_parser(self, paths: list, currency):
+#         #this function will generate PO table
+#         res = {}
         
-        for k, path in enumerate(paths):
-            res[f"PDF{k}"] = {}
-            pdf = pdfplumber.open(path)
+#         for k, path in enumerate(paths):
+#             res[f"PDF{k}"] = {}
+#             pdf = pdfplumber.open(path)
 
-            for page_num, page in enumerate(pdf.pages):
-                res[f"PDF{k}"][f"page{page_num}"] = {}
+#             for page_num, page in enumerate(pdf.pages):
+#                 res[f"PDF{k}"][f"page{page_num}"] = {}
 
-                for key in self.keys:
-                    res[f"PDF{k}"][f"page{page_num}"].update({key: []})
+#                 for key in self.keys:
+#                     res[f"PDF{k}"][f"page{page_num}"].update({key: []})
                 
-                #non main table addition
-                non_product_tables = []
-                ## non table addition
-                non_table_content = []
-                non_table_str = page.extract_text_simple()
-                non_table_lis = non_table_str.split("\n")
-                non_product_tables.append({"Order #": non_table_lis[4]})
-                non_product_tables.append({"Ship To Name": "Buc" + non_table_lis[18].split("Buc")[1]})
-                non_product_tables.append({"Ship To Address 1": non_table_lis[19]})
-                non_product_tables.append({"Ship To City": non_table_lis[20].split(",")[0]})
-                non_product_tables.append({"Ship To State": non_table_lis[20].split(",")[1].split(" ")[1]})
-                non_product_tables.append({"Ship to Zip": non_table_lis[20].split(",")[1].split(" ")[2]})
-                non_product_tables.append({"Ship To Country": non_table_lis[20].split(",")[1].split(" ")[3]})
-                non_product_tables.append({"Buying Party Name":("Buc" + non_table_lis[18].split("Buc")[2]).split("Creative ")[0]})
+#                 #non main table addition
+#                 non_product_tables = []
+#                 ## non table addition
+#                 non_table_content = []
+#                 non_table_str = page.extract_text_simple()
+#                 non_table_lis = non_table_str.split("\n")
+#                 non_product_tables.append({"Order #": non_table_lis[4]})
+#                 non_product_tables.append({"Ship To Name": "Buc" + non_table_lis[18].split("Buc")[1]})
+#                 non_product_tables.append({"Ship To Address 1": non_table_lis[19]})
+#                 non_product_tables.append({"Ship To City": non_table_lis[20].split(",")[0]})
+#                 non_product_tables.append({"Ship To State": non_table_lis[20].split(",")[1].split(" ")[1]})
+#                 non_product_tables.append({"Ship to Zip": non_table_lis[20].split(",")[1].split(" ")[2]})
+#                 non_product_tables.append({"Ship To Country": non_table_lis[20].split(",")[1].split(" ")[3]})
+#                 non_product_tables.append({"Buying Party Name":("Buc" + non_table_lis[18].split("Buc")[2]).split("Creative ")[0]})
 
-                for i, table in enumerate(page.extract_tables()):
-                    if i == 2:
-                        product_table = table
-                    if i != 2:
-                        items = [item for sublist in table for item in sublist]
-                        for item in items: 
-                            if self.re_fun(item) == None:
-                                continue
-                            else:
-                                non_product_tables.append(self.re_fun(item))
+#                 for i, table in enumerate(page.extract_tables()):
+#                     if i == 2:
+#                         product_table = table
+#                     if i != 2:
+#                         items = [item for sublist in table for item in sublist]
+#                         for item in items: 
+#                             if self.re_fun(item) == None:
+#                                 continue
+#                             else:
+#                                 non_product_tables.append(self.re_fun(item))
 
-                non_product_dic = {}
-                for dic in non_product_tables:
-                    non_product_dic.update(dic)
+#                 non_product_dic = {}
+#                 for dic in non_product_tables:
+#                     non_product_dic.update(dic)
                 
-                non_blank_keys = list(non_product_dic.keys())
+#                 non_blank_keys = list(non_product_dic.keys())
 
-                for key in self.keys:
-                    if key == "UOM_":
-                        res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["UOM"])
-                    elif key == "QTY_":
-                        res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["QTY"])
-                    elif key == "PO_currency":
-                        res[f"PDF{k}"][f"page{page_num}"][key].append("USD")
-                    else:
-                        if key in non_blank_keys:
-                            res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic[key])
-                        else:
-                            res[f"PDF{k}"][f"page{page_num}"][key].append("")
+#                 for key in self.keys:
+#                     if key == "UOM_":
+#                         res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["UOM"])
+#                     elif key == "QTY_":
+#                         res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["QTY"])
+#                     elif key == "PO_currency":
+#                         res[f"PDF{k}"][f"page{page_num}"][key].append("USD")
+#                     else:
+#                         if key in non_blank_keys:
+#                             res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic[key])
+#                         else:
+#                             res[f"PDF{k}"][f"page{page_num}"][key].append("")
 
-                # main table addition
+#                 # main table addition
                 
-                # product_keys = product_table[0]
-                product_table_ = product_table[1 : len(product_table) - 1]
-                product_keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL']
-                product_dic = {}
-                for key in product_keys:
-                    product_dic.update({key:[]})
+#                 # product_keys = product_table[0]
+#                 product_table_ = product_table[1 : len(product_table) - 1]
+#                 product_keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL']
+#                 product_dic = {}
+#                 for key in product_keys:
+#                     product_dic.update({key:[]})
 
-                for i, line in enumerate(product_table_):
-                    for i, key in enumerate(product_keys):
-                        product_dic[key].append(line[i])
-                for i in range(len(product_table_)):
-                    for key in self.keys:
-                        if key in product_keys:
-                            res[f"PDF{k}"][f"page{page_num}"][key].append(product_dic[key][i])
-                        else:
-                            res[f"PDF{k}"][f"page{page_num}"][key].append("")
-                temp_total = [product_table[len(product_table) - 1][9]]
-                for _ in range(len(product_table) - 2):
-                    temp_total.append("")
-                res[f"PDF{k}"][f"page{page_num}"].update({"total": temp_total})
+#                 for i, line in enumerate(product_table_):
+#                     for i, key in enumerate(product_keys):
+#                         product_dic[key].append(line[i])
+#                 for i in range(len(product_table_)):
+#                     for key in self.keys:
+#                         if key in product_keys:
+#                             res[f"PDF{k}"][f"page{page_num}"][key].append(product_dic[key][i])
+#                         else:
+#                             res[f"PDF{k}"][f"page{page_num}"][key].append("")
+#                 temp_total = [product_table[len(product_table) - 1][9]]
+#                 for _ in range(len(product_table) - 2):
+#                     temp_total.append("")
+#                 res[f"PDF{k}"][f"page{page_num}"].update({"total": temp_total})
 
-        if os.path.isfile("OCR_res.xlsx"):
-            os.remove("OCR_res.xlsx")
-        book = xlsxwriter.Workbook("OCR_res.xlsx")
-        sheet = book.add_worksheet("cont_excel")
-        for idx, header in enumerate(self.keys):
-            sheet.write(0, idx, header)
-        sheet.write(0, len(self.keys), "total")
-        book.close()
+#         if os.path.isfile("OCR_res.xlsx"):
+#             os.remove("OCR_res.xlsx")
+#         book = xlsxwriter.Workbook("OCR_res.xlsx")
+#         sheet = book.add_worksheet("cont_excel")
+#         for idx, header in enumerate(self.keys):
+#             sheet.write(0, idx, header)
+#         sheet.write(0, len(self.keys), "total")
+#         book.close()
 
-        book = load_workbook("OCR_res.xlsx")
-        sheet = book.get_sheet_by_name("cont_excel")
-        for dic in res:
-            for di in res[dic]:
-                for i in range(len(res[dic][di]["LINE"])):
-                    temp = []
+#         book = load_workbook("OCR_res.xlsx")
+#         sheet = book.get_sheet_by_name("cont_excel")
+#         for dic in res:
+#             for di in res[dic]:
+#                 for i in range(len(res[dic][di]["LINE"])):
+#                     temp = []
 
-                    for key in res[dic][di].keys():
-                        temp.append(res[dic][di][key][i])
+#                     for key in res[dic][di].keys():
+#                         temp.append(res[dic][di][key][i])
 
-                    sheet.append(temp)
+#                     sheet.append(temp)
 
 
-        book.save(filename = "OCR_res.xlsx")
+#         book.save(filename = "OCR_res.xlsx")
 
-        return res
+#         return res
     
 class BUCEE_Parsing:
     def __init__(self, customer_name) -> None:
@@ -411,10 +411,9 @@ class PEPCO_Add_Parsing:
     
 class Walgreens_Parsing:
     def __init__(self, customer_name) -> None:
-        self.keys = ["PO Number", "Release Number", "PO Date", "Dept #", "Retailers PO", "Requested Delivery Date", "Delivery Dates", "Ship Dates", "Cancel Date", "Carrier", "Carrier Details", "Ship To Location", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Retail Price", "Product/Item Description", "Color", "Size", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "Number of Pcs per Inner Pack", "Store #", "Qty per Store #", "Record Type", "PO purpose", "PO Type", "Contract Number", "Currency", "Ship Status", "Letter of Credit", "Vendor #", "Division #", "Cust Acct #", "Customer Order #", "Promo #", "Ticket Description", "Other Info / #s", "Frt Terms", "Carrier Service Level", "Payment Terms %", "Payment Terms Disc Due Date", "Payment Terms Disc Days Due", "Payment Terms Net Due Date", "Payment Terms Net Days", "Payment Terms Disc Amt", "Payment Terms Desc", "Contact Phone", "Contact Fax", "Contact Email", "Allow/Charge Type", "Allow/Charge Service", "Allow/Charge Amt", "Allow/Charge %", "Allow/Charge Rate", "Allow/Charge Qty", "Allow/Charge Desc", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Ship To Contact", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country", "Bill To Contact", "Buying Party Name", "Buying Party Location", "Buying Party Address 1", "Buying Party Address 2", "Buying Party City", "Buying Party State", "Buying Party Zip", "Buying Party Country", "Buying Party Contact", "Ultimate Location", "Notes/Comments", "Ship To Additional Name", "Ship To Additional Name 2", "Bill To Additional Name", "Bill To Additional Name 2", "Buyer Additional Name", "Buyer Additional Name 2", "GTIN", "PO Total Amount", "PO Total Weight ", "PO Total UOM ", "Shipping account number", "Mark for Name", "Mark for Address 1", "Mark for Address 2", "Mark for City", "Mark for State", "Mark for Postal", "Mark for Country", "Shipping Container Code", "National Drug Code", "Expiration Date", "Dist", "Scheduled Quantity", "Scheduled Qty UOM", "Required By Date", "Must Arrive By", "Entire Shipment", "Agreement Number", "Additional Vendor Part #", "Buyer Part Number", "Carrier Details Special Handling", "Restrictions/Conditions"]
-        
         self.top_lis = ["PO Number", "PO Date", "Dept #", "Retailers PO", "Delivery Dates", "Ship Dates", "Ship To Location", "PO purpose", "PO Type", "Vendor #", "Payment Terms %", "Payment Terms Disc Days Due", "Payment Terms Desc", "Contact Phone", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Bill To Name", "Bill To Address 1", "Bill To City", "Bill To Country", "PO Total Amount", "PO Total Weight ", "PO Total UOM "]
         self.all_mid_lis = ["PO Number", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "Product/Item Description", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "GTIN"]
+
     def PO_parser(self, paths: list, currency):
         res = []
 
@@ -556,7 +555,6 @@ class Dollarama_Parsing:
     
 class Family_Dollar_Parsing:
     def __init__(self, customer_name) -> None:
-        self.keys = ["Purchase Order", "PO First Ship Date", "PO Last Ship Date", "PO First DC Date", "PO Last DC Date", "Ship To", "Payment Terms", "Currencys", "Total PO Master Case Qty", "Total PO Case CFT", "Total PO Weight LBS", "Family Dollar SKU", "UPC", "VPN", "First Cost Eaches", "Total Eaches Ordered", "Total First Cost", "RMS Retail Price"]
         self.PO_coordinates = [15.108, 54.771999999999935, 131.572, 66.77199999999993]
 
     def PO_parser(self, paths: list, currency):
@@ -693,9 +691,6 @@ class Walmart_Parsing:
     def __init__(self, customer_name) -> None:
         self.keys = ["PO Number", "Release Number", "PO Date", "Dept #", "Retailers PO", "Requested Delivery Date", "Delivery Dates", "Ship Dates", "Cancel Date", "Carrier", "Carrier Details", "Ship To Location", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Retail Price", "Product/Item Description", "Color", "Size", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "Number of Pcs per Inner Pack", "Store #", "Qty per Store #", "Record Type", "PO purpose", "PO Type", "Contract Number", "Currency", "Ship Status", "Letter of Credit", "Vendor #", "Division #", "Cust Acct #", "Customer Order #", "Promo #", "Ticket Description", "Other Info / #s", "Frt Terms", "Carrier Service Level", "Payment Terms %", "Payment Terms Disc Due Date", "Payment Terms Disc Days Due", "Payment Terms Net Due Date", "Payment Terms Net Days", "Payment Terms Disc Amt", "Payment Terms Desc", "Contact Phone", "Contact Fax", "Contact Email", "Allow/Charge Type", "Allow/Charge Service", "Allow/Charge Amt", "Allow/Charge %", "Allow/Charge Rate", "Allow/Charge Qty", "Allow/Charge Desc", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Ship To Contact", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country", "Bill To Contact", "Buying Party Name", "Buying Party Location", "Buying Party Address 1", "Buying Party Address 2", "Buying Party City", "Buying Party State", "Buying Party Zip", "Buying Party Country", "Buying Party Contact", "Ultimate Location", "Notes/Comments", "Ship To Additional Name", "Ship To Additional Name 2", "Bill To Additional Name", "Bill To Additional Name 2", "Buyer Additional Name", "Buyer Additional Name 2", "GTIN", "PO Total Amount", "PO Total Weight ", "PO Total UOM ", "Shipping account number", "Mark for Name", "Mark for Address 1", "Mark for Address 2", "Mark for City", "Mark for State", "Mark for Postal", "Mark for Country", "Shipping Container Code", "National Drug Code", "Expiration Date", "Dist", "Scheduled Quantity", "Scheduled Qty UOM", "Required By Date", "Must Arrive By", "Entire Shipment", "Agreement Number", "Additional Vendor Part #", "Buyer Part Number", "Carrier Details Special Handling", "Restrictions/Conditions"]
         
-        self.top_lis = ["PO Number", "PO Date", "Dept #", "Retailers PO", "Delivery Dates", "Ship Dates", "Ship To Location", "PO purpose", "PO Type", "Vendor #", "Payment Terms %", "Payment Terms Disc Days Due", "Payment Terms Desc", "Contact Phone", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Bill To Name", "Bill To Address 1", "Bill To City", "Bill To Country", "PO Total Amount", "PO Total Weight ", "PO Total UOM "]
-        self.all_mid_lis = ["PO Number", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "Product/Item Description", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "GTIN"]
-
     def PO_parser(self, paths: list, currency):
         res = []
 
@@ -885,9 +880,7 @@ class EXCEL_Parsing:
 
             cols = len(pdf.columns)
             res.append({})
-            # this lines are to block excel inputs
-            # if "PD MOLDIMALS SURPRISE" in list(pdf[list(pdf.keys())[20]]):
-            #     continue
+
             i = 0
             num_po = -1
             while i < len(pdf[list(pdf.keys())[0]]):
@@ -903,7 +896,6 @@ class EXCEL_Parsing:
                         b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
                 except:
                     b = True
-                # print(a, b, i)
                 
                 if a ^ b:
                     if a:
@@ -926,9 +918,7 @@ class EXCEL_Parsing:
                                         res[num_po][key] = [str(pdf[key][i])]
                                 else:
                                     res[num_po][key] = [str(pdf[key][i])]
-                        # print(i)
-                        # print(pdf["Notes/Comments"][i + 1])
-                        # print(math.isnan(pdf["Notes/Comments"][i]))
+
                         try:
                             c = math.isnan(pdf["Notes/Comments"][i])
                         except:
@@ -961,7 +951,6 @@ class EXCEL_Parsing:
                                         res[num_po][key].append(str(pdf[key][i]))
                                 else:
                                     res[num_po][key].append(str(pdf[key][i]))
-                # print(pdf["Notes/Comments"])
                 
                 i = i + 1
             
@@ -972,35 +961,25 @@ class EXCEL_Parsing:
             if cols == 122:
                 while i < len(pdf[list(pdf.keys())[0]]):
                     try:
-                        # print(pdf[list(pdf.keys())[55]][i])
                         math.isnan(pdf[list(pdf.keys())[55]][i])
                     except:
-                        # print("------------------------", [pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
                         temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
 
                     try:
                         #Maijer
-                        # print(pdf[list(pdf.keys())[57]][i], type(pdf[list(pdf.keys())[57]][i]), math.isnan(pdf[list(pdf.keys())[57]][i]))
                         if str(pdf[list(pdf.keys())[57]][i]) != "nan":
                             math.isnan(str(pdf[list(pdf.keys())[57]][i]))
                     except:
-                        # print([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
                         temp[-1].extend([pdf[list(pdf.keys())[57]][i], pdf[list(pdf.keys())[58]][i]])
-                    # print(temp)
-                    # print("temp______")
+
                     try:
-                        # print(pdf[list(pdf.keys())[88]][i], type(pdf[list(pdf.keys())[88]][i]))
                         math.isnan(pdf[list(pdf.keys())[88]][i])
                     except:
                         temp_note.append(pdf[list(pdf.keys())[88]][i])
-                    # print(temp_note)
-                    # print("temp_note______")
+                    
                     i = i + 1
-                # print(temp)
-                # print(len(res), len(temp))
                 if len(temp) != 0:
                     for i, items in enumerate(temp):
-                        # print(temp[-1 - i])
                         res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
                         res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
                         res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
@@ -1009,15 +988,9 @@ class EXCEL_Parsing:
                             res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]
                         except:
                             pass
-                # print(len(temp_note))
                 if len(temp_note) / 3 == len(temp) and len(temp) != 0:
                     for i in range(int(len(temp_note) / 3)):
                         res[-1 - i][list(pdf.keys())[88]][0] = ", ".join([temp_note[-1 - i * 3], temp_note[-1 - i * 3 - 1], temp_note[-1 - i * 3 - 2]])
-                # elif len(temp_note) != 0:
-                # elif len(pdf.columns) == 84:
-                #     res.append({})
-
-        # res.pop(-1)
 
         return res
 
@@ -1033,7 +1006,7 @@ class CVS_Parsing:
                 pdf = pd.read_csv(path, encoding='ISO-8859-1')
             except:
                 pdf = pd.read_excel(path)
-            # print(type(pdf["Release Number"][0]), pdf["Release Number"][0], math.isnan(pdf["Release Number"][0]), "______________")
+
             i = 0
             flag = 0
             po_num = pdf[list(pdf.keys())[0]][0]
@@ -1063,10 +1036,9 @@ class CVS_Parsing:
                             c = math.isnan(pdf[key][i])
                         except:
                             c = False
-                        # print(key, c, "___________")
+                            
                         if c:
                             res[-1][key].append("")
-                            # print(key, res[-1][key])
                         else:
                             res[-1][key].append(pdf[key][i])
                     
