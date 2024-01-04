@@ -6,6 +6,7 @@ from . import forms
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_protect
 
 
 User = get_user_model()
@@ -55,7 +56,7 @@ def signin(request):
         form = forms.SigninForm()
     return render(request, 'signin.html', {'form': forms.SigninForm, 'is_signup_page': False})
 
-
+@csrf_protect
 def signup(request):
   if request.method == 'POST':
     form = forms.SignupForm(request.POST)

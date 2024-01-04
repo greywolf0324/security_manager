@@ -7,10 +7,8 @@ from .DB_Updater.customers_updater import customer_fields_updater
 from .DB_Updater.auto_SKU import AutoDB
 from .SalesImport_Generation.Integrator import Integrate_All
 from .SalesImport_Generation.SalesImport_updater import SalesImport_Updater
-from csv import DictWriter
 import json
 import pandas as pd
-import csv
 from openpyxl import load_workbook
 import xlsxwriter
 import os
@@ -21,115 +19,18 @@ from decimal import Decimal
 from google.oauth2 import service_account
 import gspread
 from .sheet_reader import frame_converter
-import asyncio
+from ..models import Matching_dict, Customers, Original_SalesImport
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        self.matching_dic = {
-            "Buc-ee's": {
-                "parser": "BUCEE_Parsing", 
-                "matcher": "PO_Match_BUCEE",
-            },
-            "Pepco": {
-                "parser": "PEPCO_Parsing",
-                "matcher": "PO_Match_PEPCO",
-            },
-            "Poundland": {
-                "parser": "PEPCO_Add_Parsing",
-                "matcher": "PO_Match_PEPCO_Add",
-            },
-            "Walgreens": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL",
-            },
-            "Dollarama": {
-                "parser": "Dollarama_Parsing",
-                "matcher": "PO_Match_Dollarama",
-            },
-            "Family Dollar": {
-                "parser": "Family_Dollar_Parsing",
-                "matcher": "PO_Match_Family_Dollar"
-            },
-            "Gabe's": {
-                "parser": "Gabes_Parsing",
-                "matcher": "PO_Match_Gabes" 
-            },
-            "TEDI": {
-                "parser": "TEDI_Parsing",
-                "matcher": "PO_Match_TEDI",
-            },
-            # "THE WORKS": {
-            #     "parser": "THE_WORKS_Parsing",
-            #     "matcher": "PO_Match_THE_WORKS"
-            # },
-            "Walmart": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "Ollies": {
-                "parser": "Ollies_Parsing",
-                "matcher": "PO_Match_Ollies",
-            },
-            "ORBICO": {
-                "parser": "ORBICO_Parsing",
-                "matcher": "PO_Match_ORBICO"
-            },
-            "Big Lots Stores": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "TARGET": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "CVS": {
-                "parser": "CVS_Parsing",
-                "matcher": "PO_Match_CVS"
-            },
-            "Five Below": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "Giant Tiger": {
-                "parser": "GiantTiger_Parsing",
-                "matcher": "PO_Match_GiantTiger"
-            },
-            "Hobby Lobby": {
-                "parser": "HOBBYlobby_Parsing",
-                "matcher": "PO_Match_HOBBYlobby"
-            },
-            "Lekia": {
-                "parser": "Lekia_Parsing",
-                "matcher": "PO_Match_Lekia"
-            },
-            "Meijers": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "MICHAELS": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "Fred Meyer": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "Tar Heel Trading": {
-                "parser": "EXCEL_Parsing",
-                "matcher": "PO_Match_EXCEL"
-            },
-            "Hobby Lobby": {
-                "parser": "HOBBYlobby_Parsing",
-                "matcher": "PO_Match_HOBBYlobby"
-            },
-        }
+        print([f.name for f in Original_SalesImport._meta.get_fields() if f.name != 'id'])
+        # print(eval('Original_SalesImport.objects.filter(id = 3)[0].' + 'PO_Number'))
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
-        self.SKU_list = ["Buc-ee's", "Dollarama", "Family Dollar", "Gabe's", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer"]
-        self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby"]
+        self.SKU_list = [item['customer_name'] for item in Customers.objects.filter(sku_bl=True).values('customer_name')]
         self.header_keys = {
             "PO#": "PO Number", 
             "PO Date": "PO Date", 
@@ -155,8 +56,7 @@ class SalesImport_Generator:
             "Price Total Amount": ""
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
-        
-        # self.inventory_matching = pd.read_csv(Path(__file__).resolve().parent / "config/OMS_DB/OMS_InventoryList.csv", index_col = False)
+
         f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
         google_json = json.load(f)
         credentials = service_account.Credentials.from_service_account_info(google_json)
@@ -167,8 +67,6 @@ class SalesImport_Generator:
         self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
-        # self.filename = None
-        # self.path = None
 
     def str_converter(self, input):
         temp = []
@@ -251,17 +149,21 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("On PDF parsing...")
-        parser = eval(self.matching_dic[customer_name]["parser"])(customer_name)
+        parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
         # print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
-        matcher = eval(self.matching_dic[customer_name]["matcher"])()
+        matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
+        # for matching in matcher.match_final(PO_res):
+        #     for key in matching:
+                
+                
         self.matching_res = matching_res
         
-        print(matching_res[0])
+        print(matching_res[0], len(matching_res[0]))
         # # Extract equal OMS
         print("==============================================================================================================")
         print("tracking equal things...")
