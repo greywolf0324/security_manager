@@ -618,7 +618,7 @@ class Gabes_Parsing:
 
             for page_num, page in enumerate(pdf.pages):
                 if page_num == 0:
-                    O_page = page.within_bbox(self.O_coordinates)
+                    O_page = page.within_bbox([page.search("Order Date")[0]['x0'], page.search("Order Date")[0]['top'], page.search("Order Date")[0]['x1'] + 50, page.search("Order Date")[0]['bottom']])
                     S_page = page.within_bbox(self.S_coordinates)
                     P_page = page.within_bbox(self.P_coordinates)
                     P_content = P_page.extract_table(dict(
@@ -631,7 +631,9 @@ class Gabes_Parsing:
                     
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
-                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  page.extract_text_simple().split("Order Date ")[1]
+                    temp = O_page.extract_text().split("Order Date ")[1].split("/")
+                    temp[2] = '20' + temp[2]
+                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  "/".join(temp)
                     res[f"PDF{k}"][f"page{page_num}"]["PO"] = page.extract_text_simple().split("\n")[0].split("Purchase Order ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["Ship To"] = S_page.extract_text_simple().replace("\xa0", "")
                     res[f"PDF{k}"][f"page{page_num}"]["Ship Date"] = P_content[0][1]

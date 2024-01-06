@@ -41,7 +41,6 @@ customer_list = [
 
 customer_list.sort()
 
-# Create your views here.
 @login_required
 def home(request):
   user = request.user
@@ -50,17 +49,13 @@ def home(request):
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
-    # if customername == "Buc-ee's":
-      # res = generator.processFile(files, matching_res, {}, customername, termOptions)
-    # if customername == "Pepco":
-      # currency = request.POST['currency']
     
     res = generator.processFile(files, matching_res, {}, customername, termOptions)
-    # res_view = generator.res_viewer(matching_res, customername, termOptions)
+
     if res == "fail":
       return JsonResponse({ "message": "You need to update database" }, status=400)
+    
     history = ProcessHistory.objects.create(user=user, input=res[0], output=res[1], )
-
     return JsonResponse({ "id": history.id }, status=200)
 
 
@@ -75,11 +70,8 @@ def viewer(request):
     matching_res = json.loads(request.POST['input'])
     customername = request.POST['customername']
     termOptions = json.loads(request.POST['termOptions'])
-    # if customername == "Buc-ee's":
-      # res = generator.processFile(files, matching_res, {}, customername, termOptions)
-    # if customername == "Pepco":
-      # currency = request.POST['currency']
     res = generator.res_viewer(files, matching_res, customername, termOptions)
+
     if res == "fail":
       return JsonResponse({ "message": "You need to update database" }, status=400)
     return JsonResponse({ "res": json.dumps(res) }, status=200)
@@ -98,9 +90,6 @@ def auto_matching_DB_viewer(request):
 def parseUpload(request):
   files = request.FILES.getlist('data')
   customer_name = request.POST['customername']
-  # if customer_name == "Buc-ee's":
-  #   # currency = ""
-  #   res = generator.parseUpload(files, customer_name = customer_name)
 
   if customer_name == "Pepco":
     currency = request.POST['currency']
