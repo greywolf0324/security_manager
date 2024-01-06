@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'security',
     'securityauth',
+    'django_postgres_backup',
     # 'corsheaders'
 ]
 

@@ -673,6 +673,9 @@ $(document).ready(function () {
     $.ajax({
       url: '/parse-upload',
       type: 'POST',
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
       data: formData,
       processData: false,
       contentType: false,
@@ -843,6 +846,9 @@ $(document).ready(function () {
     $.ajax({
       url: '/viewer',
       type: 'POST',
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
       data: formData,
       processData: false,
       contentType: false,
@@ -873,6 +879,9 @@ $(document).ready(function () {
     $.ajax({
       url: '/',
       type: 'POST',
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
       data: formData,
       processData: false,
       contentType: false,
@@ -920,6 +929,9 @@ $(document).ready(function () {
     $.ajax({
       url: '/export-doubleUpdate',
       type: 'POST',
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
       data: formData,
       processData: false,
       contentType: false,
@@ -946,6 +958,9 @@ $(document).ready(function () {
     $.ajax({
       url: '/export-doubleIgnore',
       type: 'POST',
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
       data: formData,
       processData: false,
       contentType: false,
