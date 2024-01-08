@@ -22,6 +22,7 @@ from google.oauth2 import service_account
 import gspread
 from .sheet_reader import frame_converter
 from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths
+from .utils.matching_orderer import Orderer
 
 filenames = []
 
@@ -170,7 +171,14 @@ class SalesImport_Generator:
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
         print(matching_res[0])
+        print(customer_name, "---", currency)
+
         uuid_code = str(uuid.uuid4())
+        for key, vkey in zip(self.matching_cols, matching_res[0].keys()):
+            print(key, vkey)
+
+        matching_res = Orderer(matching_res)
+
         for matching in matching_res:
             
             length = len(matching[list(matching.keys())[0]])
@@ -187,7 +195,10 @@ class SalesImport_Generator:
                         try:
                             matching[vkey][i] = int(float(matching[vkey][i]))
                         except:
-                            matching[vkey][i] = None
+                            if matching[vkey][i] == '':
+                                matching[vkey][i] = None
+                            else:
+                                pass
 
                     elif key in ["Unit_Price", "Retail_Price", "PO_Total_Amount", "PO_Total_Weight"]:
                         try:
@@ -203,7 +214,7 @@ class SalesImport_Generator:
                             except:
                                 matching[vkey][i] = None
                         
-                        if customer_name in ["Buc-ee's"]:
+                        if customer_name in ["Buc-ee's", "Pepco"]:
                             try:
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])
