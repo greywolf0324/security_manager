@@ -257,7 +257,7 @@ class Integrate_All:
             
             SalesImport[i].update(
                 {
-                    "ShippingNotes": self.fun_shippingnotes(element["Ship Dates"], element["Cancel Date"]),
+                    # "ShippingNotes": self.fun_shippingnotes(element["Ship Dates"], element["Cancel Date"]),
                     "ShipmentRequiredByDate": self.fun_invoicedata_expiredate(element["Ship Dates"]),
                     "InvoiceDate*/ExpireDate": self.fun_invoicedata_expiredate(element["PO Date"]),
                     "YourBaseCurrency*": self.fun_iter_top_currency("USD"),

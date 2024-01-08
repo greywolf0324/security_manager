@@ -214,7 +214,7 @@ class SalesImport_Generator:
                             except:
                                 matching[vkey][i] = None
                         
-                        if customer_name in ["Buc-ee's", "Pepco"]:
+                        if customer_name in ["Buc-ee's", "Pepco", "Poundland"]:
                             try:
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])
