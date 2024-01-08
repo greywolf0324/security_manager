@@ -39,7 +39,7 @@ class Original_SalesImport(models.Model):
   Cancel_Date = models.DateField(null = True)
   Carrier = models.CharField(max_length = 1000, null = True)
   Carrier_Details = models.CharField(max_length = 1000, null = True)
-  Ship_To_Location = models.BigIntegerField(null = True)
+  Ship_To_Location = models.CharField(max_length = 1000, null = True)
   PO_Line = models.BigIntegerField(null = True)
   Qty_Ordered = models.BigIntegerField(null = True)
   Unit_of_Measure = models.CharField(max_length = 1000, null = True)
