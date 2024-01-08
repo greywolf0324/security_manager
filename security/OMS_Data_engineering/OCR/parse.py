@@ -955,7 +955,7 @@ class EXCEL_Parsing:
                                     res[num_po][key].append(str(pdf[key][i]))
                 
                 i = i + 1
-            
+            print(pdf[list(pdf.keys())[55]])
             res.pop(-1)
             temp = []
             temp_note = []
@@ -980,8 +980,10 @@ class EXCEL_Parsing:
                         temp_note.append(pdf[list(pdf.keys())[88]][i])
                     
                     i = i + 1
+                print(temp)
                 if len(temp) != 0:
                     for i, items in enumerate(temp):
+                        print(res[-1 - i][list(pdf.keys())[55]])
                         res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
                         res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
                         res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
