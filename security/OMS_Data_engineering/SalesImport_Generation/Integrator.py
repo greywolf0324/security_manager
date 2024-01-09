@@ -334,7 +334,6 @@ class Integrate_All:
             
             for key in ["BillingAddressLine1*", "BillingCity*", "BillingProvince*", "BillingPostcode*", "BillingCountry*", "ShippingAddressLine1*", "ShippingCity*", "ShippingProvince*", "ShippingPostcode*", "ShippingCountry*"]:
                 if SalesImport[i][key][0] == None:
-                    print("gotcha")
                     SalesImport[i][key][0] = "Na"
 
             SalesImport[i].update(

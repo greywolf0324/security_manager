@@ -881,7 +881,7 @@ class EXCEL_Parsing:
 
     def PO_parser(self, paths: list, currency):
         res = []
-
+        print(paths)
         for k, path in enumerate(paths):
             try:
                 pdf = pd.read_csv(path, encoding='ISO-8859-1')
@@ -889,7 +889,7 @@ class EXCEL_Parsing:
                 pdf = pd.read_excel(path)
 
             cols = len(pdf.columns)
-            res.append({})
+            # res.append({})
 
             i = 0
             num_po = -1
@@ -901,6 +901,7 @@ class EXCEL_Parsing:
                 
                 try:
                     if cols == 122:
+                        # print("====-")
                         b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
                     else:
                         b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
@@ -929,6 +930,10 @@ class EXCEL_Parsing:
                                 else:
                                     res[num_po][key] = [str(pdf[key][i])]
 
+                                if self.customer_name in ["TARGET"]:
+                                    if key in ["Ship Dates"]:
+                                        res[num_po][key] = [pdf[key][i].split(" - ")[0]]
+                        print(k, res)
                         try:
                             c = math.isnan(pdf["Notes/Comments"][i])
                         except:
@@ -942,6 +947,7 @@ class EXCEL_Parsing:
                                 "Notes/Comments": [pdf["Notes/Comments"][i + 1]]
                             })
                     else:
+                        print("---")
                         for key in list(pdf.keys())[:-1]:
                             try:
                                 c = math.isnan(pdf[key][i])
@@ -961,10 +967,11 @@ class EXCEL_Parsing:
                                         res[num_po][key].append(str(pdf[key][i]))
                                 else:
                                     res[num_po][key].append(str(pdf[key][i]))
+                        print(res)
                 
                 i = i + 1
-            print(pdf[list(pdf.keys())[55]])
-            res.pop(-1)
+            
+            # res.pop(-1)
             temp = []
             temp_note = []
             i = 0
@@ -988,10 +995,9 @@ class EXCEL_Parsing:
                         temp_note.append(pdf[list(pdf.keys())[88]][i])
                     
                     i = i + 1
-                print(temp)
+
                 if len(temp) != 0:
                     for i, items in enumerate(temp):
-                        print(res[-1 - i][list(pdf.keys())[55]])
                         res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
                         res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
                         res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
@@ -1179,7 +1185,6 @@ class HOBBYlobby_Parsing:
             res[f"PDF{k}"][f"page{page_num}"]["SKU"] = product_page.extract_text().split("\n")[line_num_s + 1]
             res[f"PDF{k}"][f"page{page_num}"]["VENDOR#: "] = line_v.split("1ST COST")[0].split("VENDOR#: ")[1].replace(" ", "")
             res[f"PDF{k}"][f"page{page_num}"]["1ST COST"] = line_v.split("EXT COST")[0].split("1ST COST: ")[1].replace(" ", "")
-            # print(line_v.split("PRE-PRICE")[0])
             res[f"PDF{k}"][f"page{page_num}"]["EXT COST"] = line_v.split("PRE-PRICE")[0].split("EXT COST:")[1].replace(" ", "")
             res[f"PDF{k}"][f"page{page_num}"]["PRE-PRICE"] = line_v.split("PRE-PRICE: ")[1].replace(" ", "")
             res[f"PDF{k}"][f"page{page_num}"]["QTY"] = line_q.split("U/M")[0].split("QTY: ")[1].replace(" ", "")

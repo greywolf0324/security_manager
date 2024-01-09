@@ -163,18 +163,17 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        print(PO_res)
+        # print(PO_res)
+
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-        print(matching_res[0])
+        # print(matching_res)
 
         uuid_code = str(uuid.uuid4())
-        for key, vkey in zip(self.matching_cols, matching_res[0].keys()):
-            print(key, vkey)
 
         matching_res = Orderer(matching_res)
 
@@ -240,8 +239,6 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("Displaying...")
-        # print(self.auto_dic)
-        # print(OMS_equal)
         if (self.customer_name == "Pepco" or self.customer_name == "Poundland") and matching_res[0]["Currency"][0] == "CNY":
                 self.customer_name = self.customer_name + " - RMB"
         else:
@@ -252,37 +249,7 @@ class SalesImport_Generator:
                 if matching_res[0]["Currency"][0] == "US Dollar":
                     self.customer_name = self.customer_name + " US"
         
-        # if os.path.isfile("sales_origin.xlsx"):
-        #     os.remove("sales_origin.xlsx")
-        # book = xlsxwriter.Workbook("sales_origin.xlsx")
-        # sheet = book.add_worksheet("cont_excel")
-        # # keys = list(sales_import[0].keys())
-        # for idx, header in enumerate(self.field_names):
-        #     sheet.write(0, idx, header)
-        # book.close()
-        # book = load_workbook("sales_origin.xlsx")
-        # sheet = book.get_sheet_by_name("cont_excel")
-        # # print(keys, type(keys[0]))
-        # # print("*****")
-        # # print(self.field_names, type(self.field_names[0]))
-        # for num, dic in enumerate(matching_res):
-        #     keys = list(dic.keys())
-        #     for i in range(len(dic[keys[0]])):
-        #         temp = []
-        #         for key in self.field_names:
-        #             if key in keys:
-        #                 temp.append(dic[key][i])
-        #             else:
-        #                 temp.append("")
-        #         sheet.append(temp)
-        # output = Path(__file__).resolve().parent.parent.parent / f'sales_origin.xlsx'
-        
-        # book.save(filename = output)
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
-    # def requiredFields(self, matching_res):
-    #     noticer = NOTICER()
-    #     addition = noticer.getter(matching_res)
-    #     return addition
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
         objs = Input_paths.objects.filter(created = Input_paths.objects.all()[len(Input_paths.objects.all()) - 1].created)
@@ -290,11 +257,9 @@ class SalesImport_Generator:
         # filename = filenames[0]
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
-            print("---", invoice["Vendor Style"], len(invoice[list(invoice.keys())[0]]))
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
                     temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
-                    print("==",temp)
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -313,7 +278,6 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("Creating View...\n")
-        # print(matching_res)
         header_details = []
         item_details = []
         temp_item_details = []
@@ -333,7 +297,7 @@ class SalesImport_Generator:
                     }
                 )
         PO_total = []
-        print(matching_res[0])
+
         for i, invoice in enumerate(matching_res):
             PO_total.append(0)
             for key in self.item_keys:
@@ -442,7 +406,7 @@ class SalesImport_Generator:
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-        print(sales_import)
+
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
@@ -457,7 +421,7 @@ class SalesImport_Generator:
             os.remove("SalesImport.xlsx")
         book = xlsxwriter.Workbook("SalesImport.xlsx")
         sheet = book.add_worksheet("cont_excel")
-        # keys = list(sales_import[0].keys())
+
         for idx, header in enumerate(field_names):
             sheet.write(0, idx, header)
         book.close()
@@ -468,8 +432,6 @@ class SalesImport_Generator:
             for i in range(len(dic[keys[0]])):
                 temp = []
                 for key in field_names:
-                    if key == "BillingProvince*":
-                        print(dic[key][i])
                     if key in keys:
                         temp.append(dic[key][i])
                     else:
@@ -479,10 +441,11 @@ class SalesImport_Generator:
         
         book.save(filename = output)
         df = pd.read_excel(output)
-        print(df["BillingAddressLine1*"])
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
+
         return [path, output]
+    
     def live_save(self, matching_res, customername, terms):
         worksheet = self.spreadsheet.get_worksheet(6)
         leng = int(self.spreadsheet.get_worksheet(7).get_values()[0][0])
