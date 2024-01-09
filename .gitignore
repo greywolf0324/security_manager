@@ -9,3 +9,4 @@ __pycache__/*
 security/OMS_Data_engineering/config/AutoFill_DB/*
 process/*
 db.sqlite3
+security_manager\securitydbmanage\settings.py
