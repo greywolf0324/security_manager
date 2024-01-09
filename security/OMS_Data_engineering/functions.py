@@ -447,7 +447,7 @@ class SalesImport_Generator:
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-                
+        print(sales_import)
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
@@ -468,6 +468,8 @@ class SalesImport_Generator:
             for i in range(len(dic[keys[0]])):
                 temp = []
                 for key in field_names:
+                    if key == "BillingProvince*":
+                        print(dic[key][i])
                     if key in keys:
                         temp.append(dic[key][i])
                     else:
@@ -477,6 +479,7 @@ class SalesImport_Generator:
         
         book.save(filename = output)
         df = pd.read_excel(output)
+        print(df["BillingAddressLine1*"])
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
         return [path, output]

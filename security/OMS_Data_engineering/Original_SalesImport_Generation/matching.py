@@ -2463,6 +2463,11 @@ class PO_Match_HOBBYlobby(PO_Match):
 
                 del input[self.pair[key]]
 
+            elif key == "Unit of Measure":
+                input[key] = [""]
+
+                input[key].append("Each")
+
         return input
 
 

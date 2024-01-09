@@ -229,7 +229,6 @@ class Integrate_All:
             SalesImport.append({})
 
         for i,  element in enumerate(matching_res):
-            print("---", element["PO Date"][0])
             temp = element["PO Date"][0].split("/")
             if customer_name == "Big Lots Stores" and len(temp) == 3:
                 if len(temp[0]) == 1:
@@ -333,6 +332,11 @@ class Integrate_All:
                         key: element[self.add_match[key]]
                     })
             
+            for key in ["BillingAddressLine1*", "BillingCity*", "BillingProvince*", "BillingPostcode*", "BillingCountry*", "ShippingAddressLine1*", "ShippingCity*", "ShippingProvince*", "ShippingPostcode*", "ShippingCountry*"]:
+                if SalesImport[i][key][0] == None:
+                    print("gotcha")
+                    SalesImport[i][key][0] = "Na"
+
             SalesImport[i].update(
                 {
                     "CustomerName*": self.fun_iter_all(self.customer_name),
@@ -352,7 +356,6 @@ class Integrate_All:
             if customer_name == "Walmart":
                 SalesImport[i].update({"Discount": self.fun_iter_topp(element["Allow/Charge Amt"][0])})
 
-            print(SalesImport[i], "=-")
             # Add RecordType
             SalesImport[i].update(self.fun_invoice())
 
