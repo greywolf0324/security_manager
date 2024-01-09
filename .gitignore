@@ -10,3 +10,4 @@ security/OMS_Data_engineering/config/AutoFill_DB/*
 process/*
 db.sqlite3
 securitydbmanage/settings.py
+securitydbmanage/settings.py
