@@ -66,7 +66,8 @@ class Integrate_All:
         auto_dic.update({"TaxRule*": self.fun_iter_all(values[0])})
 
         #Discount
-        auto_dic.update({"Discount": self.fun_iter_line(values[3])})
+        if customer_name != "Walmart US":
+            auto_dic.update({"Discount": self.fun_iter_line(values[3])})
 
         rest = [2, 4, 5, 6, 7, 8, 9]
         for i, field in enumerate(self.OMS_Customer_Sales_Import):
@@ -126,8 +127,7 @@ class Integrate_All:
         return temp
     
     def fun_iter_line(self, input):
-        temp = []
-        temp.append("")
+        temp = [""]
 
         for _ in range(self.length - 1):
             temp.append(input)
@@ -348,7 +348,11 @@ class Integrate_All:
 
             # Add customername inherited fields
             SalesImport[i].update(self.auto_fun(self.customer_name))
-            
+
+            if customer_name == "Walmart":
+                SalesImport[i].update({"Discount": self.fun_iter_topp(element["Allow/Charge Amt"][0])})
+
+            print(SalesImport[i], "=-")
             # Add RecordType
             SalesImport[i].update(self.fun_invoice())
 
@@ -496,15 +500,21 @@ class Integrate_All:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "Ship to location: " + str(element["Ship To Location"][0])
 
             # Allow/Charge Type
-            if customer_name in ["Walgreens"]:
+            if customer_name in ["Walgreens", "Walmart"]:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "\n"
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "Allow/Charge Type: " + str(element["Allow/Charge Type"][0])
             
             # Allow/Charge Service
-            if customer_name in ["Walgreens"]:
+            if customer_name in ["Walgreens", "Walmart"]:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "\n"
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "Allow/Charge Service: " + str(element["Allow/Charge Service"][0])
             
+            # Allow/Charge %
+            if customer_name in ["Walmart"]:
+                temp_shippingnotes[0] = temp_shippingnotes[0] + "\n"
+                temp_shippingnotes[0] = temp_shippingnotes[0] + "Allow/Charge %: " + str(element["Allow/Charge %"][0])
+            
+                
             # Allow/Charge Desc
             if customer_name in ["Walgreens"]:
                 temp_shippingnotes[0] = temp_shippingnotes[0] + "\n"

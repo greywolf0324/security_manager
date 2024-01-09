@@ -725,10 +725,10 @@ class Walmart_Parsing:
                         key: []
                     })
 
+                amt_tmp = 0
                 for i in range(length):
                     if type(pdf.iloc[i + steper]["Unit of Measure"]) == str or i == 0:
                         for key, item in zip(self.keys, list(pdf.iloc[i + steper])[:-1]):
-                            
                             if type(item) == np.int64:
                                 res[k][num][key].append(int(item))
                             
@@ -743,7 +743,15 @@ class Walmart_Parsing:
                             else:
                                 res[k][num][key].append(item)
                         # res[k][num].append(list(pdf.iloc[i + steper])[:-1])
+                                
+                    
+                    if type(pdf.iloc[i + steper]["Allow/Charge Type"]) == str:
+                        res[k][num]["Allow/Charge Type"][0] += pdf.iloc[i + steper]["Allow/Charge Type"] + "   "
+                        res[k][num]["Allow/Charge Service"][0] += pdf.iloc[i + steper]["Allow/Charge Service"] + "   "
+                        amt_tmp += float(pdf.iloc[i + steper]["Allow/Charge Amt"])
+                        res[k][num]["Allow/Charge %"][0] += str(pdf.iloc[i + steper]["Allow/Charge %"]) + "   "
                 
+                res[k][num]["Allow/Charge Amt"][0] = amt_tmp
                 steper = steper + i + 1
         
         return res

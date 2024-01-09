@@ -163,7 +163,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res)
+        print(PO_res)
         # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -171,7 +171,6 @@ class SalesImport_Generator:
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
         print(matching_res[0])
-        print(customer_name, "---", currency)
 
         uuid_code = str(uuid.uuid4())
         for key, vkey in zip(self.matching_cols, matching_res[0].keys()):
@@ -443,7 +442,7 @@ class SalesImport_Generator:
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-
+        print(sales_import)
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
