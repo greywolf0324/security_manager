@@ -933,11 +933,12 @@ class EXCEL_Parsing:
                                 if self.customer_name in ["TARGET"]:
                                     if key in ["Ship Dates"]:
                                         res[num_po][key] = [pdf[key][i].split(" - ")[0]]
-                        print(k, res)
+
                         try:
                             c = math.isnan(pdf["Notes/Comments"][i])
                         except:
                             c = False
+                            
                         if c:
                             res[num_po].update({
                                 "Notes/Comments": [""]
@@ -947,7 +948,6 @@ class EXCEL_Parsing:
                                 "Notes/Comments": [pdf["Notes/Comments"][i + 1]]
                             })
                     else:
-                        print("---")
                         for key in list(pdf.keys())[:-1]:
                             try:
                                 c = math.isnan(pdf[key][i])
@@ -967,7 +967,6 @@ class EXCEL_Parsing:
                                         res[num_po][key].append(str(pdf[key][i]))
                                 else:
                                     res[num_po][key].append(str(pdf[key][i]))
-                        print(res)
                 
                 i = i + 1
             

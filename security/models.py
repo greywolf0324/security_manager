@@ -95,7 +95,7 @@ class Original_SalesImport(models.Model):
   Ship_To_Address_2 = models.CharField(max_length = 1000, null = True)
   Ship_To_City = models.CharField(max_length = 1000, null = True)
   Ship_To_State = models.CharField(max_length = 1000, null = True)
-  Ship_to_Zip = models.BigIntegerField(null = True)
+  Ship_to_Zip = models.CharField(max_length = 1000, null = True)
   Ship_To_Country = models.CharField(max_length = 1000, null = True)
   Ship_To_Contact = models.CharField(max_length = 1000, null = True)
   Bill_To_Name = models.CharField(max_length = 1000, null = True)

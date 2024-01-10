@@ -63,7 +63,6 @@ class SalesImport_Generator:
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
         
-        # self.inventory_matching = pd.read_csv(Path(__file__).resolve().parent / "config/OMS_DB/OMS_InventoryList.csv", index_col = False)
         f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
         google_json = json.load(f)
         credentials = service_account.Credentials.from_service_account_info(google_json)
@@ -71,16 +70,16 @@ class SalesImport_Generator:
         creds_with_scope = credentials.with_scopes(scope)
         client = gspread.authorize(creds_with_scope)
         self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
+
         self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
-        # self.filename = None
-        # self.path = None
 
     def str_converter(self, input):
         temp = []
         for item in list(input):
             temp.append(str(item))
+
         return temp
     
     def auto_matching_DB_viewer(self, customer_name):
@@ -93,6 +92,7 @@ class SalesImport_Generator:
                     temp.append(int(item))
                 else:
                     temp.append(item)
+
             UOM_options = ["Case", "Each"]
             location_options = list(self.stocklocations["Locations"])
             vendor_options = {}
@@ -113,7 +113,7 @@ class SalesImport_Generator:
             print("________________________")
             target = self.str_converter(auto_df["Vendor Style from OMS_equal"])
             print("========================")
-            # print({"PO": list(auto_df["PO"]), "UOM": list(auto_df["Unit of Measure"]), "LOCATION": list(auto_df["StockLocation"]), "TARGET": list(auto_df["Vendor Style from OMS_equal"])})
+
             return {"PO": list(auto_df["PO"]), "UOM": list(auto_df["Unit of Measure"]), "LOCATION": list(auto_df["StockLocation"]), "TARGET": target, "UOM_options": UOM_options, "location_options": location_options, "vendor_options": vendor_options}
         
         else: 
@@ -121,15 +121,9 @@ class SalesImport_Generator:
         
     def auto_matching_DB_changer(self, customer_name, db):
         print("updating vendor style matching DB...")
-        # print(customer_name)
-        # print(db)
-        # print(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv")
         pd.DataFrame(db[0]).to_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index = False)
 
     def uploadFile(self, data):
-        # async def data_async_generator(data):
-        #     for file in data:
-        #         yield file
         self.paths = []            
         global filenames
         uuid_code = str(uuid.uuid4())
@@ -147,25 +141,27 @@ class SalesImport_Generator:
             obj.path = str(path)
             obj.created = uuid_code
             obj.save()
+
             with open(path, 'wb') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
-        # return [self.paths, self.filename]
     
     def parseUpload(self, data, customer_name = None, currency = None):
         print("==============================================================================================================")
         print("CustomerFields Updating...")
+
         customer_fields_updater()
+
         self.customer_name = customer_name
         self.uploadFile(data)
         paths = self.paths
+
         print("==============================================================================================================")
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res)
+        # print(PO_res[0])
 
-        # Data_Integration : Generate SalesImport_Original
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
@@ -176,9 +172,7 @@ class SalesImport_Generator:
         uuid_code = str(uuid.uuid4())
 
         matching_res = Orderer(matching_res)
-
         for matching in matching_res:
-            
             length = len(matching[list(matching.keys())[0]])
             
             for i in range(length):
@@ -197,7 +191,6 @@ class SalesImport_Generator:
                                 matching[vkey][i] = None
                             else:
                                 pass
-
                     elif key in ["Unit_Price", "Retail_Price", "PO_Total_Amount", "PO_Total_Weight"]:
                         try:
                             matching[vkey][i] = float(matching[vkey][i])
