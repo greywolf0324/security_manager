@@ -399,12 +399,12 @@ class SalesImport_Generator:
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-
+        
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-        print(sales_import)
+
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
@@ -434,6 +434,7 @@ class SalesImport_Generator:
         
         book.save(filename = output)
         df = pd.read_excel(output)
+        print(df["Discount"])
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
 

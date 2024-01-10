@@ -351,9 +351,11 @@ class Integrate_All:
 
             # Add customername inherited fields
             SalesImport[i].update(self.auto_fun(self.customer_name))
-
+            # print(type('{0:.2f}'.format(element["Allow/Charge %"][0])), "==")
+            
             if customer_name == "Walmart":
-                SalesImport[i].update({"Discount": self.fun_iter_topp(element["Allow/Charge Amt"][0])})
+                print('{0:.2f}'.format(element["Allow/Charge %"][0]))
+                SalesImport[i].update({"Discount": self.fun_iter_line(str('{0:.2f}'.format(element["Allow/Charge %"][0])) + "%")})
 
             # Add RecordType
             SalesImport[i].update(self.fun_invoice())

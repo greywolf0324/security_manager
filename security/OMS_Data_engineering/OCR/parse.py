@@ -748,10 +748,10 @@ class Walmart_Parsing:
                     if type(pdf.iloc[i + steper]["Allow/Charge Type"]) == str:
                         res[k][num]["Allow/Charge Type"][0] += pdf.iloc[i + steper]["Allow/Charge Type"] + "   "
                         res[k][num]["Allow/Charge Service"][0] += pdf.iloc[i + steper]["Allow/Charge Service"] + "   "
-                        amt_tmp += float(pdf.iloc[i + steper]["Allow/Charge Amt"])
-                        res[k][num]["Allow/Charge %"][0] += str(pdf.iloc[i + steper]["Allow/Charge %"]) + "   "
+                        amt_tmp += float(pdf.iloc[i + steper]["Allow/Charge %"])
+                        res[k][num]["Allow/Charge Amt"][0] += str(pdf.iloc[i + steper]["Allow/Charge Amt"]) + "   "
                 
-                res[k][num]["Allow/Charge Amt"][0] = amt_tmp
+                res[k][num]["Allow/Charge %"][0] = amt_tmp
                 steper = steper + i + 1
         
         return res
@@ -938,7 +938,7 @@ class EXCEL_Parsing:
                             c = math.isnan(pdf["Notes/Comments"][i])
                         except:
                             c = False
-                            
+
                         if c:
                             res[num_po].update({
                                 "Notes/Comments": [""]
