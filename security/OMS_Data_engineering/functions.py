@@ -198,14 +198,14 @@ class SalesImport_Generator:
                             matching[vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
-                        if customer_name in ["Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart"]:
+                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart"]:
                             try:
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
                                 matching[vkey][i] = None
                         
-                        if customer_name in ["Buc-ee's", "Pepco", "Poundland"]:
+                        if customer_name in ["Pepco", "Poundland"]:
                             try:
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])
