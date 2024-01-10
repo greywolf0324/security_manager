@@ -881,7 +881,7 @@ class EXCEL_Parsing:
 
     def PO_parser(self, paths: list, currency):
         res = []
-        print(paths)
+
         for k, path in enumerate(paths):
             try:
                 pdf = pd.read_csv(path, encoding='ISO-8859-1')
@@ -889,10 +889,11 @@ class EXCEL_Parsing:
                 pdf = pd.read_excel(path)
 
             cols = len(pdf.columns)
-            # res.append({})
 
             i = 0
-            num_po = -1
+            if k == 0 and self.customer_name in ["TARGET"]:
+                num_po = -1
+                
             while i < len(pdf[list(pdf.keys())[0]]):
                 try:
                     a = (not math.isnan(pdf[list(pdf.keys())[2]][i]))
@@ -901,7 +902,6 @@ class EXCEL_Parsing:
                 
                 try:
                     if cols == 122:
-                        # print("====-")
                         b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
                     else:
                         b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
@@ -969,7 +969,8 @@ class EXCEL_Parsing:
                                     res[num_po][key].append(str(pdf[key][i]))
                 
                 i = i + 1
-            
+            # if k != 0:
+            #     print(res)
             # res.pop(-1)
             temp = []
             temp_note = []

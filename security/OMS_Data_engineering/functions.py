@@ -160,7 +160,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res[0])
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -304,15 +304,15 @@ class SalesImport_Generator:
                 elif key == "Pack Size":
                     for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                         temp_item_details[i][key].append(1)
-                    # for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
-                    #     temp_item_details[i][key].append(int(float(invoice["Qty Ordered"][j + 1])) / int(float(invoice["Pack Size UOM"][j + 1])))
+
                 elif key == "Quantity Ordered":
                     for item in invoice[self.item_keys[key]][1:]:
                         temp_item_details[i][key].append(int(float(item)))
-                
+
                 elif key == "Number of Pcs per Case Pack":
                     for item in invoice[self.item_keys[key]][1:]:
                         temp_item_details[i][key].append(item)
+
                 elif key == "Total Case Pack Qty":
                     if invoice[self.item_keys["Unit Of Measure"]][1] == "Case":
                         for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
@@ -320,16 +320,16 @@ class SalesImport_Generator:
                     else:
                         for j in range(len(invoice[self.item_keys["UPC"]]) - 1):
                             temp_item_details[i][key].append(temp_item_details[i]["Quantity Ordered"][j] / int(temp_item_details[i]["Number of Pcs per Case Pack"][j]))
-                
+
                 elif key == "Unit Of Measure":
                     if invoice[self.item_keys[key]][1] == "Case":
                         for item in invoice[self.item_keys[key]][1:]:
                             temp_item_details[i][key].append(item)
-                    
+
                     else:
                         for item in invoice[self.item_keys[key]][1:]:
                             temp_item_details[i][key].append("Each")
-                    
+
                 else:
                     for item in invoice[self.item_keys[key]][1:]:
                         temp_item_details[i][key].append(item)
@@ -341,8 +341,10 @@ class SalesImport_Generator:
                 
                 elif key == "PO Total":
                     header_details[i][key].append(PO_total[i])
+
                 else: 
                     header_details[i][key].append(invoice[self.header_keys[key]][0])
+
         for i in range(len(matching_res)):
             item_details.append({})
             for key in self.input_item_keys:
@@ -355,9 +357,6 @@ class SalesImport_Generator:
         with open(Path(__file__).resolve().parent.parent.parent / f'process/views/{filename}.json', 'w') as f:
             json.dump(res, f)
         
-        # print("printing item_details...")
-        # print(header_details)
-        # print(item_details)
         return [customer_name, header_details, item_details]
     
     def processFile(self, data, matching_res, extra, customer_name, terms):
@@ -434,7 +433,6 @@ class SalesImport_Generator:
         
         book.save(filename = output)
         df = pd.read_excel(output)
-        print(df["Discount"])
         df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
 
