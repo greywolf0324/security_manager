@@ -891,8 +891,8 @@ class EXCEL_Parsing:
             cols = len(pdf.columns)
 
             i = 0
-            # if k == 0 and self.customer_name in ["TARGET"]:
-            num_po = -1
+            if k == 0 and self.customer_name in ["TARGET"]:
+                num_po = -1
                 
             while i < len(pdf[list(pdf.keys())[0]]):
                 try:
