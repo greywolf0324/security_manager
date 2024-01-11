@@ -155,13 +155,13 @@ class Integrate_All:
 
         return temp
 
-    def fun_total(self, quantity, price_amount):
+    def fun_total(self, quantity, price_amount, discount):
         total = [""]
 
         for i in range(1, self.length):
-            total.append(quantity[i] * price_amount[i])
+            total.append(quantity[i] * price_amount[i] * (1 - discount / 100))
 
-        return {"Total*": total}
+        return total
 
     def fun_invoice(self):
         temp = []
@@ -358,7 +358,7 @@ class Integrate_All:
             SalesImport[i].update(product)
             SalesImport[i].update(quantity)
             SalesImport[i].update(price)
-            SalesImport[i].update(self.fun_total(quantity["Quantity*"], price["Price/Amount*"]))
+            SalesImport[i].update({"Total*": self.fun_total(quantity["Quantity*"], price["Price/Amount*"], element["Allow/Charge %"][0])})
 
             temp = [c.convert(1, SalesImport[i]["CustomerCurrency*"][0], "USD")]
 
