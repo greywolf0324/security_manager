@@ -208,7 +208,6 @@ class Integrate_All:
             SalesImport.append({})
 
         for i,  element in enumerate(matching_res):
-            print(element["Ship Dates"], element["PO Date"], "-=")
             temp = element["PO Date"][0].split("/")
             if customer_name == "Big Lots Stores" and len(temp) == 3:
                 if len(temp[0]) == 1:
@@ -233,7 +232,6 @@ class Integrate_All:
                         self.customer_name = self.customer_name + " US"
 
             self.currency = element["Currency"][0]
-            print(element["Ship Dates"], element["PO Date"], "-=")
             SalesImport[i].update(
                 {
                     # "ShippingNotes": self.fun_shippingnotes(element["Ship Dates"], element["Cancel Date"]),
@@ -333,7 +331,7 @@ class Integrate_All:
             SalesImport[i].update(self.auto_fun(self.customer_name))
             # print(type('{0:.2f}'.format(element["Allow/Charge %"][0])), "==")
             
-            if customer_name == "Walmart":
+            if customer_name in ["Walmart", "Walgreens"]:
                 print('{0:.2f}'.format(element["Allow/Charge %"][0]))
                 SalesImport[i].update({"Discount": self.fun_iter_line(str('{0:.2f}'.format(element["Allow/Charge %"][0])) + "%")})
 
@@ -358,7 +356,10 @@ class Integrate_All:
             SalesImport[i].update(product)
             SalesImport[i].update(quantity)
             SalesImport[i].update(price)
-            SalesImport[i].update({"Total*": self.fun_total(quantity["Quantity*"], price["Price/Amount*"], element["Allow/Charge %"][0])})
+            if customer_name in ["Walmart", "Walgreens"]:
+                SalesImport[i].update({"Total*": self.fun_total(quantity["Quantity*"], price["Price/Amount*"], element["Allow/Charge %"][0])})
+            else:
+                SalesImport[i].update({"Total*": self.fun_total(quantity["Quantity*"], price["Price/Amount*"], 0)})
 
             temp = [c.convert(1, SalesImport[i]["CustomerCurrency*"][0], "USD")]
 

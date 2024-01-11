@@ -980,8 +980,9 @@ class EXCEL_Parsing:
                     try:
                         math.isnan(pdf[list(pdf.keys())[55]][i])
                     except:
-                        temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[61]][i]])
-
+                        print(pdf[list(pdf.keys())[58]][i], "---")
+                        temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[58]][i], pdf[list(pdf.keys())[61]][i]])
+                        print("temp", temp)
                     try:
                         #Maijer
                         if str(pdf[list(pdf.keys())[57]][i]) != "nan":
@@ -995,12 +996,13 @@ class EXCEL_Parsing:
                         temp_note.append(pdf[list(pdf.keys())[88]][i])
                     
                     i = i + 1
-
+                
                 if len(temp) != 0:
                     for i, items in enumerate(temp):
                         res[-1 - i][list(pdf.keys())[55]][0] = temp[-1 - i][0]
                         res[-1 - i][list(pdf.keys())[56]][0] = temp[-1 - i][1]
-                        res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][2]
+                        res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][2]
+                        res[-1 - i][list(pdf.keys())[61]][0] = temp[-1 - i][3]
                         try:
                             res[-1 - i][list(pdf.keys())[57]][0] = temp[-1 - i][3]
                             res[-1 - i][list(pdf.keys())[58]][0] = temp[-1 - i][4]

@@ -167,7 +167,7 @@ class SalesImport_Generator:
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-
+        print(matching_res)
         uuid_code = str(uuid.uuid4())
         matching_res = Orderer(matching_res)
         
@@ -200,7 +200,6 @@ class SalesImport_Generator:
                         if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama"]:
                             
                             try:
-                                print(key, vkey, matching[vkey])
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
@@ -272,7 +271,6 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("Creating View...\n")
-        print(matching_res)
         header_details = []
         item_details = []
         temp_item_details = []
@@ -399,7 +397,6 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
-        print(matching_res)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
         
         print("==============================================================================================================")
