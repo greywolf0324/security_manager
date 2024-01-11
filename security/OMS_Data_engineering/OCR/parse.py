@@ -891,7 +891,7 @@ class EXCEL_Parsing:
             cols = len(pdf.columns)
 
             i = 0
-            if k == 0 and self.customer_name in ["TARGET"]:
+            if k == 0 and self.customer_name in ["TARGET", "Walgreens"]:
                 num_po = -1
                 
             while i < len(pdf[list(pdf.keys())[0]]):
@@ -930,7 +930,7 @@ class EXCEL_Parsing:
                                 else:
                                     res[num_po][key] = [str(pdf[key][i])]
 
-                                if self.customer_name in ["TARGET"]:
+                                if self.customer_name in ["TARGET", "Walgreens"]:
                                     if key in ["Ship Dates"]:
                                         res[num_po][key] = [pdf[key][i].split(" - ")[0]]
 

@@ -148,28 +148,7 @@ class Integrate_All:
         for i, _ in enumerate(date_lis):
             if len(date_lis[i]) == 1:
                 date_lis[i] = '0' + date_lis[i]
-        # if m_shipdates[0] != "":
-        #     if self.customer_name in ["Family Dollar", "Walmart US", "Ollies", "Giant Tiger", "CVS", "Hobby Lobby", "Lekia", "Big Lots Stores", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Hobby Lobby"]:
-        #         tem = m_shipdates[0].split("/")
-        #         temp.append("".join([tem[i] for i in [2, 0, 1]]).replace("\n", ""))
-
-        #     elif self.currency == "USD" and self.customer_name != "Buc-ee's":
-        #         temp.append("".join(m_shipdates[0].split(".")[::-1]).replace("\n", ""))
-            
-        #     elif self.customer_name == "Gabe's":
-        #         temp.append("".join(m_shipdates[0].split("/")[::-1]).replace("\n", ""))
-        #         temp[0] = "20" + temp[0]
-
-        #     elif self.customer_name in ["TEDI"]:
-        #         temp.append("".join(m_shipdates[0].split(".")[::-1]).replace("\n", ""))
-
-        #     elif self.customer_name in ["Walgreens", "TARGET"]:
-        #         temp.append("".join([m_shipdates[0].split(" - ")[0].split("/")[i] for i in [2, 0, 1]]).replace("\n", ""))
-
-        #     else:
-        #         temp.append("".join(m_shipdates[0].split("/")[::-1]).replace("\n", ""))
-        # else:
-        #     temp = [""]
+                
         temp.append("".join(date_lis))
         for _ in range(self.length - 1):
             temp.append("")
