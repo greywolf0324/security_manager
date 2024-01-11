@@ -208,6 +208,7 @@ class Integrate_All:
             SalesImport.append({})
 
         for i,  element in enumerate(matching_res):
+            print(element["Ship Dates"], element["PO Date"], "-=")
             temp = element["PO Date"][0].split("/")
             if customer_name == "Big Lots Stores" and len(temp) == 3:
                 if len(temp[0]) == 1:
@@ -232,7 +233,7 @@ class Integrate_All:
                         self.customer_name = self.customer_name + " US"
 
             self.currency = element["Currency"][0]
-            
+            print(element["Ship Dates"], element["PO Date"], "-=")
             SalesImport[i].update(
                 {
                     # "ShippingNotes": self.fun_shippingnotes(element["Ship Dates"], element["Cancel Date"]),
@@ -304,7 +305,7 @@ class Integrate_All:
                         "ShipToCompany*": element["Buying Party Name"]
                     })
 
-            elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby"]:
+            elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama"]:
         
                 for key in self.add_match:
                     SalesImport[i].update({

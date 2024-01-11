@@ -8,8 +8,8 @@ class AutoDB:
         self.auto_dic = {}
         self.length = 0
         self.customer_name = ""
-        self.SKU_list = ["Buc-ee's", "Dollarama", "Gabe's", "Family Dollar", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer"]
-        self.customer_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "TEDI", "CVS", "Giant Tiger", "Hobby Lobby"]
+        self.SKU_list = ["Buc-ee's", "Gabe's", "Family Dollar", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer"]
+        self.customer_list = ["Pepco", "Dollarama", "Poundland", "Walgreens", "Ollies", "TEDI", "CVS", "Giant Tiger", "Hobby Lobby"]
 
     def DB_tester(self, customer_name, matching_res):
         self.length = len(matching_res[0][list(matching_res[0].keys())[0]])
@@ -51,11 +51,23 @@ class AutoDB:
                     
                     for sku in list(po["Buyers Catalog or Stock Keeping #"])[1:]:
                         if str(sku) in string_converter(list(auto_df["PO"])):
-                            self.auto_dic.update(
-                                {
-                                    int(sku): [list(auto_df[auto_df["PO"] == int(float(sku))]["Unit of Measure"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["StockLocation"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["Vendor Style from OMS_equal"])[0]]
-                                }
-                            )
+                            try:
+                                temp = [list(auto_df[auto_df["PO"] == int(float(sku))]["Unit of Measure"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["StockLocation"])[0], list(auto_df[auto_df["PO"] == int(float(sku))]["Vendor Style from OMS_equal"])[0]]
+
+                                self.auto_dic.update(
+                                    {
+                                        int(sku): temp
+                                    }
+                                )
+                            except:
+                                temp = [list(auto_df[auto_df["PO"] == str(sku)]["Unit of Measure"])[0], list(auto_df[auto_df["PO"] == str(sku)]["StockLocation"])[0], list(auto_df[auto_df["PO"] == str(sku)]["Vendor Style from OMS_equal"])[0]]
+
+                                self.auto_dic.update(
+                                    {
+                                        sku: temp
+                                    }
+                                )
+                            
 
         return self.auto_dic
 

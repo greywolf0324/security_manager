@@ -36,7 +36,6 @@ class Extractor:
         self.length = 0
         self.vendor_customer = [
             "Buc-ee's",
-            "Dollarama",
             "Family Dollar",
             "Gabe's",
             "Walmart US",
@@ -72,10 +71,9 @@ class Extractor:
                 customer_name = customer_name + "-GBP"
         
         elif customer_name == "Walmart":
-            # print(matching_res[0]["Currency"], "********")
             if matching_res[0]["Currency"][0] == "US Dollar":
                 customer_name = customer_name + " US"
-        # print(customer_name, "Walmart US")
+
         payment_term = list(self.OMS_Customers[self.OMS_Customers["Name"] == customer_name]["PaymentTerm"])[0]
         
         for content in matching_res:
@@ -96,8 +94,6 @@ class Extractor:
                             temp.append(product_)
                     
                 temp_inventory.append(temp)
-
-            # print(len(temp_inventory))
 
             equal_inventorylist.append(temp_inventory)
 

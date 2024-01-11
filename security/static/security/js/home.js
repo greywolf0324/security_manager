@@ -828,7 +828,7 @@ $(document).ready(function () {
         return index ? customInputs["StockLocation"][idx] : ""
       })
     })
-
+    
     formData.append("input", JSON.stringify(originalData))
     var termsOptions = ''
 

@@ -665,24 +665,23 @@ class PO_Match_Dollarama(PO_Match):
             "Retail Price": "Retail",
             "Product/Item Description": "Item Description",
             "PO Total Amount": "Total_Total USD Cost",
-            "PO Total Weight": "Total_Total Weight",
             "Vendor Style": "Vendor",
             "Notes/Comments": ["ISI", "AD", "comment"]
         }
 
         self.month_match = {
-            "January": 1,
-            "February":2,
-            "March": 3,
-            "April": 4,
-            "May": 5,
-            "June": 6,
-            "July": 7,
-            "August": 8,
-            "September": 9,
-            "October": 10,
-            "November": 11,
-            "December": 12,
+            "January": '01',
+            "February": '02',
+            "March": '03',
+            "April": '04',
+            "May": '05',
+            "June": '06',
+            "July": '07',
+            "August": '08',
+            "September": '09',
+            "October": '10',
+            "November": '11',
+            "December": '12',
         }
 
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
@@ -733,13 +732,25 @@ class PO_Match_Dollarama(PO_Match):
     def date_converter_1(self, input: str):
         for key in self.month_match:
             if key in input:
-                return input.replace(key, str(self.month_match[key]) + ",").replace(",", "/").replace(" ", "")
+                temp = input.replace(key, str(self.month_match[key]) + ",").replace(",", "/").replace(" ", "")
+                break
+
+        temp = temp.split("/")
+        if len(temp[1]) == 1:
+            temp[1] = '0' + temp[1]
+        
+        return "/".join(temp)
             
     def date_converter_2(self, input: str):
         for key in self.month_match:
             if key in input:
                 temp = input.replace(key, str(self.month_match[key])).replace("-", "/").split("/")
                 break
+        
+        if len(temp[1]) == 1:
+            temp[1] = '0' + temp[1]
+        
+        temp[2] = '20' + temp[2]
         
         return "/".join([temp[i] for i in [1, 0, 2]])
     
@@ -840,14 +851,6 @@ class PO_Match_Dollarama(PO_Match):
 
                 del input[self.pair[key]]
 
-            elif key == "PO Total Weight":
-                input[key] = [float(re.sub('[^0-9]+', '', input[self.pair[key]]))]
-
-                for _ in range(self.length - 1):
-                    input[key].append("")
-
-                del input[self.pair[key]]
-            
             elif key == "Vendor Style":
                 input[key] = [""]
 

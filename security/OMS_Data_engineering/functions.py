@@ -36,7 +36,7 @@ class SalesImport_Generator:
         self.matching_cols = [f.name for f in Original_SalesImport._meta.get_fields() if f.name != 'id'][3:]
 
         self.field_names = [f.field_name for f in Osalesimport_fields.objects.all()]
-        self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby"]
+        self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby", "Dollarama"]
         self.header_keys = {
             "PO#": "PO Number", 
             "PO Date": "PO Date", 
@@ -167,11 +167,10 @@ class SalesImport_Generator:
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-        # print(matching_res)
 
         uuid_code = str(uuid.uuid4())
-
         matching_res = Orderer(matching_res)
+        
         for matching in matching_res:
             length = len(matching[list(matching.keys())[0]])
             
@@ -198,8 +197,10 @@ class SalesImport_Generator:
                             matching[vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
-                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart"]:
+                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama"]:
+                            
                             try:
+                                print(key, vkey, matching[vkey])
                                 temp = matching[vkey][i].split("/")
                                 matching[vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
@@ -241,7 +242,7 @@ class SalesImport_Generator:
             elif self.customer_name == "Walmart":
                 if matching_res[0]["Currency"][0] == "US Dollar":
                     self.customer_name = self.customer_name + " US"
-        
+
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
@@ -271,6 +272,7 @@ class SalesImport_Generator:
 
         print("==============================================================================================================")
         print("Creating View...\n")
+        print(matching_res)
         header_details = []
         item_details = []
         temp_item_details = []
@@ -397,6 +399,7 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
+        print(matching_res)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
         
         print("==============================================================================================================")
