@@ -884,36 +884,37 @@ class EXCEL_Parsing:
 
         for k, path in enumerate(paths):
             try:
-                pdf = pd.read_csv(path, encoding='ISO-8859-1')
+                pdf = pd.read_csv(path, encoding='ISO-8859-1', index_col=False)
             except:
                 pdf = pd.read_excel(path)
-
+            
+            pdf = pdf.loc[:, ~pdf.columns.str.contains('^Unnamed')]
             cols = len(pdf.columns)
 
             i = 0
-            if k == 0 and self.customer_name in ["TARGET", "Walgreens"]:
+            if k == 0 and self.customer_name in ["TARGET", "Walgreens", "Big Lots Stores"]:
                 num_po = -1
                 
             while i < len(pdf[list(pdf.keys())[0]]):
                 try:
-                    a = (not math.isnan(pdf[list(pdf.keys())[2]][i]))
+                    head_line = (not math.isnan(pdf[list(pdf.keys())[2]][i]))
                 except:
-                    a = True
+                    head_line = True
                 
                 try:
                     if cols == 122:
-                        b = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
+                        item_line = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
                     else:
-                        b = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
+                        item_line = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
                 except:
-                    b = True
+                    item_line = True
                 
-                if a ^ b:
-                    if a:
+                if head_line ^ item_line:
+                    if head_line:
                         res.append({})
                         num_po = num_po + 1
 
-                        for key in list(pdf.keys())[:-1]:
+                        for key in list(pdf.keys()):
                             try:
                                 c = math.isnan(pdf[key][i])
                             except:
@@ -948,7 +949,7 @@ class EXCEL_Parsing:
                                 "Notes/Comments": [pdf["Notes/Comments"][i + 1]]
                             })
                     else:
-                        for key in list(pdf.keys())[:-1]:
+                        for key in list(pdf.keys()):
                             try:
                                 c = math.isnan(pdf[key][i])
                             except:
@@ -975,14 +976,13 @@ class EXCEL_Parsing:
             temp = []
             temp_note = []
             i = 0
-            if cols == 122:
+            if cols == 121:
                 while i < len(pdf[list(pdf.keys())[0]]):
                     try:
                         math.isnan(pdf[list(pdf.keys())[55]][i])
                     except:
-                        print(pdf[list(pdf.keys())[58]][i], "---")
                         temp.append([pdf[list(pdf.keys())[55]][i], pdf[list(pdf.keys())[56]][i], pdf[list(pdf.keys())[58]][i], pdf[list(pdf.keys())[61]][i]])
-                        print("temp", temp)
+
                     try:
                         #Maijer
                         if str(pdf[list(pdf.keys())[57]][i]) != "nan":
