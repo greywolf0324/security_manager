@@ -149,7 +149,11 @@ class Integrate_All:
         #         date_lis[i] = '0' + date_lis[i]
                 
         # temp.append("".join(date_lis))
-        temp.append(m_shipdates[0].replace("-", ""))
+        try:
+            tem = m_shipdates[0].replace("-", "")
+        except:
+            tem = None
+        temp.append(tem)
         for _ in range(self.length - 1):
             temp.append("")
 
@@ -207,7 +211,7 @@ class Integrate_All:
         for i in range(len(matching_res)):
             SalesImport.append({})
 
-        for i,  element in enumerate(matching_res):
+        for i, element in enumerate(matching_res):
             try:
                 temp = element["PO Date"][0].split("/")
                 if customer_name == "Big Lots Stores" and len(temp) == 3:

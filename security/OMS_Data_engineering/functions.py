@@ -170,9 +170,9 @@ class SalesImport_Generator:
 
         uuid_code = str(uuid.uuid4())
         matching_res = Orderer(matching_res)
-        
-        for matching in matching_res:
-            length = len(matching[list(matching.keys())[0]])
+
+        for k, _ in enumerate(matching_res):
+            length = len(matching_res[k][list(matching_res[k].keys())[0]])
             
             for i in range(length):
                 if i == 0:
@@ -181,45 +181,44 @@ class SalesImport_Generator:
                     obj = Original_SalesImport.objects.create(start_line = False)
 
                 obj.created = uuid_code
-                for key, vkey in zip(self.matching_cols, matching.keys()):
+                for key, vkey in zip(self.matching_cols, matching_res[k].keys()):
                     if key in ["PO_Number", "Release_Number", "Retailers_PO", "Buyers_Catalog_or_Stock_Keeping", "UPC_EAN", "Ship_To_Location", "PO_Line", "Qty_Ordered", "Vendor_Style", "Number_of_Inner_Packs", "Number_of_Pcs_per_Inner_Pack", "Qty_per_Store", "Vendor", "Ship_to_Zip", "Bill_To_Zip", "Buying_Party_Zip", "Mark_for_Postal"]:
                         try:
-                            matching[vkey][i] = int(float(matching[vkey][i]))
+                            matching_res[k][vkey][i] = int(float(matching_res[k][vkey][i]))
                         except:
-                            if matching[vkey][i] == '':
-                                matching[vkey][i] = None
+                            if matching_res[k][vkey][i] == '':
+                                matching_res[k][vkey][i] = None
                             else:
                                 pass
                     elif key in ["Unit_Price", "Retail_Price", "PO_Total_Amount", "PO_Total_Weight"]:
                         try:
-                            matching[vkey][i] = float(matching[vkey][i])
+                            matching_res[k][vkey][i] = float(matching_res[k][vkey][i])
                         except:
-                            matching[vkey][i] = None
+                            matching_res[k][vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
                         if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar"]:
-                            
                             try:
-                                temp = matching[vkey][i].split("/")
-                                matching[vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
+                                temp = matching_res[k][vkey][i].split("/")
+                                matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
-                                matching[vkey][i] = None
+                                matching_res[k][vkey][i] = None
                         
                         if customer_name in ["Pepco", "Poundland"]:
                             try:
-                                temp = matching[vkey][i].split("/")
-                                matching[vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])
+                                temp = matching_res[k][vkey][i].split("/")
+                                matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])
                             except:
-                                matching[vkey][i] = None
+                                matching_res[k][vkey][i] = None
                                 
                     else:
-                        if matching[vkey][i] == "":
-                            matching[vkey][i] = None
+                        if matching_res[k][vkey][i] == "":
+                            matching_res[k][vkey][i] = None
                         
                         else:
                             pass
 
-                    setattr(obj, key, matching[vkey][i])
+                    setattr(obj, key, matching_res[k][vkey][i])
                 
                 obj.save()
         

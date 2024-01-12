@@ -41,10 +41,11 @@ class PO_Match:
         for key in self.pair:
             self.initial_part.update({key:""})
     
-    def date_converter(self, date):
-        temp = date.split("/")
+    # def date_converter(self, date):
+    #     print(date)
+    #     temp = date.split("/")
 
-        return "-".join([temp[i] for i in [2, 0, 1]])
+    #     return "-".join([temp[i] for i in [2, 0, 1]])
 
 # class PO_Match_BUCEE_PDF(PO_Match):
 #     def __init__(self) -> None:
@@ -916,11 +917,9 @@ class PO_Match_Family_Dollar(PO_Match):
             "PO Number": "Purchase Order", 
             "Ship Dates": "PO First Ship Date", 
             "Cancel Date": "PO Last Ship Date", 
-            # : "PO First DC Date",
-            # : "PO Last DC Date", 
             "Payment Terms Net Days": "Payment Terms", 
             "Currency": "Currencys", 
-            "PO Total Weight": "Total PO Weight LBS", 
+            # "PO Total Weight": "Total PO Weight LBS", 
             "Buyers Catalog or Stock Keeping #": "Family Dollar SKU", 
             "UPC/EAN": "UPC", 
             "Vendor Style": "VPN", 
@@ -931,12 +930,6 @@ class PO_Match_Family_Dollar(PO_Match):
             "Qty Ordered": "Total Eaches Ordered", 
             "PO Total Amount": "Total First Cost",
             "Notes/Comments": "Comments",
-            # "Bill To Name": 
-            # "Bill To Address 1": 
-            # "Bill To City":	
-            # "Bill To State":	
-            # "Bill To Zip":
-            # : "RMS Retail Price"
         }
 
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
@@ -978,7 +971,7 @@ class PO_Match_Family_Dollar(PO_Match):
                 del input[self.pair[key]]
 
             elif key == "Ship Dates":
-                input[key] = [self.date_converter(input[self.pair[key]])]
+                input[key] = [input[self.pair[key]]]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")
@@ -986,7 +979,7 @@ class PO_Match_Family_Dollar(PO_Match):
                 del [input[self.pair[key]]]
 
             elif key == "Cancel Date":
-                input[key] = [self.date_converter(input[self.pair[key]])]
+                input[key] = [input[self.pair[key]]]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")
@@ -1009,13 +1002,13 @@ class PO_Match_Family_Dollar(PO_Match):
                 
                 del [input[self.pair[key]]]
 
-            elif key == "PO Total Weight":
-                input[key] = [float(re.sub('[^0-9]+', '', input[self.pair[key]]))]
+            # elif key == "PO Total Weight":
+            #     input[key] = [float(re.sub('[^0-9]+', '', input[self.pair[key]]))]
 
-                for _ in range(self.length - 1): 
-                    input[key].append("")
+            #     for _ in range(self.length - 1): 
+            #         input[key].append("")
                 
-                del [input[self.pair[key]]]
+            #     del [input[self.pair[key]]]
 
             elif key == "Buyers Catalog or Stock Keeping #":
                 input[key] = [""]
