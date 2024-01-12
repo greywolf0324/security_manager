@@ -53,7 +53,6 @@ class Extractor:
         self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())
         self.OMS_InventoryList = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
         
-        
         equal_inventorylist = []
 
         if customer_name == "Pepco":
@@ -82,7 +81,8 @@ class Extractor:
             temp_inventory = []
 
             for product in list(content["Vendor Style"])[1:]:
-                if type(product) != str: product = str(product)
+                print(product, type(product))
+                if type(product) != str: product = str(int(float(product)))
                 if customer_name not in self.vendor_customer:
                     temp_inventory.append(list(self.OMS_InventoryList["ProductCode"]))
                     continue

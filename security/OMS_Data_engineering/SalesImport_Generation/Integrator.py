@@ -143,13 +143,13 @@ class Integrate_All:
     
     def fun_invoicedata_expiredate(self, m_shipdates: str):
         temp = []
-
-        date_lis = m_shipdates[0].split("-")
-        for i, _ in enumerate(date_lis):
-            if len(date_lis[i]) == 1:
-                date_lis[i] = '0' + date_lis[i]
+        # date_lis = m_shipdates[0].split("-")
+        # for i, _ in enumerate(date_lis):
+        #     if len(date_lis[i]) == 1:
+        #         date_lis[i] = '0' + date_lis[i]
                 
-        temp.append("".join(date_lis))
+        # temp.append("".join(date_lis))
+        temp.append(m_shipdates[0].replace("-", ""))
         for _ in range(self.length - 1):
             temp.append("")
 
@@ -208,12 +208,16 @@ class Integrate_All:
             SalesImport.append({})
 
         for i,  element in enumerate(matching_res):
-            temp = element["PO Date"][0].split("/")
-            if customer_name == "Big Lots Stores" and len(temp) == 3:
-                if len(temp[0]) == 1:
-                    temp[0] = '0' + temp[0]
-            
-            element["PO Date"][0] = "/".join(temp)
+            try:
+                temp = element["PO Date"][0].split("/")
+                if customer_name == "Big Lots Stores" and len(temp) == 3:
+                    if len(temp[0]) == 1:
+                        temp[0] = '0' + temp[0]
+                
+                element["PO Date"][0] = "/".join(temp)
+            except:
+                pass
+            # print(element)
             #everything will be done here
             self.length = len(element[list(element.keys())[0]])
 

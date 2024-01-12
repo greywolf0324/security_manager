@@ -160,14 +160,14 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        print(PO_res[0])
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-        # print(matching_res[0])
+
         uuid_code = str(uuid.uuid4())
         matching_res = Orderer(matching_res)
         
@@ -197,7 +197,7 @@ class SalesImport_Generator:
                             matching[vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
-                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama"]:
+                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar"]:
                             
                             try:
                                 temp = matching[vkey][i].split("/")

@@ -40,6 +40,11 @@ class PO_Match:
         # self.initial_part = self.pair
         for key in self.pair:
             self.initial_part.update({key:""})
+    
+    def date_converter(self, date):
+        temp = date.split("/")
+
+        return "-".join([temp[i] for i in [2, 0, 1]])
 
 # class PO_Match_BUCEE_PDF(PO_Match):
 #     def __init__(self) -> None:
@@ -973,7 +978,7 @@ class PO_Match_Family_Dollar(PO_Match):
                 del input[self.pair[key]]
 
             elif key == "Ship Dates":
-                input[key] = [input[self.pair[key]]]
+                input[key] = [self.date_converter(input[self.pair[key]])]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")
@@ -981,7 +986,7 @@ class PO_Match_Family_Dollar(PO_Match):
                 del [input[self.pair[key]]]
 
             elif key == "Cancel Date":
-                input[key] = [input[self.pair[key]]]
+                input[key] = [self.date_converter(input[self.pair[key]])]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")

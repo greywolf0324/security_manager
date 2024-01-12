@@ -230,8 +230,8 @@ const termsOptionsFromOMS = (term) => {
     '75 Days',
     '90 Days',
     'Letter of Credit']
-  console.log(term, "term")
-  return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option === term ? "selected" : ""}>${option}</option>`)}</select>`
+
+    return `<select class="form-select terms-options w-75 " onchange="getvalue(this)">${options.map(option => `<option value="${option}" ${option === term ? "selected" : ""}>${option}</option>`)}</select>`
 }
 
 const term_options = [' T/T against BL Copy',
@@ -253,7 +253,6 @@ const term_options = [' T/T against BL Copy',
   'Letter of Credit']
 
 function sortSelect(user_select) {
-  console.log(user_select, "++++++")
   var tmpAry = new Array();
   for (var i = 0; i < user_select.options.length; i++) {
     tmpAry[i] = new Array();
@@ -261,26 +260,17 @@ function sortSelect(user_select) {
     tmpAry[i][1] = user_select.options[i].value;
   }
   tmpAry.sort();
-  console.log(tmpAry, "++_+_+_+_+_+")
   while (user_select.options.length > 0) {
     user_select.options[0] = null;
   }
-  console.log(user_select, "!!!!!!!")
   for (var i = 0; i < tmpAry.length; i++) {
     var op = new Option(tmpAry[i][0], tmpAry[i][1]);
     user_select.options[i] = op;
   }
-  console.log(user_select, "___")
   return;
 }
 var user_select = document.getElementById("customername")
 sortSelect(user_select)
-// console.log(user_select.options[1].text, user_select.options[1].value)
-// console.log(user_select, "____")
-// var user_options = Array.from(user_select.options)
-// user_options.forEach(function(option) {
-//   user_select.appendChild(option)
-// })
 
 function getCookie(name) {
   var cookieValue = null;
@@ -370,18 +360,10 @@ $(document).ready(function () {
   function buildTable(data_header, data_item, selector, single = true) {
 
 
-    console.log("!!!!!!!!!!!!!!!!!!!!!!", selector)
-
-    console.log("*******  data_header ::: ", data_header)
     const keys_header = Object.keys(data_header[0])
-    console.log("******* keys_header ::: ", keys_header)
     const keys_item = Object.keys(data_item[0])
-    console.log("******* keys_item ::: ", keys_item)
     const element = $(selector)
-    console.log("******* element ::: ", element)
     const input_len = data_header.length
-    console.log("******* data_header.length ::: ", data_header.length)
-    console.log("******* st3_headerDetails ::: ", st3_headerDetails)
 
     if (data_header == null) {
       data_header = st3_headerDetails
@@ -525,7 +507,6 @@ $(document).ready(function () {
 
   function displayTable(data, selector, selector1, options, termRsOptions, data3, locations, data5) {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
-    console.log(data5, "data5")
     const customername = data5
     const customernameoptions = customername === "Pepco" ? "<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>" : `<select class='w-75 form-select'><option>${customername}</option></select>`
 
@@ -574,7 +555,6 @@ $(document).ready(function () {
     //               </div>
     //             </div>`;
     // $(selector1).html(head1)
-    console.log(data, "_____")
     const table_len = data.length
     const sku_keyname = customerStyle(customername)
     var tables = `
@@ -588,8 +568,6 @@ $(document).ready(function () {
     `;
     let temp = {}
     for (var i = 0; i < data.length; i++) {
-      console.log(data[0], "+++++ ")
-      console.log(keys[0], "_____")
       tables += `
     
     
@@ -697,7 +675,6 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         let { data1, data2, data3, data4, data5 } = response
-        console.log(data1, "_____")
         data1 = JSON.parse(data1.replace(/NaN/g, '\"\"'))
         data2 = JSON.parse(data2)
         data3 = JSON.parse(data3.replace(/NaN/g, '\"\"'))
@@ -850,12 +827,9 @@ $(document).ready(function () {
     return formData
   }
 
-
-
-
-
   $('#NextButton').click(function () {
     const formData = buildFinalForm()
+    // console.log("original", originalData)
     processStepper.navigate('3')
     closeDialog()
     document.getElementById('loader2').classList.toggle('d-none');
@@ -992,20 +966,4 @@ $(document).ready(function () {
       }
     })
   })
-
-  // $('#history_viewer').addEventListener('click', function(event) {
-  //   event.preventDefault();
-
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.open('GET', '/responser/', true);
-  //   xhr.onreadystatechange = function() {
-  //       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-  //           // Handle the response here
-  //           var response = JSON.parse(xhr.responseText);
-  //           console.log(response, "_____+++++"); // Access the received data
-  //       }
-  //   };
-  //   xhr.send();
-  // })
-
 });
