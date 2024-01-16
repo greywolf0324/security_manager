@@ -1,7 +1,7 @@
 import datetime
 import uuid
-from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing
-from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia
+from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing, Byebye_Parsing
+from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia, PO_Match_ByebyeBaby
 from .DB_Updater.equal_extractor import Extractor
 from .DB_Updater.customers_updater import customer_fields_updater
 from .DB_Updater.auto_SKU import AutoDB
@@ -170,7 +170,7 @@ class SalesImport_Generator:
 
         uuid_code = str(uuid.uuid4())
         matching_res = Orderer(matching_res)
-
+        # print(matching_res[0])
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
             
@@ -204,7 +204,7 @@ class SalesImport_Generator:
                             except:
                                 matching_res[k][vkey][i] = None
                         
-                        if customer_name in ["Pepco", "Poundland"]:
+                        elif customer_name in ["Pepco", "Poundland", "buy buy BABY"]:
                             try:
                                 temp = matching_res[k][vkey][i].split("/")
                                 matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 1, 0]])

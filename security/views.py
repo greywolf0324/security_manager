@@ -36,6 +36,7 @@ customer_list = [
     "Tar Heel Trading",
     # "Giant Tiger",
     "Hobby Lobby",
+    "buy buy BABY",
     # "Lekia",
 ]
 

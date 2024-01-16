@@ -631,9 +631,9 @@ class Gabes_Parsing:
                     
                     res[f"PDF{k}"][f"page{page_num}"] = {}
 
-                    temp = O_page.extract_text().split("Order Date ")[1].split("/")
-                    temp[2] = '20' + temp[2]
-                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  "/".join(temp)
+                    # temp = O_page.extract_text().split("Order Date ")[1].split("/")
+                    # temp[2] = '20' + temp[2]
+                    res[f"PDF{k}"][f"page{page_num}"]["Order Date"] =  O_page.extract_text().split("Order Date ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["PO"] = page.extract_text_simple().split("\n")[0].split("Purchase Order ")[1]
                     res[f"PDF{k}"][f"page{page_num}"]["Ship To"] = S_page.extract_text_simple().replace("\xa0", "")
                     res[f"PDF{k}"][f"page{page_num}"]["Ship Date"] = P_content[0][1]
@@ -892,7 +892,7 @@ class EXCEL_Parsing:
             cols = len(pdf.columns)
 
             i = 0
-            if k == 0 and self.customer_name in ["TARGET", "Walgreens", "Big Lots Stores", "Five Below"]:
+            if k == 0 and self.customer_name in ["TARGET", "Walgreens", "Big Lots Stores", "Five Below", "Fred Meyer", "Meijers"]:
                 num_po = -1
                 
             while i < len(pdf[list(pdf.keys())[0]]):
@@ -902,7 +902,7 @@ class EXCEL_Parsing:
                     head_line = True
                 
                 try:
-                    if cols == 122:
+                    if cols == 121:
                         item_line = (not math.isnan(pdf[list(pdf.keys())[14]][i]))
                     else:
                         item_line = (not math.isnan(pdf[list(pdf.keys())[12]][i]))
@@ -1260,4 +1260,64 @@ class Lekia_Parsing:
                     res[f"PDF{k}"][f"page{page_num}"]["Price/unit"].append(line[3])
                     res[f"PDF{k}"][f"page{page_num}"]["Value"].append(line[4])
 
+        return res
+    
+class Byebye_Parsing:
+    def __init__(self, customer_name) -> None:
+        pass
+
+    def PO_parser(self, paths: list, currency):
+        res = {}
+
+        for k, path in enumerate(paths):
+            res[f"PDF{k}"] = {}
+            pdf = pdfplumber.open(path)
+            
+            for i, page in enumerate(pdf.pages):
+                res[f"PDF{k}"][f"page{i}"] = {}
+
+                add_cropage = page.within_bbox([page.search("BBBY")[0]['x0'], page.search("BBBY")[0]['bottom'], page.search("CO, LLC")[0]['x1'] + 20, page.search("Purchase Order")[0]['top']])
+                po_cropage = page.within_bbox([page.search("Purchase Order#")[0]['x0'], page.search("Purchase Order#")[0]['top'] - 1, page.search("Mark For")[0]['x0'], page.search("Ship Window")[0]['bottom'] + 1])
+                ad_cropage = page.within_bbox([page.search("Mark For")[0]['x0'], page.search("Deliver To")[0]['bottom'] - 1, page.width, page.search("Casepack")[0]['top']])
+                p_cropage = page.within_bbox([0, page.search("Item & Description")[0]['bottom'], page.width, page.search("Items in Total")[0]['top']])
+                p_table = p_cropage.extract_table(dict(
+                    explicit_vertical_lines = [0, page.width],
+                    explicit_horizontal_lines = [page.search("Item & Description")[0]['bottom'], page.search("Items in Total")[0]['top']],
+                ))
+                t_page = page.within_bbox([page.search("Sub Total")[0]['x0'], page.search("Sub Total")[0]['bottom'], page.width, page.search("Sub Total")[0]['bottom'] + 20])
+                T_page = page.within_bbox([page.search("Payment Terms: ")[0]['x0'], page.search("Payment Terms: ")[0]['top'] - 1, page.search("Payment Terms: ")[0]['x1'] + 80, page.search("Payment Terms: ")[0]['bottom'] + 1, ])
+
+                res[f"PDF{k}"][f"page{i}"]["s_name"] = add_cropage.extract_text().split('\n')[0]
+                res[f"PDF{k}"][f"page{i}"]["s_add"] = add_cropage.extract_text().split('\n')[1]
+                res[f"PDF{k}"][f"page{i}"]["s_city"] = add_cropage.extract_text().split('\n')[2]
+                res[f"PDF{k}"][f"page{i}"]["s_state"] = " ".join(add_cropage.extract_text().split('\n')[3].split(" ")[:2])
+                res[f"PDF{k}"][f"page{i}"]["s_postal"] = add_cropage.extract_text().split('\n')[3].split(" ")[2]
+                res[f"PDF{k}"][f"page{i}"]["s_country"] = add_cropage.extract_text().split('\n')[4]
+                res[f"PDF{k}"][f"page{i}"]["PO"] = po_cropage.extract_text().split("\n")[0].split(" : ")[1]
+                res[f"PDF{k}"][f"page{i}"]["PO_date"] = po_cropage.extract_text().split("\n")[1].split(" : ")[1]
+                res[f"PDF{k}"][f"page{i}"]["ship_s_date"] = po_cropage.extract_text().split("\n")[2].split(" : ")[1]
+                res[f"PDF{k}"][f"page{i}"]["b_name"] = ad_cropage.extract_text().split("\n")[1]
+                res[f"PDF{k}"][f"page{i}"]["b_add"] = ad_cropage.extract_text().split("\n")[2]
+                res[f"PDF{k}"][f"page{i}"]["b_city"] = ad_cropage.extract_text().split("\n")[3]
+                res[f"PDF{k}"][f"page{i}"]["b_state"] = ad_cropage.extract_text().split("\n")[4].split(" ")[0]
+                res[f"PDF{k}"][f"page{i}"]["b_postal"] = ad_cropage.extract_text().split("\n")[4].split(" ")[1]
+                res[f"PDF{k}"][f"page{i}"]["b_country"] = ad_cropage.extract_text().split("\n")[5]
+                res[f"PDF{k}"][f"page{i}"]["total"] = t_page.extract_text().split(" $")[1]
+                res[f"PDF{k}"][f"page{i}"]["Payment Terms"] = T_page.extract_text().split("Payment Terms: ")[1]
+
+                res[f"PDF{k}"][f"page{i}"]["I&D"] = []
+                res[f"PDF{k}"][f"page{i}"]["Style"] = []
+                res[f"PDF{k}"][f"page{i}"]["Casepack"] = []
+                res[f"PDF{k}"][f"page{i}"]["Unit"] = []
+                res[f"PDF{k}"][f"page{i}"]["Rate"] = []
+                res[f"PDF{k}"][f"page{i}"]["Amount"] = []
+
+                for line in p_table:
+                    res[f"PDF{k}"][f"page{i}"]["I&D"].append(line[1])
+                    res[f"PDF{k}"][f"page{i}"]["Style"].append(line[2])
+                    res[f"PDF{k}"][f"page{i}"]["Casepack"].append(line[3])
+                    res[f"PDF{k}"][f"page{i}"]["Unit"].append(line[4])
+                    res[f"PDF{k}"][f"page{i}"]["Rate"].append(line[5])
+                    res[f"PDF{k}"][f"page{i}"]["Amount"].append(line[6])
+        
         return res

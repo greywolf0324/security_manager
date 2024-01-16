@@ -353,6 +353,7 @@ $(document).ready(function () {
       "Meijers",
       "MICHAELS",
       "Fred Meyer",
+      "buy buy BABY"
     ];
     return styles.includes(name) ? "Vendor Style" : "Buyers Catalog or Stock Keeping #"
   }

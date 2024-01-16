@@ -45,7 +45,8 @@ class Extractor:
             "Lekia",
             "Meijers",
             "MICHAELS",
-            'Fred Meyer'
+            'Fred Meyer',
+            "buy buy BABY"
         ]
 
 
@@ -81,14 +82,13 @@ class Extractor:
             temp_inventory = []
 
             for product in list(content["Vendor Style"])[1:]:
-                print(product, type(product))
-                if type(product) != str: product = str(int(float(product)))
                 if customer_name not in self.vendor_customer:
                     temp_inventory.append(list(self.OMS_InventoryList["ProductCode"]))
                     continue
                 else:
                     temp = []
                     for product_ in list(self.OMS_InventoryList["ProductCode"]):
+                        if type(product) != str: product = str(int(float(product)))
                         if type(product_) != str: product_ = str(product_)
                         if product in product_:
                             temp.append(product_)

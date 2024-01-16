@@ -21,6 +21,36 @@ import numpy as np
 import math
 
 class PO_Match:
+    def __init__(self) -> None:
+        self.month_match = {
+            "January": '01',
+            "February": '02',
+            "March": '03',
+            "April": '04',
+            "May": '05',
+            "June": '06',
+            "July": '07',
+            "August": '08',
+            "September": '09',
+            "October": '10',
+            "November": '11',
+            "December": '12',
+        }
+
+        self.month_summary_match = {
+            "Jan": '01',
+            "Feb": '02',
+            "Mar": '03',
+            "Apr": '04',
+            "May": '05',
+            "Jun": '06',
+            "Jul": '07',
+            "Aug": '08',
+            "Sep": '09',
+            "Oct": '10',
+            "Nov": '11',
+            "Dec": '12',
+        }
     def match_formula(self, input):
         temp_key = input.keys()
 
@@ -657,6 +687,8 @@ class PO_Match_Walgreens:
     
 class PO_Match_Dollarama(PO_Match):
     def __init__(self) -> None:
+        super().__init__()
+
         self.PO_keys = []
         self.length = 1
         self.pair = {
@@ -673,21 +705,6 @@ class PO_Match_Dollarama(PO_Match):
             "PO Total Amount": "Total_Total USD Cost",
             "Vendor Style": "Vendor",
             "Notes/Comments": ["ISI", "AD", "comment"]
-        }
-
-        self.month_match = {
-            "January": '01',
-            "February": '02',
-            "March": '03',
-            "April": '04',
-            "May": '05',
-            "June": '06',
-            "July": '07',
-            "August": '08',
-            "September": '09',
-            "October": '10',
-            "November": '11',
-            "December": '12',
         }
 
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
@@ -1149,6 +1166,16 @@ class PO_Match_Gabes(PO_Match):
 
         return res
 
+    def match_date(self, input):
+        temp = input.split("/")
+        temp[2] = '20' + temp[2]
+
+        for i, _ in enumerate(temp):
+            if len(temp[i]) == 1:
+                temp[i] = '0' + temp[i]
+
+        return '/'.join(temp)
+
     def match_same(self, input):
         self.initial_part_init()
 
@@ -1167,10 +1194,7 @@ class PO_Match_Gabes(PO_Match):
                 del input[self.pair[key]]
 
             elif key == "PO Date":
-                temp = [input[self.pair[key]].split('/')[i] for i in [2, 0, 1]]
-                temp[0] = '20' + str(temp[0])
-                date = '\\'.join(temp)
-                input[key] = [date]
+                input[key] = [self.match_date(input[self.pair[key]])]
 
                 for _ in range(self.length - 1):
                     input[key].append("")
@@ -1178,7 +1202,7 @@ class PO_Match_Gabes(PO_Match):
                 del input[self.pair[key]]
 
             elif key == "Ship Dates":
-                input[key] = [input[self.pair[key]]]
+                input[key] = [self.match_date(input[self.pair[key]])]
 
                 for _ in range(self.length - 1):
                     input[key].append("")
@@ -1186,7 +1210,7 @@ class PO_Match_Gabes(PO_Match):
                 del input[self.pair[key]]
 
             elif key == "Cancel Date":
-                input[key] = [input[self.pair[key]]]
+                input[key] = [self.match_date(input[self.pair[key]])]
 
                 for _ in range(self.length - 1):
                     input[key].append("")
@@ -2621,5 +2645,136 @@ class PO_Match_Lekia(PO_Match):
                 if key not in self.PO_inherited:
                     del item[key]
 
+
+        return output
+    
+class PO_Match_ByebyeBaby(PO_Match):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.PO_keys = []
+        self.length = 2
+        self.pair = {
+            "PO Number": "PO",
+            "PO Date": "PO_date",
+            "Ship Dates": "ship_s_date",
+            # "Cancel Date": "Cancel Date: ",
+            "Qty Ordered": "Rate",
+            "Unit of Measure": "",
+            "Unit Price": "Unit",
+            # "Buyers Catalog or Stock Keeping #": "SKU",
+            "Payment Terms Net Days": "Payment Terms",
+            # "UPC/EAN": "UPC Code",
+            "Vendor Style": "Style",
+            "Product/Item Description": "I&D",
+            "PO Total Amount": "total",
+            # "PO Total Weight": "",
+            "Ship To Name": "s_name",	
+            "Ship To Address 1": "s_add",	
+            "Ship To City": "s_city",	
+            "Ship To State": "s_state",	
+            "Ship to Zip": "s_postal",	
+            "Ship To Country": "s_country",
+            "Bill To Name": "b_name",
+            "Bill To Address 1": "b_add",
+            "Bill To City": "b_city",
+            "Bill To State": "b_state",
+            "Bill To Zip": "b_postal",
+            "Bill To Country": "b_country"
+        }
+
+        f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
+        self.field_names = json.load(f)
+        self.field_names_temp = []
+
+        for item in self.field_names:
+            self.field_names_temp.append(item) 
+
+        for item in self.field_names_temp:
+            if item in list(self.pair.keys()):
+                (self.field_names).remove(item)
+    
+    def match_plain(self, input):
+        res = []
+
+        for i, _ in enumerate(input):
+            pdf = input[f"PDF{i}"]
+
+            for j, _ in enumerate(pdf):
+                res.append(pdf[f"page{j}"])
+
+        return res
+    
+    def match_same(self, input):
+        self.initial_part_init()
+        
+        for key in self.pair:
+            if key in ["PO Date", "Ship Dates", "Payment Terms Net Days", "PO Total Amount", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Bill To Name", "Bill To Address 1", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country"]:
+                if key in ["PO Date", "Ship Dates"]:
+                    temp = input[self.pair[key]].split(" ")
+                    temp[1] = self.month_summary_match[temp[1]]
+
+                    if len(temp[0]) == 1:
+                        temp[0] = '0' + temp[0]
+                    
+                    input[key] = ['/'.join(temp)]
+                else:
+                    input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append("")
+                
+                del input[self.pair[key]]
+            
+            elif key in ["Qty Ordered", "Unit Price", "Vendor Style", "Product/Item Description", "Unit of Measure"]:
+                input[key] = [""]
+
+                for i in range(self.length - 1):
+                    if key == "Unit of Measure":
+                        input[key].append("Each")
+                    else:
+                        input[key].append(input[self.pair[key]][i])
+
+                if key == "Unit of Measure":
+                    pass
+                else:
+                    del input[self.pair[key]]
+            
+            elif key == "PO Number":
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append(input[self.pair[key]])
+
+                input["Retailers PO"] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input["Retailers PO"].append("")
+
+                del input[self.pair[key]]
+
+        return input
+
+    def match_final(self, PO_res):
+        # return final result
+        output = self.match_plain(PO_res)
+        
+        # get PO_res keys
+        self.PO_keys = list(output[0].keys())
+        self.PO_inherited = []
+        for key in self.pair:
+            self.PO_inherited.append(self.pair[key])
+        
+        #register un-inherited keys
+        
+        for content in output:
+            self.length = len(content["Style"])
+            item = self.match_same(content)
+            item = self.match_formula(item)
+            # output.pop(i)
+            # output.insert(i, item)
+            for key in self.PO_keys:
+                if key not in self.PO_inherited:
+                    del item[key]
 
         return output

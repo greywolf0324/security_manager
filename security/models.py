@@ -103,7 +103,7 @@ class Original_SalesImport(models.Model):
   Bill_To_Address_2 = models.CharField(max_length = 1000, null = True)
   Bill_To_City = models.CharField(max_length = 1000, null = True)
   Bill_To_State = models.CharField(max_length = 1000, null = True)
-  Bill_To_Zip = models.BigIntegerField(null = True)
+  Bill_To_Zip = models.CharField(max_length = 1000, null = True)
   Bill_To_Country = models.CharField(max_length = 1000, null = True)
   Bill_To_Contact = models.CharField(max_length = 1000, null = True)
   Buying_Party_Name = models.CharField(max_length = 1000, null = True)
