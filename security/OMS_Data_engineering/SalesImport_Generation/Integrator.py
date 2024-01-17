@@ -251,23 +251,23 @@ class Integrate_All:
                 }
             )
             
-            # if self.customer_name in ["Buc-ee's", "CVS"]:
-            #     SalesImport[i].update(
-            #         {
-            #             "BillingAddressLine1*": element["Ship To Address 1"],
-            #             # "BillingAddressLine2": element["Buying Party Address 2"],
-            #             "BillingCity*": element["Ship To City"],
-            #             "BillingProvince*": element["Ship To State"],
-            #             "BillingPostcode*": element["Ship to Zip"],
-            #             "BillingCountry*": element["Ship To Country"],
-            #             "ShippingAddressLine1*": element["Ship To Address 1"],
-            #             # "ShippingAddressLine2":element["Buying Party Address 2"],
-            #             "ShippingCity*": element["Ship To City"],
-            #             "ShippingProvince*": element["Ship To State"],
-            #             "ShippingPostcode*": element["Ship to Zip"],
-            #             "ShippingCountry*": element["Ship To Country"],
-            #         }
-            #     )
+            if self.customer_name in ["Buc-ee's"]:
+                SalesImport[i].update(
+                    {
+                        "BillingAddressLine1*": element["Ship To Address 1"],
+                        "ShippingAddressLine2": element["Ship To Address 2"],
+                        "BillingCity*": element["Ship To City"],
+                        "BillingProvince*": element["Ship To State"],
+                        "BillingPostcode*": element["Ship to Zip"],
+                        "BillingCountry*": element["Ship To Country"],
+                        "ShippingAddressLine1*": element["Ship To Address 1"],
+                        "BillingAddressLine2": element["Ship To Address 2"],
+                        "ShippingCity*": element["Ship To City"],
+                        "ShippingProvince*": element["Ship To State"],
+                        "ShippingPostcode*": element["Ship to Zip"],
+                        "ShippingCountry*": element["Ship To Country"],
+                    }
+                )
             # elif "Poundland" in self.customer_name:
             #     SalesImport[i].update(
             #         {
@@ -321,11 +321,12 @@ class Integrate_All:
             #         SalesImport[i].update({
             #             key: element[self.add_match[key]]
             #         })
-            for key in self.add_match:
-                SalesImport[i].update({
-                    key: element[self.add_match[key]]
-                })
-            for key in ["BillingAddressLine1*", "BillingCity*", "BillingProvince*", "BillingPostcode*", "BillingCountry*", "ShippingAddressLine1*", "ShippingCity*", "ShippingProvince*", "ShippingPostcode*", "ShippingCountry*"]:
+            else:
+                for key in self.add_match:
+                    SalesImport[i].update({
+                        key: element[self.add_match[key]]
+                    })
+            for key in ["BillingAddressLine1*", "BillingAddressLine2", "BillingCity*", "BillingProvince*", "BillingPostcode*", "BillingCountry*", "ShippingAddressLine1*", "ShippingAddressLine2", "ShippingCity*", "ShippingProvince*", "ShippingPostcode*", "ShippingCountry*"]:
                 if SalesImport[i][key][0] == None:
                     SalesImport[i][key][0] = "Na"
 

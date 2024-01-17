@@ -160,7 +160,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res)
+        print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -173,7 +173,7 @@ class SalesImport_Generator:
         # print(matching_res[0])
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
-            
+
             for i in range(length):
                 if i == 0:
                     obj = Original_SalesImport.objects.create(start_line = True)
