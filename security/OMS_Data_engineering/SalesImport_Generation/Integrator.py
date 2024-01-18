@@ -268,61 +268,62 @@ class Integrate_All:
                         "ShippingCountry*": element["Ship To Country"],
                     }
                 )
-            # elif "Poundland" in self.customer_name:
-            #     SalesImport[i].update(
-            #         {
-            #             "CustomerEmail": element["Contact Email"],
+            elif "Poundland" in self.customer_name:
+                SalesImport[i].update(
+                    {
+                        "CustomerEmail": element["Contact Email"],
 
-            #             "BillingAddressLine1*": element["Buying Party Address 1"],
-            #             # "BillingAddressLine2": element["Buying Party Address 2"],
-            #             "BillingCity*": element["Buying Party City"],
-            #             # "BillingProvince*": element["Buying Party State"],
-            #             # "BillingPostcode*": element["Buying Party Zip"],
-            #             # "BillingCountry*": element["Buying Party Country"],
-            #             "ShippingAddressLine1*":element["Buying Party Address 1"],
-            #             "ShippingAddressLine2":element["Buying Party Address 2"],
-            #             "ShippingCity*":element["Buying Party City"],
-            #             # "ShippingProvince*":element["Buying Party State"],
-            #             # "ShippingPostcode*":element["Buying Party Zip"],
-            #             # "ShippingCountry*":element["Buying Party Country"],
-            #         }
-            #     )
+                        "BillingAddressLine1*": element["Buying Party Address 1"],
+                        # "BillingAddressLine2": element["Buying Party Address 2"],
+                        "BillingCity*": element["Buying Party City"],
+                        # "BillingProvince*": element["Buying Party State"],
+                        # "BillingPostcode*": element["Buying Party Zip"],
+                        # "BillingCountry*": element["Buying Party Country"],
+                        "ShippingAddressLine1*":element["Buying Party Address 1"],
+                        "ShippingAddressLine2":element["Buying Party Address 2"],
+                        "ShippingCity*":element["Buying Party City"],
+                        # "ShippingProvince*":element["Buying Party State"],
+                        # "ShippingPostcode*":element["Buying Party Zip"],
+                        # "ShippingCountry*":element["Buying Party Country"],
+                    }
+                )
 
-            # elif self.customer_name in ["Walmart US", "TARGET"]:
-            #     SalesImport[i].update(
-            #         {
-            #             "BillingAddressLine1*": element["Buying Party Address 1"],
-            #             "BillingAddressLine2": element["Buying Party Address 2"],
-            #             "BillingCity*": element["Buying Party City"],
-            #             "BillingProvince*": element["Buying Party State"],
-            #             "BillingPostcode*": element["Buying Party Zip"],
-            #             "BillingCountry*": element["Buying Party Country"],
-            #             "ShippingAddressLine1*":element["Buying Party Address 1"],
-            #             "ShippingAddressLine2":element["Buying Party Address 2"],
-            #             "ShippingCity*":element["Buying Party City"],
-            #             "ShippingProvince*":element["Buying Party State"],
-            #             "ShippingPostcode*":element["Buying Party Zip"],
-            #             "ShippingCountry*":element["Buying Party Country"],
-            #         }
-            #     )
-            #     if self.customer_name == "TARGET":
-            #         SalesImport[i].update({
-            #             "ShipToCompany*": element["Buying Party Name"]
-            #         })
+            elif self.customer_name in ["Walmart US", "TARGET"]:
+                SalesImport[i].update(
+                    {
+                        "BillingAddressLine1*": element["Buying Party Address 1"],
+                        "BillingAddressLine2": element["Buying Party Address 2"],
+                        "BillingCity*": element["Buying Party City"],
+                        "BillingProvince*": element["Buying Party State"],
+                        "BillingPostcode*": element["Buying Party Zip"],
+                        "BillingCountry*": element["Buying Party Country"],
+                        "ShippingAddressLine1*":element["Buying Party Address 1"],
+                        "ShippingAddressLine2":element["Buying Party Address 2"],
+                        "ShippingCity*":element["Buying Party City"],
+                        "ShippingProvince*":element["Buying Party State"],
+                        "ShippingPostcode*":element["Buying Party Zip"],
+                        "ShippingCountry*":element["Buying Party Country"],
+                    }
+                )
+                if self.customer_name == "TARGET":
+                    SalesImport[i].update({
+                        "ShipToCompany*": element["Buying Party Name"]
+                    })
             
-            # elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama", "Pepco"]:
+            elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama", "Pepco"]:
         
-            #     for key in self.add_match:
-            #         SalesImport[i].update({
-            #             key: element[self.add_match[key]]
-            #         })
-            # elif "Pepco" in self.customer_name:
-            #     for key in self.add_match:
-            #         SalesImport[i].update({
-            #             key: element[self.add_match[key]]
-            #         })
+                for key in self.add_match:
+                    SalesImport[i].update({
+                        key: element[self.add_match[key]]
+                    })
+            elif "Pepco" in self.customer_name:
+                for key in self.add_match:
+                    SalesImport[i].update({
+                        key: element[self.add_match[key]]
+                    })
             else:
                 for key in self.add_match:
+                    print(element[self.add_match[key]])
                     SalesImport[i].update({
                         key: element[self.add_match[key]]
                     })
@@ -375,6 +376,7 @@ class Integrate_All:
             else:
                 SalesImport[i].update({"Total*": self.fun_total(quantity["Quantity*"], price["Price/Amount*"], 0)})
 
+            # Currency
             temp = [c.convert(1, SalesImport[i]["CustomerCurrency*"][0], "USD")]
 
             for _ in range(self.length - 1):

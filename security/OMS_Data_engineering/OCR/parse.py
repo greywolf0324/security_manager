@@ -728,7 +728,8 @@ class Walmart_Parsing:
                 amt_tmp = 0
                 for i in range(length):
                     if type(pdf.iloc[i + steper]["Unit of Measure"]) == str or i == 0:
-                        for key, item in zip(self.keys, list(pdf.iloc[i + steper])[:-1]):
+                        
+                        for key, item in zip(self.keys, list(pdf.iloc[i + steper])):
                             if type(item) == np.int64:
                                 res[k][num][key].append(int(item))
                             
@@ -742,6 +743,9 @@ class Walmart_Parsing:
                                         res[k][num][key].append(int(item))
                             else:
                                 res[k][num][key].append(item)
+                        
+                        if type(pdf.iloc[i + steper]["Unit of Measure"]) == str:
+                            print(res[k][num])
                         # res[k][num].append(list(pdf.iloc[i + steper])[:-1])
                                 
                     
