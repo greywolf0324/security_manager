@@ -303,12 +303,13 @@ class Integrate_All:
                         "ShippingProvince*":element["Buying Party State"],
                         "ShippingPostcode*":element["Buying Party Zip"],
                         "ShippingCountry*":element["Buying Party Country"],
+                        "ShipToCompany*": element["Buying Party Name"]
                     }
                 )
-                if self.customer_name == "TARGET":
-                    SalesImport[i].update({
-                        "ShipToCompany*": element["Buying Party Name"]
-                    })
+                # if self.customer_name == "TARGET":
+                #     SalesImport[i].update({
+                #         "ShipToCompany*": element["Buying Party Name"]
+                #     })
             
             elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama", "Pepco"]:
         

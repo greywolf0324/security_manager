@@ -160,7 +160,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        print(PO_res[0])
+        # print(PO_res[0])
 
         print("==============================================================================================================")
         print("On Match Operating...")
