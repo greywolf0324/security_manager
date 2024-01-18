@@ -744,8 +744,6 @@ class Walmart_Parsing:
                             else:
                                 res[k][num][key].append(item)
                         
-                        if type(pdf.iloc[i + steper]["Unit of Measure"]) == str:
-                            print(res[k][num])
                         # res[k][num].append(list(pdf.iloc[i + steper])[:-1])
                                 
                     

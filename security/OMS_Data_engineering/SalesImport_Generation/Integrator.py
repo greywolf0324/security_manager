@@ -221,7 +221,7 @@ class Integrate_All:
                 element["PO Date"][0] = "/".join(temp)
             except:
                 pass
-            # print(element)
+
             #everything will be done here
             self.length = len(element[list(element.keys())[0]])
 
@@ -324,7 +324,6 @@ class Integrate_All:
                     })
             else:
                 for key in self.add_match:
-                    print(element[self.add_match[key]])
                     SalesImport[i].update({
                         key: element[self.add_match[key]]
                     })

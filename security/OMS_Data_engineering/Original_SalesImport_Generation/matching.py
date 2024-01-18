@@ -2768,7 +2768,7 @@ class PO_Match_ByebyeBaby(PO_Match):
         #register un-inherited keys
         
         for content in output:
-            self.length = len(content["Style"])
+            self.length = len(content["Style"]) + 1
             item = self.match_same(content)
             item = self.match_formula(item)
             # output.pop(i)
