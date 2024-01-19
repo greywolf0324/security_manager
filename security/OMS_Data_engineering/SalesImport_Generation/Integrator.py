@@ -304,7 +304,12 @@ class Integrate_All:
                     if SalesImport[i][key][0] == None:
                         SalesImport[i][key][0] = "Na"
                 except:
-                    SalesImport[i][key][0] = "Na"
+                    temp = ["Na"]
+                    for _ in range(self.length - 1):
+                        temp.append("")
+                    SalesImport[i].update({
+                        key: temp
+                    })
 
             SalesImport[i].update(
                 {
