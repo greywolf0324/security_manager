@@ -32,7 +32,7 @@ class AutoDB:
             auto_df = pd.read_csv(Path(__file__).resolve().parent.parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
 
             if customer_name in self.SKU_list:
-                for po in matching_res: 
+                for po in matching_res:
                     for sku in list(po["Vendor Style"])[1:]:
                         try:
                             sku_con = int(float(sku))

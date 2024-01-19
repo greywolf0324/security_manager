@@ -632,7 +632,7 @@ class Ollies_Parsing:
                 except:
                     product_ending_y = pdf.pages[page_flag].height
                     
-                ln_page = pdf.pages[page_flag].within_bbox([0, pdf.pages[page_flag].search("Ext Cost")[0]['top'], pdf.pages[page_flag].search("Ln")[0]['x1'], product_ending_y])
+                n_page = pdf.pages[page_flag].within_bbox([0, pdf.pages[page_flag].search("Ext Cost")[0]['top'], pdf.pages[page_flag].search("Ln")[0]['x1'], product_ending_y])
                 sku_page = pdf.pages[page_flag].within_bbox([pdf.pages[page_flag].search("Ln")[0]['x1'], pdf.pages[page_flag].search("Ext Cost")[0]['top'], pdf.pages[page_flag].search("Description")[0]['x0'], product_ending_y])
                 desc_page = pdf.pages[page_flag].within_bbox([pdf.pages[page_flag].search("Description")[0]['x0'], pdf.pages[page_flag].search("Ext Cost")[0]['top'], pdf.pages[page_flag].search("Model#")[0]['x0'], product_ending_y])
                 model_page = pdf.pages[page_flag].within_bbox([pdf.pages[page_flag].search("Model#")[0]['x0'], pdf.pages[page_flag].search("Ext Cost")[0]['top'], pdf.pages[page_flag].search("Cs Pk")[0]['x0'], product_ending_y])
@@ -718,7 +718,7 @@ class EXCEL_Parsing:
             cols = len(pdf.columns)
 
             i = 0
-            if k == 0 and self.customer_name in ["TARGET", "Walgreens", "Big Lots Stores", "Five Below", "Fred Meyer", "Meijers"]:
+            if k == 0 and self.customer_name in ["TARGET", "Walgreens", "Big Lots Stores", "Five Below", "Fred Meyer", "Meijers", "MICHAELS"]:
                 num_po = -1
                 
             while i < len(pdf[list(pdf.keys())[0]]):

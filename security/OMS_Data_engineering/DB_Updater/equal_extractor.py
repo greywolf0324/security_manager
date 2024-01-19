@@ -9,30 +9,8 @@ import json
 
 class Extractor:
     def __init__(self) -> None:
-        # f = open(Path(__file__).resolve().parent.parent / "config/django-connection-1008-5f931d8f4038.json")
-        # google_json = json.load(f)
-        # credentials = service_account.Credentials.from_service_account_info(google_json)
-        # scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-        # creds_with_scope = credentials.with_scopes(scope)
-        # client = gspread.authorize(creds_with_scope)
-        # spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
-        
-        # self.OMS_AdditionalUOM = pd.read_csv(Path(__file__).resolve().parent.parent / "config/OMS_DB/OMS_AdditionalUOM.csv")
-        # self.OMS_AdditionalUOM = frame_converter(spreadsheet.get_worksheet(3).get_all_records())
-
-        # self.OMS_Customers = pd.read_csv(Path(__file__).resolve().parent.parent / "config/OMS_DB/OMS_Customers.csv", index_col = False)
-        # self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())
         self.OMS_Customers = None
-
-        # self.OMS_InventoryList = pd.read_csv(Path(__file__).resolve().parent.parent / "config/OMS_DB/OMS_InventoryList.csv")
-        # self.OMS_InventoryList = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
         self.OMS_InventoryList = None
-
-        # self.OMS_PaymentTerm = pd.read_csv(Path(__file__).resolve().parent.parent / "config/OMS_DB/OMS_PaymentTerm.csv")
-        # self.OMS_PaymentTerm = frame_converter(spreadsheet.get_worksheet(2).get_all_records())
-
-        # self.OMS_UoM = pd.read_csv(Path(__file__).resolve().parent.parent / "config/OMS_DB/OMS_UOM.csv")
-        # self.OMS_UoM = frame_converter(spreadsheet.get_worksheet(4).get_all_records())
         self.length = 0
         self.vendor_customer = [
             "Buc-ee's",
@@ -76,7 +54,7 @@ class Extractor:
 
         payment_term = list(self.OMS_Customers[self.OMS_Customers["Name"] == customer_name]["PaymentTerm"])[0]
         
-        for content in matching_res:
+        for i, content in enumerate(matching_res):
             self.length = len(content.keys())
 
             temp_inventory = []
