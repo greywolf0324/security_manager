@@ -70,220 +70,7 @@ class PO_Match:
         # self.initial_part = self.pair
         for key in self.pair:
             self.initial_part.update({key:""})
-    
-    # def date_converter(self, date):
-    #     print(date)
-    #     temp = date.split("/")
 
-    #     return "-".join([temp[i] for i in [2, 0, 1]])
-
-# class PO_Match_BUCEE_PDF(PO_Match):
-#     def __init__(self) -> None:
-#         # parse_res: OCR parsed result for PO
-        
-#         self.PO_keys = []
-#         self.variables = {}
-#         self.data = []
-#         self.length = 0
-#         self.pair = {
-#             'PO Line #': "LINE",
-#             'Vendor Style': "VENDOR PN",
-#             'UPC/EAN': "UPC/GTIN",
-#             'Product/Item Description': "DESCRIPTIONLINE ITEM COMMENTS",
-#             "Dept #": "DESCRIPTIONLINE ITEM COMMENTS",
-#             'Unit Price': "UNIT COST/RETAIL PRICE",
-#             'Qty Ordered': "QTY",
-#             "Unit of Measure": "UOM",
-#             "PO Date": "PO Date:",
-#             "Requested Delivery Date": "Requested Delivery Date:",
-#             "Ship Dates": "Requested Ship Date:",
-#             "Cancel Date": "Cancel Date:",
-#             "Vendor #": "Vendor #:",
-#             "Frt Terms": "Freight Terms:",
-#             "Payment Terms Disc Due Date": "Disc. Due Date:",
-#             "Payment Terms Net Days": "Disc. Days:",
-#             "Payment Terms Net Due Date": "Net Due Date:",
-#             "Payment Terms Net Days": "Net Days:",
-#             "Buyers Catalog or Stock Keeping #": "SKU",
-#             "PO Total Amount": "total",
-#             "PO Total Weight": "Weight:",
-#             "PO Number": "Order #",
-#             "Retailers PO": "Order #",
-#             "Currency": "PO_currency",
-#             "Ship To Name": "Ship To Name",
-#             "Ship To Address 1": "Ship To Address 1",
-#             "Ship To City": "Ship To City",
-#             "Ship To State": "Ship To State",
-#             "Ship to Zip": "Ship to Zip",
-#             "Ship To Country": "Ship To Country",
-#             "Buying Party Name": "Buying Party Name",
-#         }
-        
-#         self.initial_part = {
-#             "PO Line #": "",
-#             'Vendor Style': "",
-#             "UPC/EAN": "",
-#             "Product/Item Description": "",
-#             "Dept #": "",
-#             'Unit Price': "",
-#             'Qty Ordered': "",
-#             "Unit of Measure": "",
-#             "PO Date": "",
-#             "Requested Delivery Date": "",
-#             "Ship Dates": "",
-#             "Cancel Date": "",
-#             "Vendor #": "",
-#             "Frt Terms": "",
-#             "Payment Terms Disc Due Date": "",
-#             "Payment Terms Net Days": "",
-#             "Payment Terms Net Due Date": "",
-#             "Payment Terms Net Days": "",
-#             "Buyers Catalog or Stock Keeping #": "",
-#             "PO Total Amount": "",
-#             "PO Total Weight": "",
-#             "PO Number": "",
-#             "Retailers PO": "",
-#             "Currency": "",
-#             "Ship To Name": "",
-#             "Ship To Address 1": "",
-#             "Ship To City": "",
-#             "Ship To State": "",
-#             "Ship to Zip": "",
-#             "Ship To Country": "",
-#             "Buying Party Name": "",
-#         }
-        
-#         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
-#         self.field_names = json.load(f)
-#         self.field_names_temp = []
-#         for item in self.field_names:
-#             self.field_names_temp.append(item) 
-#         for item in self.field_names_temp:
-#             a = list(self.pair.keys())
-#             if item in list(self.pair.keys()):
-#                 (self.field_names).remove(item)
-    
-#     def variable_init(self):
-#         self.variables = {}
-#         for key in self.field_names:
-#             self.variables[key] = ""
-    
-#     def match_plain(self, input):
-#         res = []
-
-#         for i, _ in enumerate(input):
-#             pdf = input[f"PDF{i}"]
-
-#             for j, _ in enumerate(pdf):
-#                 res.append(pdf[f"page{j}"])
-
-#         return res
-    
-#     def match_divide(self, input):
-
-#         input = list(input)
-#         input.remove("\n")
-#         input = "".join(input)
-#         input_ = input.split("Department Number")
-#         temp = []
-
-#         for i, element in enumerate(input_):
-#             if ":" in element: temp.append(i)
-
-#             # f_th = input_[0:temp[1]]
-#             # s_nd = input_[temp[1]:]
-#         return [input_[0:temp[1]], input_[temp[1]:]]
-    
-#     def order_extract(self, input):
-#         temp = []
-#         temp.append(re.findall(r"\d+", input[0])[0][2:])
-#         for i in range(1, self.length):
-#             temp.append("")
-            
-
-#         return temp
-    
-#     def match_same(self, input):
-#         self.initial_part_init()
-        
-#         for key in self.pair:
-#             if key == "Product/Item Description":
-#                 input[key] = []
-#                 input["Dept #"] = []
-
-#                 for i in range(1, self.length):
-#                     input[key].append(self.match_divide(input[self.pair[key]][i])[0][0].split(":")[1])
-#                     input["Dept #"].append(self.match_divide(input[self.pair[key]][i])[1][0].split(":")[1])
-
-#                 input[key].insert(0, "")
-#                 input["Dept #"].insert(0, "")
-#                 del input[self.pair[key]]
-                
-#             elif key == "Dept #": continue
-            
-#             elif key == "Unit Price":
-#                 input[key] = []
-
-#                 for i in range(1, self.length):
-#                     temp = re.findall(r'\d\.\d+', input[self.pair[key]][i])
-#                     input[key].append("".join(temp))
-                
-#                 input[key].insert(0, "")
-
-#                 del input[self.pair[key]]
-            
-#             elif key == 'Vendor Style':
-#                 input[key] = []
-                
-#                 for i in range(1, self.length):
-#                     temp = re.findall(r'\d', input[self.pair[key]][i])
-#                     input[key].append("".join(temp))
-                
-#                 input[key].insert(0, "")
-#                 del input[self.pair[key]]
-
-#             elif key == "PO Number":
-#                 input[key] = self.order_extract(input[self.pair[key]])
-#                 del input[self.pair[key]]
-            
-#             elif key == "Retailers PO":
-#                 input[key] = input["PO Number"]
-
-#             elif key in ["Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Buying Party Name"]:
-#                 input[key] = input[self.pair[key]]
-
-#             else:
-#                 input[key] = input[self.pair[key]]
-#                 del input[self.pair[key]]
-
-#         return input
-    
-#     def match_final(self, PO_res):
-#         # return final result
-#         output = self.match_plain(PO_res)
-        
-#         # get PO_res keys
-#         self.PO_keys = list(output[0].keys())
-#         self.PO_inherited = []
-#         for key in self.pair:
-#             self.PO_inherited.append(self.pair[key])
-
-#         #register un-inherited keys
-        
-        
-#         for content in output:
-#             self.length = len(content["LINE"])
-#             item = self.match_same(content)
-#             item = self.match_formula(item)
-#             # output.pop(i)
-#             # output.insert(i, item)
-#             for key in self.PO_keys:
-#                 if key not in self.PO_inherited:
-#                     del item[key]
-
-        
-#         return output
-    
 class PO_Match_BUCEE(PO_Match):
     def __init__(self) -> None:
         pass
@@ -304,11 +91,7 @@ class PO_Match_BUCEE(PO_Match):
 
 class PO_Match_PEPCO(PO_Match):
     def __init__(self) -> None:
-        # parse_res: OCR parsed result for PO
-        
         self.PO_keys = []
-        # self.variables = {}
-        # self.data = []
         self.length = 0
         self.pair = {
             "PO Number": "Order - ID",
@@ -407,20 +190,14 @@ class PO_Match_PEPCO(PO_Match):
         return input
     
     def match_fun(self, input):
-        #PO Line #
         input["PO Line #"] = []
         input["PO Line #"].append("")
         for i in range(self.length - 1):
             input["PO Line #"].append(i + 1)
         
-        #PO Total Amount
         input["PO Total Amount"] = []
         input["PO Total Amount"].append(float(self.match_remove_space(input["Unit Price"][1])) * float(self.match_remove_space(input["Qty Ordered"][1])))
         input["PO Total Amount"].append("")
-
-        ##remove fields
-        # (self.field_names).remove("PO Line #")
-        # (self.field_names).remove("PO Total Amount")
 
         return input
 
@@ -564,13 +341,9 @@ class PO_Match_PEPCO_Add(PO_Match):
                 input[key] = [input[self.pair[key]][1]]
                 input[key].append("")
 
-                # del input[self.pair[key]]
-
             elif key == "Buying Party Address 1":
                 input[key] = [input[self.pair[key]][2]]
                 input[key].append("")
-
-                # del input[self.pair[key]]
 
             elif key == "Buying Party City":
                 input[key] = [input[self.pair[key]][3]]
@@ -582,13 +355,9 @@ class PO_Match_PEPCO_Add(PO_Match):
                 input[key] = [input[self.pair[key]].split(",")[0]]
                 input[key].append("")
 
-                # del input[self.pair[key]]
-
             elif key == "Bill To Address 2":
                 input[key] = [input[self.pair[key]].split(",")[1]]
                 input[key].append("")
-
-                # del input[self.pair[key]]
 
             elif key == "Bill To City":
                 input[key] = [input[self.pair[key]].split(",")[2]]
@@ -608,14 +377,6 @@ class PO_Match_PEPCO_Add(PO_Match):
 
                 del input[self.pair[key]]
             
-
-            # elif key == "Ship Dates":
-            # else:
-            #     input[key] = [input[self.pair[key]][0]]
-            #     input[key].append("")
-
-            #     del input[self.pair[key]]
-        
         return input
 
     def match_final(self, PO_res):
@@ -682,7 +443,6 @@ class PO_Match_Walgreens:
                 elif key == "Cancel Date":
                     content[key] = dates[1]
                     
-
         return output
     
 class PO_Match_Dollarama(PO_Match):
@@ -824,8 +584,6 @@ class PO_Match_Dollarama(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
             
-                #There is non-key to delete
-            
             elif key == "Unit Price":
                 input[key] = [""]
 
@@ -920,7 +678,6 @@ class PO_Match_Dollarama(PO_Match):
             for key in self.PO_keys:
                 if key not in self.PO_inherited:
                     del item[key]
-
 
         return output
     
@@ -1103,23 +860,17 @@ class PO_Match_Family_Dollar(PO_Match):
 
 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
         for key in self.pair:
             self.PO_inherited.append(self.pair[key])
 
-        #register un-inherited keys
-        
-        
         for content in output:
             item = self.match_same(content)
             item = self.match_formula(item)
-            # output.pop(i)
-            # output.insert(i, item)
+
             for key in self.PO_keys:
                 if key not in self.PO_inherited:
                     del item[key]
@@ -1231,8 +982,6 @@ class PO_Match_Gabes(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
             
-                #There is non-key to delete
-
             elif key == "Unit Price":
                 input[key] = [""]
 
@@ -1260,10 +1009,8 @@ class PO_Match_Gabes(PO_Match):
         return input
 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -1368,8 +1115,6 @@ class PO_Match_TEDI(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
             
-                #There is non-key to delete
-            
             elif key == "Unit Price":
                 input[key] = [""]
 
@@ -1403,10 +1148,8 @@ class PO_Match_TEDI(PO_Match):
         return input
                 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
 
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -1420,7 +1163,6 @@ class PO_Match_TEDI(PO_Match):
             for key in self.PO_keys:
                 if key not in self.PO_inherited:
                     del item[key]
-
 
         return output
 
@@ -1564,14 +1306,10 @@ class PO_Match_Ollies(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
 
-                #There is non-key to delete
-
             elif key == "Unit Price":
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
             
@@ -1579,8 +1317,6 @@ class PO_Match_Ollies(PO_Match):
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 
@@ -1588,16 +1324,13 @@ class PO_Match_Ollies(PO_Match):
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
+
             elif key == "Product/Item Description":
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
             
@@ -1696,10 +1429,8 @@ class PO_Match_Ollies(PO_Match):
         return input
         
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -1811,14 +1542,10 @@ class PO_Match_ORBICO(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
 
-                #There is non-key to delete
-
             elif key == "Unit Price":
                 input[key] = [""]
 
                 input[key].extend(self.match_chRemover(input[self.pair[key]]))
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 
@@ -1826,8 +1553,6 @@ class PO_Match_ORBICO(PO_Match):
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
                 
@@ -1835,8 +1560,6 @@ class PO_Match_ORBICO(PO_Match):
                 input[key] = [""]
 
                 input[key].extend(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 
@@ -1851,10 +1574,8 @@ class PO_Match_ORBICO(PO_Match):
         return input
     
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -1966,11 +1687,6 @@ class PO_Match_EXCEL(PO_Match):
                 if key in ["Buyers Catalog or Stock Keeping #"]:
                     del input[self.pair[key]]
 
-        # for key in input.keys():
-        #     if key not in list(self.pair.keys()) and key in self.field_names:
-        #         input[key] = self.match_convTstr(input[key])
-        #         input[key].insert(0, "")
-
         return input
     
     def match_formula(self, input):
@@ -1997,7 +1713,6 @@ class PO_Match_EXCEL(PO_Match):
             return PO_res
         
         else:
-            # get PO_res keys
             self.PO_keys = list(PO_res[0].keys())
             self.PO_inherited = []
 
@@ -2020,7 +1735,6 @@ class PO_Match_EXCEL(PO_Match):
                 for key in self.PO_keys:
                     if key not in self.PO_inherited:
                         del item[key]
-
 
             return PO_res
 class PO_Match_CVS(PO_Match):
@@ -2168,7 +1882,6 @@ class PO_Match_CVS(PO_Match):
         return input
     
     def match_final(self, PO_res):
-        # get PO_res keys
         self.PO_keys = list(PO_res[0].keys())
         self.PO_inherited = []
 
@@ -2305,14 +2018,10 @@ class PO_Match_GiantTiger(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
 
-                #There is non-key to delete
-
             elif key == "Unit Price":
                 input[key] = [""]
 
                 input[key].append(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 
@@ -2320,8 +2029,6 @@ class PO_Match_GiantTiger(PO_Match):
                 input[key] = [""]
 
                 input[key].append(input[self.pair[key]])
-                # for _ in range(self.length - 1):
-                #     input[key].append(input[self.pair[key]])
 
                 del input[self.pair[key]]
 
@@ -2350,10 +2057,8 @@ class PO_Match_GiantTiger(PO_Match):
         return input
 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -2498,10 +2203,8 @@ class PO_Match_HOBBYlobby(PO_Match):
 
 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -2607,10 +2310,7 @@ class PO_Match_Lekia(PO_Match):
 
                 elif key == "Vendor Style":
                     for i in range(self.length - 1):
-                        # if input[self.pair[key]][i][0] == '0':
-                        #     input[key].append(input[self.pair[key]][i][1:])
-                        # else:
-                            input[key].append(input[self.pair[key]][i])
+                        input[key].append(input[self.pair[key]][i])
 
                 del input[self.pair[key]]
 
@@ -2620,15 +2320,11 @@ class PO_Match_Lekia(PO_Match):
                 for _ in range(self.length - 1):
                     input[key].append("Each")
 
-                #There is non-key to delete
-
         return input
     
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
 
@@ -2644,7 +2340,6 @@ class PO_Match_Lekia(PO_Match):
             for key in self.PO_keys:
                 if key not in self.PO_inherited:
                     del item[key]
-
 
         return output
     
@@ -2756,23 +2451,18 @@ class PO_Match_ByebyeBaby(PO_Match):
         return input
 
     def match_final(self, PO_res):
-        # return final result
         output = self.match_plain(PO_res)
         
-        # get PO_res keys
         self.PO_keys = list(output[0].keys())
         self.PO_inherited = []
         for key in self.pair:
             self.PO_inherited.append(self.pair[key])
         
-        #register un-inherited keys
-        
         for content in output:
             self.length = len(content["Style"]) + 1
             item = self.match_same(content)
             item = self.match_formula(item)
-            # output.pop(i)
-            # output.insert(i, item)
+
             for key in self.PO_keys:
                 if key not in self.PO_inherited:
                     del item[key]

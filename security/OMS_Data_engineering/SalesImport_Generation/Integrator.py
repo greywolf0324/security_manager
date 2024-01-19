@@ -107,18 +107,7 @@ class Integrate_All:
 
         return temp
     
-    # def fun_iter_top(self, input):
-    #     temp = [input]
-
-    #     for _ in range(self.length - 1):
-    #         temp.append("")
-
-    #     return temp
-    
     def fun_iter_topp(self, input):
-        # if input == "":
-        #     temp = ["NO"]
-        # else:
         temp = [input]
 
         for _ in range(self.length - 1):
@@ -143,12 +132,7 @@ class Integrate_All:
     
     def fun_invoicedata_expiredate(self, m_shipdates: str):
         temp = []
-        # date_lis = m_shipdates[0].split("-")
-        # for i, _ in enumerate(date_lis):
-        #     if len(date_lis[i]) == 1:
-        #         date_lis[i] = '0' + date_lis[i]
-                
-        # temp.append("".join(date_lis))
+
         try:
             tem = m_shipdates[0].replace("-", "")
         except:
@@ -242,7 +226,6 @@ class Integrate_All:
             self.currency = element["Currency"][0]
             SalesImport[i].update(
                 {
-                    # "ShippingNotes": self.fun_shippingnotes(element["Ship Dates"], element["Cancel Date"]),
                     "ShipmentRequiredByDate": self.fun_invoicedata_expiredate(element["Ship Dates"]),
                     "InvoiceDate*/ExpireDate": self.fun_invoicedata_expiredate(element["PO Date"]),
                     "YourBaseCurrency*": self.fun_iter_top_currency("USD"),
@@ -274,17 +257,10 @@ class Integrate_All:
                         "CustomerEmail": element["Contact Email"],
 
                         "BillingAddressLine1*": element["Buying Party Address 1"],
-                        # "BillingAddressLine2": element["Buying Party Address 2"],
                         "BillingCity*": element["Buying Party City"],
-                        # "BillingProvince*": element["Buying Party State"],
-                        # "BillingPostcode*": element["Buying Party Zip"],
-                        # "BillingCountry*": element["Buying Party Country"],
                         "ShippingAddressLine1*":element["Buying Party Address 1"],
                         "ShippingAddressLine2":element["Buying Party Address 2"],
                         "ShippingCity*":element["Buying Party City"],
-                        # "ShippingProvince*":element["Buying Party State"],
-                        # "ShippingPostcode*":element["Buying Party Zip"],
-                        # "ShippingCountry*":element["Buying Party Country"],
                     }
                 )
 
@@ -306,10 +282,6 @@ class Integrate_All:
                         "ShipToCompany*": element["Buying Party Name"]
                     }
                 )
-                # if self.customer_name == "TARGET":
-                #     SalesImport[i].update({
-                #         "ShipToCompany*": element["Buying Party Name"]
-                #     })
             
             elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama", "Pepco"]:
         
@@ -328,7 +300,10 @@ class Integrate_All:
                         key: element[self.add_match[key]]
                     })
             for key in ["BillingAddressLine1*", "BillingAddressLine2", "BillingCity*", "BillingProvince*", "BillingPostcode*", "BillingCountry*", "ShippingAddressLine1*", "ShippingAddressLine2", "ShippingCity*", "ShippingProvince*", "ShippingPostcode*", "ShippingCountry*"]:
-                if SalesImport[i][key][0] == None:
+                try:
+                    if SalesImport[i][key][0] == None:
+                        SalesImport[i][key][0] = "Na"
+                except:
                     SalesImport[i][key][0] = "Na"
 
             SalesImport[i].update(
@@ -454,7 +429,6 @@ class Integrate_All:
                 )
 
             ################################################################### Shipping Notes Addition ###################################################################
-            temp_ = []
 
             # Ship Dates
             if customer_name in ["Big Lots Stores", "Buc-ee's", "Five Below", "TARGET", "Walmart", "CVS", "Five Below", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Dollarama", "Family Dollar", "Ollies", "Pepco", "Poundland", "Hobby Lobby"]:

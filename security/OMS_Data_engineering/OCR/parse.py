@@ -6,129 +6,6 @@ import xlsxwriter
 import os
 import numpy as np
 import math
-
-
-# PDF Parsing for Bucee's
-# class BUCEE_Parsing_PDF:
-#     def __init__(self) -> None:
-#         self.keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL', 'PO Date:', 'Requested Delivery Date:', 'Requested Ship Date:', 'Cancel Date:', 'Delivery Window:', 'Shipping Window:', 'Vendor #:', 'Department #:', 'Freight Terms:', 'Preferred Carrier:', 'Terms Type', 'Terms Basis:', 'Terms Disc\n%:', 'Disc. Due Date:', 'Disc. Days:', 'Net Due Date:', 'Net Days:', 'Description:', 'TYPE', 'SERVICE TYPE', 'PERCENT', 'RATE', 'QTY_', 'UOM_', 'DESCRIPTION', 'AMOUNT', 'Total Qty:', 'Weight:', 'Volume:', 'Purchase Order Total:', '280.80', 'Order #', "PO_currency", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Buying Party Name"]
-
-
-#     def re_fun(self, str_input: str) -> dict:
-#         if str_input == None:
-#             return None
-#         loc = str_input.rfind(":")
-#         left, right = str_input[:loc] + str_input[loc], (str_input[loc:])[1:]
-        
-#         return {left: right}
-    
-#     def PO_parser(self, paths: list, currency):
-#         #this function will generate PO table
-#         res = {}
-        
-#         for k, path in enumerate(paths):
-#             res[f"PDF{k}"] = {}
-#             pdf = pdfplumber.open(path)
-
-#             for page_num, page in enumerate(pdf.pages):
-#                 res[f"PDF{k}"][f"page{page_num}"] = {}
-
-#                 for key in self.keys:
-#                     res[f"PDF{k}"][f"page{page_num}"].update({key: []})
-                
-#                 #non main table addition
-#                 non_product_tables = []
-#                 ## non table addition
-#                 non_table_content = []
-#                 non_table_str = page.extract_text_simple()
-#                 non_table_lis = non_table_str.split("\n")
-#                 non_product_tables.append({"Order #": non_table_lis[4]})
-#                 non_product_tables.append({"Ship To Name": "Buc" + non_table_lis[18].split("Buc")[1]})
-#                 non_product_tables.append({"Ship To Address 1": non_table_lis[19]})
-#                 non_product_tables.append({"Ship To City": non_table_lis[20].split(",")[0]})
-#                 non_product_tables.append({"Ship To State": non_table_lis[20].split(",")[1].split(" ")[1]})
-#                 non_product_tables.append({"Ship to Zip": non_table_lis[20].split(",")[1].split(" ")[2]})
-#                 non_product_tables.append({"Ship To Country": non_table_lis[20].split(",")[1].split(" ")[3]})
-#                 non_product_tables.append({"Buying Party Name":("Buc" + non_table_lis[18].split("Buc")[2]).split("Creative ")[0]})
-
-#                 for i, table in enumerate(page.extract_tables()):
-#                     if i == 2:
-#                         product_table = table
-#                     if i != 2:
-#                         items = [item for sublist in table for item in sublist]
-#                         for item in items: 
-#                             if self.re_fun(item) == None:
-#                                 continue
-#                             else:
-#                                 non_product_tables.append(self.re_fun(item))
-
-#                 non_product_dic = {}
-#                 for dic in non_product_tables:
-#                     non_product_dic.update(dic)
-                
-#                 non_blank_keys = list(non_product_dic.keys())
-
-#                 for key in self.keys:
-#                     if key == "UOM_":
-#                         res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["UOM"])
-#                     elif key == "QTY_":
-#                         res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic["QTY"])
-#                     elif key == "PO_currency":
-#                         res[f"PDF{k}"][f"page{page_num}"][key].append("USD")
-#                     else:
-#                         if key in non_blank_keys:
-#                             res[f"PDF{k}"][f"page{page_num}"][key].append(non_product_dic[key])
-#                         else:
-#                             res[f"PDF{k}"][f"page{page_num}"][key].append("")
-
-#                 # main table addition
-                
-#                 # product_keys = product_table[0]
-#                 product_table_ = product_table[1 : len(product_table) - 1]
-#                 product_keys = ['LINE', 'SKU', 'VENDOR PN', 'UPC/GTIN', 'DESCRIPTIONLINE ITEM COMMENTS', 'MARKS AND NUMBERS', 'UNIT COST/RETAIL PRICE', 'QTY', 'UOM', 'ITEMTOTAL']
-#                 product_dic = {}
-#                 for key in product_keys:
-#                     product_dic.update({key:[]})
-
-#                 for i, line in enumerate(product_table_):
-#                     for i, key in enumerate(product_keys):
-#                         product_dic[key].append(line[i])
-#                 for i in range(len(product_table_)):
-#                     for key in self.keys:
-#                         if key in product_keys:
-#                             res[f"PDF{k}"][f"page{page_num}"][key].append(product_dic[key][i])
-#                         else:
-#                             res[f"PDF{k}"][f"page{page_num}"][key].append("")
-#                 temp_total = [product_table[len(product_table) - 1][9]]
-#                 for _ in range(len(product_table) - 2):
-#                     temp_total.append("")
-#                 res[f"PDF{k}"][f"page{page_num}"].update({"total": temp_total})
-
-#         if os.path.isfile("OCR_res.xlsx"):
-#             os.remove("OCR_res.xlsx")
-#         book = xlsxwriter.Workbook("OCR_res.xlsx")
-#         sheet = book.add_worksheet("cont_excel")
-#         for idx, header in enumerate(self.keys):
-#             sheet.write(0, idx, header)
-#         sheet.write(0, len(self.keys), "total")
-#         book.close()
-
-#         book = load_workbook("OCR_res.xlsx")
-#         sheet = book.get_sheet_by_name("cont_excel")
-#         for dic in res:
-#             for di in res[dic]:
-#                 for i in range(len(res[dic][di]["LINE"])):
-#                     temp = []
-
-#                     for key in res[dic][di].keys():
-#                         temp.append(res[dic][di][key][i])
-
-#                     sheet.append(temp)
-
-
-#         book.save(filename = "OCR_res.xlsx")
-
-#         return res
     
 class BUCEE_Parsing:
     def __init__(self, customer_name) -> None:
@@ -185,12 +62,11 @@ class BUCEE_Parsing:
                                         res[k][num][key].append(int(item))
                             else:
                                 res[k][num][key].append(item)
-                        # res[k][num].append(list(pdf.iloc[i + steper])[:-1])
                 
                 steper = steper + i + 1
         
         return res
-# PDF Parsing for Pepco
+
 class PEPCO_Parsing:
     def __init__(self, customer_name) -> None:
         self.keys = ["Order - ID", "Pre Order -ID", "Item No", "Item classification", "Item name", "Item name English", "Promotional product", "Supplier product code", "Season", "Merch code", "Collection", "Pictogram no", "Style type", "Supplier name", "Supplier ID", "Terms of payments", "Date of order creation", "Booking date", "Handover date", "Port of shipment", "Destination port", "Destination DC", "Delivery terms", "Transport mode", "Time of delivery", "Purchase price", "Total", "ONE", "Pack multiplier", "Total qty in outer", "barcode", "PO_currency"]
@@ -332,34 +208,9 @@ class PEPCO_Parsing:
                         
                         res[f"PDF{k}"][self.keys[30]].append(content[5].split(";")[1].split(":")[1].split("\xa0")[1])
                         res[f"PDF{k}"][self.keys[30]].insert(0, "")
-            
-            
-
-        # if os.path.isfile("OCR_res.xlsx"):
-        #     os.remove("OCR_res.xlsx")
-        # book = xlsxwriter.Workbook("OCR_res.xlsx")
-        # sheet = book.add_worksheet("cont_excel")
-        # for idx, header in enumerate(self.keys):
-        #     sheet.write(0, idx, header)
-        # sheet.write(0, len(self.keys), "total")
-        # book.close()
-
-        # book = load_workbook("OCR_res.xlsx")
-        # sheet = book.get_sheet_by_name("cont_excel")
-        # for dic in res:
-        #     for i in range(2):
-        #         temp = []
-        #         for key in res[dic].keys():
-        #             temp.append(res[dic][key][i])
-
-        #         sheet.append(temp)
-
-
-        # book.save(filename = "OCR_res.xlsx")
 
         return res
     
-#PDF Parsing for Additional Pepco (poundland & dealz)
 class PEPCO_Add_Parsing:
     def __init__(self, customer_name) -> None:
         self.keys = ["Order Number", "Invoice", "RegisteredAddress", "Supplier name", "Terms of payment", "Supplier number", "Method of payment", "Address", "Buyer", "Order Contact", "Deliver to", "Delivery Date", "Delivery Terms", "Date of order creation", "Handover date", "Sku", "Vendor Product No", "Product Description", "Department", "Cost price currency", "Unit Cost price", "Case Price", "Case Quantity", "Total Case Qty", "Total Unit Qty", "Total Order Value", "Comments"]
@@ -368,7 +219,6 @@ class PEPCO_Add_Parsing:
         res = {}
 
         for k, path in enumerate(paths):
-            
             res[f"PDF{k}"] = {}
             pdf = pdfplumber.open(path)
             page_num = 0
@@ -405,7 +255,6 @@ class PEPCO_Add_Parsing:
             res[f"PDF{k}"][f"page{page_num}"]["invoice"] = invoice_page.extract_text().split("\n")[1:]
             # res[f"PDF{k}"][f"page{page_num}"]["shipto"] = shipto_page.extract_text().split("\n")
             res[f"PDF{k}"][f"page{page_num}"]["deliver_to"] = deliver_page.extract_text().split("Deliver to ")[1].replace("\n", " ")
-
 
         return res
     
@@ -455,27 +304,6 @@ class Walgreens_Parsing:
                 for key in pdf:
                     if key not in self.all_mid_lis:
                         res[k][i][key].append("")
-
-        # if os.path.isfile("OCR_res.xlsx"):
-        #     os.remove("OCR_res.xlsx")
-        # book = xlsxwriter.Workbook("OCR_res.xlsx")
-        # sheet = book.add_worksheet("cont_excel")
-        # for idx, header in enumerate(self.keys):
-        #     sheet.write(0, idx, header)
-        # sheet.write(0, len(self.keys), "total")
-        # book.close()
-
-        # book = load_workbook("OCR_res.xlsx")
-        # sheet = book.get_sheet_by_name("cont_excel")
-        # for dic in res:
-        #     for i in range(len(res[dic][list(res[dic].keys())[0]])):
-        #         temp = []
-        #         for key in res[dic].keys():
-        #             temp.append(res[dic][key][i])
-
-        #         sheet.append(temp)
-
-        # book.save(filename = "OCR_res.xlsx")
         
         return res
     
@@ -648,7 +476,6 @@ class Gabes_Parsing:
         
         return res
     
-  
 class TEDI_Parsing:
     def __init__(self, customer_name) -> None:
         pass
@@ -744,9 +571,6 @@ class Walmart_Parsing:
                             else:
                                 res[k][num][key].append(item)
                         
-                        # res[k][num].append(list(pdf.iloc[i + steper])[:-1])
-                                
-                    
                     if type(pdf.iloc[i + steper]["Allow/Charge Type"]) == str:
                         res[k][num]["Allow/Charge Type"][0] += pdf.iloc[i + steper]["Allow/Charge Type"] + "   "
                         res[k][num]["Allow/Charge Service"][0] += pdf.iloc[i + steper]["Allow/Charge Service"] + "   "
@@ -972,9 +796,7 @@ class EXCEL_Parsing:
                                     res[num_po][key].append(str(pdf[key][i]))
                 
                 i = i + 1
-            # if k != 0:
-            #     print(res)
-            # res.pop(-1)
+
             temp = []
             temp_note = []
             i = 0

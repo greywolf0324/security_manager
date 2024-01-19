@@ -160,7 +160,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res)
+        print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -245,7 +245,7 @@ class SalesImport_Generator:
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
         objs = Input_paths.objects.filter(created = Input_paths.objects.all()[len(Input_paths.objects.all()) - 1].created)
         filename = objs[0].file_name
-        # filename = filenames[0]
+
         #Fields being filled from selected Vendor Style: Pack Size UOM, Number of Inner Packs, Number of Pcs per Inner Pack
         for invoice in matching_res:
             for i in range(len(invoice[list(invoice.keys())[0]])):
