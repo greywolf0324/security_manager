@@ -1036,7 +1036,7 @@ class PO_Match_TEDI(PO_Match):
         self.length = 2
         self.pair = {
             "PO Number": "Order number",
-            # "PO Date": "Order Date",
+            "PO Date": "order entry",
             "Ship Dates": "Shipping window",
             "Cancel Date": "Shipping window",
             "Qty Ordered": "total_quantity",
@@ -1047,6 +1047,11 @@ class PO_Match_TEDI(PO_Match):
             # "Vendor Style": "",
             "Product/Item Description": "Description",
             "PO Total Amount": "total_cost",
+            "Bill To Name": "bt_name",
+            "Bill To Address 1": "bt_add1",
+            "Bill To City": "bt_city",
+            "Bill To Zip": "bt_zip",
+            "Bill To Country": "bt_country"
         }
         f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
         self.field_names = json.load(f)
@@ -1088,13 +1093,13 @@ class PO_Match_TEDI(PO_Match):
                 del input[self.pair[key]]
             
             elif key == "Ship Dates":
-                input[key] = [input[self.pair[key]].split(" - ")[0]]
+                input[key] = [input[self.pair[key]].split(" - ")[0].replace(".", "/")]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")
             
             elif key == "Cancel Date":
-                input[key] = [input[self.pair[key]].split(" - ")[1]]
+                input[key] = [input[self.pair[key]].split(" - ")[1].replace(".", "/")]
 
                 for _ in range(self.length - 1): 
                     input[key].append("")
@@ -1145,6 +1150,22 @@ class PO_Match_TEDI(PO_Match):
 
                 del input[self.pair[key]]
 
+            elif key == "PO Date":
+                input[key] = [input[self.pair[key]].replace(".", "/")]
+
+                for i in range(self.length - 1):
+                    input[key].append("")
+
+                del input[self.pair[key]]
+
+            elif key in ["Bill To Name", "Bill To Address 1", "Bill To City", "Bill To Zip", "Bill To Country"]:
+                input[key] = [input[self.pair[key]]]
+
+                for i in range(self.length - 1):
+                    input[key].append("")
+
+                del input[self.pair[key]]
+                
         return input
                 
     def match_final(self, PO_res):

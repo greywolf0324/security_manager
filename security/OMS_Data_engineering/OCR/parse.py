@@ -514,7 +514,15 @@ class TEDI_Parsing:
                     res[f"PDF{k}"][f"page{page_num}"]["Terms of payment"] = tt[4][13]
                     res[f"PDF{k}"][f"page{page_num}"]["total_quantity"] = tt[7][0]
                     res[f"PDF{k}"][f"page{page_num}"]["Supplier art.-no"] = tables[2][1][2].replace('"', "")
-
+                    
+                    billto_page = page.within_bbox([0, 0, page.search("Tel:")[0]['x0'], page.search("VAT no")[0]['bottom']])
+                    res[f"PDF{k}"][f"page{page_num}"]["bt_name"] = billto_page.extract_text().split("\n")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bt_add1"] = billto_page.extract_text().split("\n")[1].split(", ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bt_zip"] = billto_page.extract_text().split("\n")[1].split(", ")[1].split(" ")[0]
+                    res[f"PDF{k}"][f"page{page_num}"]["bt_city"] = billto_page.extract_text().split("\n")[1].split(", ")[1].split(" ")[1]
+                    res[f"PDF{k}"][f"page{page_num}"]["bt_country"] = billto_page.extract_text().split("\n")[2]
+                elif page_num == 1:
+                    res[f"PDF{k}"][f"page{0}"]["order entry"] = page.within_bbox([page.search("Order entry: ")[0]['x1'], page.search("Order entry: ")[0]['top'], page.search("Order entry: ")[0]['x1'] + 100, page.search("Order entry: ")[0]['bottom']]).extract_text()
         return res
 
 class Walmart_Parsing:
