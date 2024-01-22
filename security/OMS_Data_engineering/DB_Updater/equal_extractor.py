@@ -59,9 +59,12 @@ class Extractor:
 
             temp_inventory = []
 
-            for product in list(content["Vendor Style"])[1:]:
+            for k, product in enumerate(list(content["Vendor Style"])[1:]):
                 if customer_name not in self.vendor_customer:
-                    temp_inventory.append(list(self.OMS_InventoryList["ProductCode"]))
+                    if str(content["Buyers Catalog or Stock Keeping #"][k + 1]) in list(self.OMS_InventoryList["SupplierProductCode"]):
+                        temp_inventory.append(list(self.OMS_InventoryList[self.OMS_InventoryList["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
+                    else:
+                        temp_inventory.append(list(self.OMS_InventoryList["ProductCode"]))
                     continue
                 else:
                     temp = []

@@ -1,7 +1,7 @@
 import datetime
 import uuid
-from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing, Byebye_Parsing
-from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia, PO_Match_ByebyeBaby
+from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing, Byebye_Parsing, DollarTree_Parsing
+from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia, PO_Match_ByebyeBaby, PO_Match_DollarTree
 from .DB_Updater.equal_extractor import Extractor
 from .DB_Updater.customers_updater import customer_fields_updater
 from .DB_Updater.auto_SKU import AutoDB
@@ -160,7 +160,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res[0])
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -196,7 +196,7 @@ class SalesImport_Generator:
                             matching_res[k][vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
-                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar"]:
+                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar", "Dollar Tree Stores"]:
                             try:
                                 temp = matching_res[k][vkey][i].split("/")
                                 matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])

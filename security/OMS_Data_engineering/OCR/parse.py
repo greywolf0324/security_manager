@@ -6,6 +6,7 @@ import xlsxwriter
 import os
 import numpy as np
 import math
+from pathlib import Path
     
 class BUCEE_Parsing:
     def __init__(self, customer_name) -> None:
@@ -1144,4 +1145,101 @@ class Byebye_Parsing:
                     res[f"PDF{k}"][f"page{i}"]["Rate"].append(line[5])
                     res[f"PDF{k}"][f"page{i}"]["Amount"].append(line[6])
         
+        return res
+    
+class DollarTree_Parsing:
+    def __init__(self, customer_name) -> None:
+        pass
+
+    def PO_parser(self, paths: list, currency):
+        res = {}
+
+        for k, path in enumerate(paths):
+            res[f"PDF{k}"] = {}
+            p = Path(path)
+            p.rename(p.with_suffix('.txt'))
+            f = open(str(p).replace("eml", "txt"), 'r')
+            tx = f.read().split("\n")
+            for line in tx[:200]:
+                print(line)
+            res[f"PDF{k}"]['sku'] = []
+            res[f"PDF{k}"]['dept'] = []
+            res[f"PDF{k}"]['desc'] = []
+            res[f"PDF{k}"]['upc'] = []
+            res[f"PDF{k}"]['ship_d'] = []
+            res[f"PDF{k}"]['cancel_d'] = []
+            res[f"PDF{k}"]['quan'] = []
+            res[f"PDF{k}"]['pack'] = []
+            res[f"PDF{k}"]['unit_cost'] = []
+
+            for i, _ in enumerate(tx):
+                if "PURCHASE ORDER EMAIL" in tx[i]:
+                    # print(tx[i])
+                    count = 0
+                    while "I N C ." not in tx[i - count]:
+                        count = count + 1
+                    print("===", count)
+                    if count == 12:
+                        res[f"PDF{k}"]['BillTo_name'] = tx[i - 12]
+                        res[f"PDF{k}"]['BillToadd_1'] = tx[i - 10]
+                        res[f"PDF{k}"]['BillToadd_2'] = tx[i - 8]
+                        res[f"PDF{k}"]['BillTo_city'] = tx[i - 6].split(", ")[0]
+                        res[f"PDF{k}"]['BillTo_state'] = tx[i - 6].split(", ")[1].split(" ")[0]
+                        res[f"PDF{k}"]['BillTo_country'] = tx[i - 4]
+                    elif count == 10:
+                        res[f"PDF{k}"]['BillTo_name'] = tx[i - 10]
+                        res[f"PDF{k}"]['BillToadd_1'] = tx[i - 8]
+                        # res[f"PDF{k}"]['BillToadd_2'] = tx[i - 6]
+                        print(tx[i - 4])
+                        res[f"PDF{k}"]['BillTo_city'] = tx[i - 6].split(", ")[0]
+                        res[f"PDF{k}"]['BillTo_state'] = tx[i - 6].split(", ")[1].split(" ")[0]
+                        res[f"PDF{k}"]['BillTo_zip'] = tx[i - 6].split(", ")[1].split(" ")[1]
+                        res[f"PDF{k}"]['BillTo_country'] = tx[i - 4]
+                elif "DATE: " in tx[i]:
+                    if "VENDOR" in tx[i + 3]:
+                        res[f"PDF{k}"]['date'] = tx[i].split("DATE: ")[1]
+                        print(tx[i])
+                elif "P/O#: " in tx[i]:
+                    res[f"PDF{k}"]['PO#'] = tx[i].split("P/O#: ")[1]
+                elif "SHIP TO:" in tx[i]:
+                    # print(tx[i])
+                    try:
+                        res[f"PDF{k}"]['shipt_name'] = tx[i + 4].split(", ")[0]
+                        res[f"PDF{k}"]['shipt_add_1'] = tx[i + 4].split(", ")[1]
+                        res[f"PDF{k}"]['shipt_add_2'] = tx[i + 4].split(", ")[2]
+                        res[f"PDF{k}"]['shipt_city'] = tx[i + 5].split(", ")[0]
+                        res[f"PDF{k}"]['shipt_state'] = tx[i + 5].split(", ")[1].split(" ")[0]
+                        res[f"PDF{k}"]['shipt_country'] = tx[i + 5].split(", ")[2]
+                    except:
+                        res[f"PDF{k}"]['shipt_name'] = tx[i + 4].split(", ")[0]
+                        res[f"PDF{k}"]['shipt_add_1'] = tx[i + 4].split(", ")[1]
+                        res[f"PDF{k}"]['shipt_city'] = tx[i + 4].split(", ")[2]
+                        res[f"PDF{k}"]['shipt_state'] = tx[i + 4].split(", ")[3].split(" ")[0]
+                        res[f"PDF{k}"]['shipt_zip'] = tx[i + 4].split(", ")[3].split(" ")[1].replace(" ", "")
+                        res[f"PDF{k}"]['shipt_country'] = tx[i + 4].split(", ")[4]
+
+                elif "SKU: " in tx[i]:
+                    print(tx[i])
+                    res[f"PDF{k}"]['sku'].append(tx[i].split("SKU: ")[1])
+                elif "DEPT: " in tx[i]:
+                    print(tx[i])
+                    res[f"PDF{k}"]['dept'].append(tx[i].split("DEPT: ")[1].split(" ")[0])
+                elif "DESCRIPTION: " in tx[i]:
+                    print(tx[i])
+                    res[f"PDF{k}"]['desc'].append(tx[i].split("DESCRIPTION: ")[1])
+                elif "UPC: " in tx[i]:
+                    print(tx[i])
+                    res[f"PDF{k}"]['upc'].append(tx[i].split("UPC: ")[1].replace(" ", ""))
+                elif "SHIP: " in tx[i]:
+                    print(tx[i])
+                    res[f"PDF{k}"]['ship_d'].append( tx[i].split("SHIP: ")[1].split("CANCEL: ")[0].replace(" ", ""))
+                    res[f"PDF{k}"]['cancel_d'].append( tx[i].split("SHIP: ")[1].split("CANCEL: ")[1].split("ETA: ")[0].replace(" ", ""))
+                    res[f"PDF{k}"]['quan'].append(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[0].replace(" ", ""))
+                    # print(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[1])
+                    # print(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[1].split("UNIT COST: ")[0].replace(" ", ""))
+                    res[f"PDF{k}"]['pack'].append(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[1].split("UNIT COST: ")[0].replace(" ", ""))
+                    res[f"PDF{k}"]['unit_cost'].append(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[1].split("UNIT COST: ")[1].split("COST AMOUNT")[0].replace(" ", ""))
+                elif "SIGNATURE ON FILE" in tx[i]:
+                    break
+            
         return res

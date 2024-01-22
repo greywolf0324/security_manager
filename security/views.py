@@ -38,6 +38,7 @@ customer_list = [
     "Hobby Lobby",
     "buy buy BABY",
     # "Lekia",
+    "Dollar Tree Stores"
 ]
 
 customer_list.sort()

@@ -2468,3 +2468,134 @@ class PO_Match_ByebyeBaby(PO_Match):
                     del item[key]
 
         return output
+    
+class PO_Match_DollarTree(PO_Match):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.PO_keys = []
+        self.length = 2
+        self.pair = {
+            "PO Number": "PO#",
+            "PO Date": "date",
+            "Ship Dates": "ship_d",
+            "Cancel Date": "cancel_d",
+            "Qty Ordered": "quan",
+            "Unit of Measure": "",
+            "Unit Price": "unit_cost",
+            "Buyers Catalog or Stock Keeping #": "sku",
+            "UPC/EAN": "upc",
+            "Product/Item Description": "desc",
+            "Dept #": "dept",
+            "Ship To Name": "shipt_name",	
+            "Ship To Address 1": "shipt_add_1",
+            "Ship To Address 2": "shipt_add_2",
+            "Ship To City": "shipt_city",	
+            "Ship To State": "shipt_state",	
+            "Ship to Zip": "shipt_zip",	
+            "Ship To Country": "shipt_country",
+            "Bill To Name": "BillTo_name",
+            "Bill To Address 1": "BillToadd_1",
+            "Bill To Address 2": "BillToadd_2",
+            "Bill To City": "BillTo_city",
+            "Bill To State": "BillTo_state",
+            "Bill To Zip": "BillTo_zip",
+            "Bill To Country": "BillTo_country"
+        }
+
+        f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
+        self.field_names = json.load(f)
+        self.field_names_temp = []
+
+        for item in self.field_names:
+            self.field_names_temp.append(item) 
+
+        for item in self.field_names_temp:
+            if item in list(self.pair.keys()):
+                (self.field_names).remove(item)
+    
+    def match_plain(self, input):
+        res = []
+
+        for i, _ in enumerate(input):
+            res.append(input[f"PDF{i}"])
+            # pdf = input[f"PDF{i}"]
+
+            # for j, _ in enumerate(pdf):
+            #     res.append(pdf[f"page{j}"])
+
+        return res
+    
+    def match_same(self, input):
+        self.initial_part_init()
+        
+        for key in self.pair:
+            if key in ["PO Date", "Ship Dates", "Cancel Date", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country"]:
+                if key in ["PO Date", "Ship Dates", "Cancel Date"]:
+                    if key in ["Ship Dates", "Cancel Date"]:
+                        temp = input[self.pair[key]][0].split("/")
+                        temp[2] = '20' + temp[2]
+                    else:
+                        temp = input[self.pair[key]].split("/")
+                        
+                    input[key] = ['/'.join(temp)]
+                else:
+                    try:
+                        input[key] = [input[self.pair[key]]]
+                    except:
+                        input[key] = [""]
+
+                for _ in range(self.length - 1): 
+                    input[key].append("")
+                
+                try:
+                    del input[self.pair[key]]
+                except:
+                    pass
+            elif key in ["Qty Ordered", "Unit Price", "Product/Item Description", "Unit of Measure", "Buyers Catalog or Stock Keeping #", "UPC/EAN"]:
+                input[key] = [""]
+
+                for i in range(self.length - 1):
+                    if key == "Unit of Measure":
+                        input[key].append("Each")
+                    else:
+                        input[key].append(input[self.pair[key]][i])
+
+                if key == "Unit of Measure":
+                    pass
+                else:
+                    del input[self.pair[key]]
+            elif key in ["PO Number", "Dept #"]:
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append(input[self.pair[key]])
+
+                if key == "PO Number":
+                    input["Retailers PO"] = [input[self.pair[key]]]
+
+                    for _ in range(self.length - 1): 
+                        input["Retailers PO"].append("")
+
+                del input[self.pair[key]]
+            
+        return input
+
+    def match_final(self, PO_res):
+        output = self.match_plain(PO_res)
+        
+        self.PO_keys = list(output[0].keys())
+        self.PO_inherited = []
+        for key in self.pair:
+            self.PO_inherited.append(self.pair[key])
+        
+        for content in output:
+            self.length = len(content["sku"]) + 1
+            item = self.match_same(content)
+            item = self.match_formula(item)
+
+            for key in self.PO_keys:
+                if key not in self.PO_inherited:
+                    del item[key]
+
+        return output
