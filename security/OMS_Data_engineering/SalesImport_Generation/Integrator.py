@@ -233,7 +233,7 @@ class Integrate_All:
                     "ShipToOther*": self.fun_iter_topp("NO")
                 }
             )
-            
+            # print(self.customer_name)
             if self.customer_name in ["Buc-ee's"]:
                 SalesImport[i].update(
                     {
@@ -283,7 +283,7 @@ class Integrate_All:
                     }
                 )
             
-            elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama", "Pepco"]:
+            elif self.customer_name in ["Big Lots Stores", "TARGET", "Walgreens", "Meijers", "MICHAELS", "Fred Meyer", "Tar Heel Trading", "Ollies", "Hobby Lobby", "Dollarama"]:
         
                 for key in self.add_match:
                     SalesImport[i].update({

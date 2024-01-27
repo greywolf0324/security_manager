@@ -23,6 +23,8 @@ import gspread
 from .sheet_reader import frame_converter
 from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths
 from .utils.matching_orderer import Orderer
+from openpyxl import Workbook
+from openpyxl.styles import numbers
 
 filenames = []
 
@@ -160,14 +162,14 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        print(PO_res)
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-        print(matching_res[0])
+        # print(matching_res[0])
         uuid_code = str(uuid.uuid4())
         matching_res = Orderer(matching_res)
         
@@ -396,12 +398,12 @@ class SalesImport_Generator:
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
         sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-        
+        print(sales_import[0])
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-
+        print(sales_import[0])
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
@@ -431,8 +433,8 @@ class SalesImport_Generator:
         
         book.save(filename = output)
         df = pd.read_excel(output)
-        df.to_csv(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv', index=False)
-        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
+        df.to_excel(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx', index=False, float_format='%.2f')
+        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
 
         return [path, output]
     
