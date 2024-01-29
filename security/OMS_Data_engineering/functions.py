@@ -22,17 +22,18 @@ from google.oauth2 import service_account
 import gspread
 from .sheet_reader import frame_converter
 from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths
-from .utils.matching_orderer import Orderer
+from .utils.orderer import Orderer
 from openpyxl import Workbook
 from openpyxl.styles import numbers
 from ..models import Osalesimport_fields, SalesImport_fields
 from collections import OrderedDict
+from .util import orderer, field_adder
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        
+
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
@@ -40,7 +41,7 @@ class SalesImport_Generator:
         self.matching_cols = [f.name for f in Original_SalesImport._meta.get_fields() if f.name != 'id'][3:]
 
         self.osales_fieldnames = [f.field_name for f in Osalesimport_fields.objects.all()]
-        # self.sales_fieldnames = [f.field_name for f in SalesImport_fields.objects.all()]
+        self.sales_fieldnames = [f.field_names for f in SalesImport_fields.objects.all()]
         self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby", "Dollarama"]
         self.header_keys = {
             "PO#": "PO Number", 
@@ -175,7 +176,7 @@ class SalesImport_Generator:
         self.matching_res = matching_res
         # print(matching_res[0])
         uuid_code = str(uuid.uuid4())
-        matching_res = Orderer(matching_res)
+        matching_res = Orderer(matching_res, self.osales_fieldnames)
         
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
@@ -407,18 +408,64 @@ class SalesImport_Generator:
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-        print(sales_import[0])
+        print(len(sales_import[0]))
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
-        field_names = json.load(f)
+        o_field_names = json.load(f)
+        wb = Workbook()
+        ws = wb.active
 
+        # Example decimal numbers
+        number = [0.500, 1.000, 1.500]
+        sales_import = orderer(field_adder(sales_import, self.sales_fieldnames), self.sales_fieldnames)
+        # print(sales_import[0])
+        for i, key in enumerate(self.sales_fieldnames):
+            cell = ws.cell(row = 1, column = i + 1, value = key)
+
+        counter = 1
+        for i, order in enumerate(sales_import):
+            len_order = len(order[list(order.keys())[0]])
+            for j in range(len_order):
+                counter += 1
+                for k, key in enumerate(order):
+                    # print(order[key])
+                    if key == "Discount":
+                        try:
+                            cell = ws.cell(row = counter, column = k + 1, value = float(order[key][j]))
+                            cell.number_format = numbers.FORMAT_NUMBER_00
+                        except:
+                            pass
+                    elif key == "Total*":
+                        cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
+                        cell.number_format = numbers.FORMAT_NUMBER_00
+                    else:
+                        cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
+                    # cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
+                    # if key in ["Discount", "Total*"]:
+                    #     if key == "Discount":
+                    #         try:
+
+                    #         print(order[key][j], type(order[key][j]))
+                    #     cell.number_format = numbers.FORMAT_NUMBER_00
+                    
+                
+            # for j, key in enumerate(order):
+            #     print(order[key])
+                        
+        # # Write numbers to the sheet with trailing zeros preserved
+        # for i, numbe in enumerate(number):
+        #     cell = ws.cell(row=i+1, column=1, value=numbe)
+        #     cell.number_format = numbers.FORMAT_NUMBER_00
+
+        # Save the workbook
+        wb.save(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv')
         # if os.path.isfile("SalesImport.xlsx"):
         #     os.remove("SalesImport.xlsx")
         # book = xlsxwriter.Workbook("SalesImport.xlsx")
         # sheet = book.add_worksheet("cont_excel")
 
-        # for idx, header in enumerate(field_names):
+        # for idx, header in enumerate(o_field_names):
         #     sheet.write(0, idx, header)
         # book.close()
         # book = load_workbook("SalesImport.xlsx")
@@ -427,7 +474,7 @@ class SalesImport_Generator:
         #     keys = list(dic.keys())
         #     for i in range(len(dic[keys[0]])):
         #         temp = []
-        #         for key in field_names:
+        #         for key in o_field_names:
         #             if key in keys:
         #                 temp.append(dic[key][i])
         #             else:
@@ -439,7 +486,7 @@ class SalesImport_Generator:
         # df = pd.read_excel(output)
         # df.to_excel(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx', index=False, float_format='%.2f')
 
-        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
+        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.csv'
 
         return [path, output]
     
