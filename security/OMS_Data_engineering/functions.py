@@ -22,7 +22,6 @@ from google.oauth2 import service_account
 import gspread
 from .sheet_reader import frame_converter
 from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths
-from .utils.orderer import Orderer
 from openpyxl import Workbook
 from openpyxl.styles import numbers
 from ..models import Osalesimport_fields, SalesImport_fields
