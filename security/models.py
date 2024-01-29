@@ -149,6 +149,71 @@ class Original_SalesImport(models.Model):
   Buyer_Part_Number = models.CharField(max_length = 1000, null = True)
   Carrier_Details_Special_Handling = models.CharField(max_length = 1000, null = True)
   Restrictions_Conditions = models.CharField(max_length = 1000, null = True)
+
+class SalesImport_fields(models.Model):
+  field_names = models.CharField(max_length = 50, null = True)
+  
+# class SalesImport(models.Model):
+#   RecordType
+#   CustomerName* = 
+#   InvoiceNumber* = 
+#   Reference/Comment/Note = 
+#   Product* = 
+#   Quantity* = 
+#   Price/Amount* = 
+#   Discount = 
+#   Tax = 
+#   Total* = 
+#   Account = 
+#   TaxRule* = 
+#   DropShip = 
+#   CurrencyConversionRate = 
+#   DatePaid* = 
+#   CustomerContact = 
+#   CustomerPhone = 
+#   CustomerEmail = 
+#   SalesRepresentative* = 
+#   ShipmentRequiredByDate = 
+#   YourBaseCurrency* = 
+#   CustomerCurrency* = 
+#   Terms = 
+#   PriceTier = 
+#   StockLocation = 
+#   MemoOnInvoice = 
+#   InvoiceDate*/ExpireDate = 
+#   InvoiceDueDate = 
+#   TaxInclusive* = 
+#   ShippingAddressLine1* = 
+#   ShippingAddressLine2 = 
+#   ShipToOther* = 
+#   ShippingCity* = 
+#   ShippingProvince* = 
+#   ShippingPostcode* = 
+#   ShippingCountry* = 
+#   ShipToCompany* = 
+#   BillingAddressLine1* = 
+#   BillingAddressLine2 = 
+#   BillingCity* = 
+#   BillingProvince* = 
+#   BillingPostcode* = 
+#   BillingCountry* = 
+#   CreditNoteNumber = 
+#   CreditNoteDate = 
+#   CustomField1 = 
+#   CustomField2 = 
+#   CustomField3 = 
+#   CustomField4 = 
+#   CustomField5 = 
+#   CustomField6 = 
+#   CustomField7 = 
+#   CustomField8 = 
+#   CustomField9 = 
+#   CustomField10 = 
+#   CarrierCode = 
+#   CarrierServiceCode = 
+#   ShipToContact = 
+#   ShippingNotes = 
+
   
 class OMS_Customers(models.Model):
   Name = models.CharField(max_length = 1000, null = True)

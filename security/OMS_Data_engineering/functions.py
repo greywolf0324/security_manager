@@ -25,19 +25,22 @@ from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimpor
 from .utils.matching_orderer import Orderer
 from openpyxl import Workbook
 from openpyxl.styles import numbers
+from ..models import Osalesimport_fields, SalesImport_fields
+from collections import OrderedDict
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-
+        
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
         self.SKU_list = [item['customer_name'] for item in Customers.objects.filter(sku_bl=True).values('customer_name')]
         self.matching_cols = [f.name for f in Original_SalesImport._meta.get_fields() if f.name != 'id'][3:]
 
-        self.field_names = [f.field_name for f in Osalesimport_fields.objects.all()]
+        self.osales_fieldnames = [f.field_name for f in Osalesimport_fields.objects.all()]
+        # self.sales_fieldnames = [f.field_name for f in SalesImport_fields.objects.all()]
         self.customer_SKU_list = ["Pepco", "Poundland", "Walgreens", "Ollies", "CVS", "Giant Tiger", "Hobby Lobby", "Dollarama"]
         self.header_keys = {
             "PO#": "PO Number", 
@@ -64,7 +67,8 @@ class SalesImport_Generator:
             "Price Total Amount": ""
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
-        
+        self.osales_fields = [item.field_name for item in Osalesimport_fields.objects.all()]
+
         f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
         google_json = json.load(f)
         credentials = service_account.Credentials.from_service_account_info(google_json)
@@ -409,31 +413,32 @@ class SalesImport_Generator:
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
         field_names = json.load(f)
 
-        if os.path.isfile("SalesImport.xlsx"):
-            os.remove("SalesImport.xlsx")
-        book = xlsxwriter.Workbook("SalesImport.xlsx")
-        sheet = book.add_worksheet("cont_excel")
+        # if os.path.isfile("SalesImport.xlsx"):
+        #     os.remove("SalesImport.xlsx")
+        # book = xlsxwriter.Workbook("SalesImport.xlsx")
+        # sheet = book.add_worksheet("cont_excel")
 
-        for idx, header in enumerate(field_names):
-            sheet.write(0, idx, header)
-        book.close()
-        book = load_workbook("SalesImport.xlsx")
-        sheet = book.get_sheet_by_name("cont_excel")
-        for _, dic in enumerate(sales_import):
-            keys = list(dic.keys())
-            for i in range(len(dic[keys[0]])):
-                temp = []
-                for key in field_names:
-                    if key in keys:
-                        temp.append(dic[key][i])
-                    else:
-                        temp.append("")
-                sheet.append(temp)
-        output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
+        # for idx, header in enumerate(field_names):
+        #     sheet.write(0, idx, header)
+        # book.close()
+        # book = load_workbook("SalesImport.xlsx")
+        # sheet = book.get_sheet_by_name("cont_excel")
+        # for _, dic in enumerate(sales_import):
+        #     keys = list(dic.keys())
+        #     for i in range(len(dic[keys[0]])):
+        #         temp = []
+        #         for key in field_names:
+        #             if key in keys:
+        #                 temp.append(dic[key][i])
+        #             else:
+        #                 temp.append("")
+        #         sheet.append(temp)
+        # output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
         
-        book.save(filename = output)
-        df = pd.read_excel(output)
-        df.to_excel(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx', index=False, float_format='%.2f')
+        # book.save(filename = output)
+        # df = pd.read_excel(output)
+        # df.to_excel(Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx', index=False, float_format='%.2f')
+
         output = Path(__file__).resolve().parent.parent.parent / f'process/outputs/{filename}.xlsx'
 
         return [path, output]
