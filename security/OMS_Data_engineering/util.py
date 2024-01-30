@@ -15,8 +15,10 @@ def orderer(input, fields):
 
 def field_adder(input: list, fields):
     field_len = len(input[0][list(input[0].keys())[0]])
-
+    
     for po in input:
+        field_len = len(po[list(po.keys())[0]])
+        print("=-=-", field_len)
         for field in fields:
             if field not in po.keys():
                 po.update({

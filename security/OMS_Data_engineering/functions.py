@@ -418,13 +418,15 @@ class SalesImport_Generator:
         # Example decimal numbers
         number = [0.500, 1.000, 1.500]
         sales_import = orderer(field_adder(sales_import, self.sales_fieldnames), self.sales_fieldnames)
-        # print(sales_import[0])
+        print(sales_import[0])
         for i, key in enumerate(self.sales_fieldnames):
             cell = ws.cell(row = 1, column = i + 1, value = key)
 
         counter = 1
         for i, order in enumerate(sales_import):
             len_order = len(order[list(order.keys())[0]])
+            # print("length: ", len_order)
+            # print(order)
             for j in range(len_order):
                 counter += 1
                 for k, key in enumerate(order):
@@ -439,6 +441,7 @@ class SalesImport_Generator:
                         cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                         cell.number_format = numbers.FORMAT_NUMBER_00
                     else:
+                        # print(key)
                         cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                     # cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                     # if key in ["Discount", "Total*"]:

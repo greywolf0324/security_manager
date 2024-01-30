@@ -328,7 +328,7 @@ class Integrate_All:
             SalesImport[i].update(self.auto_fun(self.customer_name))
             
             if customer_name in ["Walmart", "Walgreens"]:
-                SalesImport[i].update({"Discount": self.fun_iter_line(str('{0:.2f}'.format(element["Allow/Charge %"][0])) + "%")})
+                SalesImport[i].update({"Discount": self.fun_iter_line(str('{0:.2f}'.format(element["Allow/Charge %"][0])))})
 
             # Add RecordType
             SalesImport[i].update(self.fun_invoice())
