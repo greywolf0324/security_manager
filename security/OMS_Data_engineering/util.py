@@ -18,7 +18,6 @@ def field_adder(input: list, fields):
     
     for po in input:
         field_len = len(po[list(po.keys())[0]])
-        print("=-=-", field_len)
         for field in fields:
             if field not in po.keys():
                 po.update({
@@ -26,3 +25,7 @@ def field_adder(input: list, fields):
                 })
 
     return input
+
+def modelto_dataframe(db):
+    print(db)
+    

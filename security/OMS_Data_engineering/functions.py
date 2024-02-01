@@ -21,17 +21,19 @@ from decimal import Decimal
 from google.oauth2 import service_account
 import gspread
 from .sheet_reader import frame_converter
-from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths
+from ..models import Customers, Original_SalesImport, Matching_dict, Osalesimport_fields, OMS_Customers, OMS_Payment_term, OMS_AdditionalUOM, OMS_UOM, OMS_Locations, OMS_Inventory_List, Input_paths, Ocustomer_fields, Oinventory_fields, Olocation_fields
 from openpyxl import Workbook
 from openpyxl.styles import numbers
 from ..models import Osalesimport_fields, SalesImport_fields
 from collections import OrderedDict
-from .util import orderer, field_adder
+from .util import orderer, field_adder, modelto_dataframe
+from monday import MondayClient
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
+        # self.mondayoms_fetcher()
 
         self.customer_name = ""
         self.auto_dic = []
@@ -80,6 +82,127 @@ class SalesImport_Generator:
         self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
         self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
         self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
+        print(type(self.inventory_matching))
+        # print(len(self.inventory_matching[0]))
+        # print(self.inventory_matching[0])
+        locations = OMS_Locations.objects.all()
+        invents = OMS_Inventory_List.objects.all()
+        invent_fields = Oinventory_fields.objects.all()
+        invent_cols = [f.name for f in OMS_Inventory_List._meta.get_fields()]
+        dic = {}
+        for field in invent_fields:
+            dic.update({
+                field.field_name: []
+            })
+        # print(invents[0])
+        field_object = OMS_Inventory_List._meta.get_field(invent_cols[0])
+        print(field_object.value_from_object(invents[0]))
+        for invent in invents:
+            for field_name, field in zip(invent_fields, invent_cols):
+                dic[field_name.field_name].append(OMS_Inventory_List._meta.get_field(field).value_from_object(invent))
+
+        self.df = pd.DataFrame(dic)
+        # print(df.iloc[0])
+        # self.inventory_matching = modelto_dataframe(OMS_Inventory_List.objects.all(), Oinventory_fields.objects.all())
+        customer_fields = ["Locations"]
+        for field in customer_fields:
+            x = Olocation_fields(field_name = field)
+            x.save()
+    def mondayoms_fetcher(self):
+        apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
+        monday = MondayClient(token=apiKey)
+        Customers_boardID = 5790363144
+        Inventory_boardID = 5965921251
+        StockLocation_boardID = 5751350023
+
+        x = OMS_Customers.objects.all()
+        x.delete()
+        arr = monday.boards.fetch_items_by_board_id(Customers_boardID)
+        customers = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        for customer in customers:
+            input = OMS_Customers(
+                Name = customer["name"],
+                Status = customer["column_values"][4]["text"],
+                Currency = customer["column_values"][5]["text"],
+                PaymentTerm = customer["column_values"][6]["text"],
+                TaxRule = customer["column_values"][7]["text"],
+                PriceTier = customer["column_values"][8]["text"],
+                Discount = customer["column_values"][9]["text"],
+                CreditLimit = customer["column_values"][10]["text"],
+                Carrier = customer["column_values"][12]["text"],
+                SalesRepresentative = customer["column_values"][13]["text"],
+                Location = customer["column_values"][14]["text"],
+                TaxNumber = customer["column_values"][15]["text"],
+                Tags = customer["column_values"][16]["text"],
+            )
+            input.save()
+
+        x = OMS_Inventory_List.objects.all()
+        x.delete()
+        arr = monday.boards.fetch_items_by_board_id(Inventory_boardID)
+        inventories = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        for inventory in inventories:
+            input = OMS_Inventory_List(
+                ProductCode = inventory["name"],
+                Name = inventory["column_values"][0]["text"],
+                Category = inventory["column_values"][1]["text"],
+                Brand = inventory["column_values"][2]["text"],
+                Type = inventory["column_values"][3]["text"],
+                FixedAssetType = inventory["column_values"][4]["text"],
+                CostingMethod = inventory["column_values"][5]["text"],
+                Length = inventory["column_values"][6]["text"],
+                Width = inventory["column_values"][7]["text"],
+                Height = inventory["column_values"][8]["text"],
+                Weight = inventory["column_values"][9]["text"],
+                CartonLength = inventory["column_values"][10]["text"],
+                CartonWidth = inventory["column_values"][11]["text"],
+                CartonHeight = inventory["column_values"][12]["text"],
+                CartonInnerQuantity = inventory["column_values"][13]["text"],
+                CartonQuantity = inventory["column_values"][14]["text"],
+                CartonVolume = inventory["column_values"][15]["text"],
+                WeightUnits = inventory["column_values"][16]["text"],
+                DimensionUnits = inventory["column_values"][17]["text"],
+                Barcode = inventory["column_values"][18]["text"],
+                ReorderQuantity = inventory["column_values"][20]["text"],
+                DefaultLocation = inventory["column_values"][21]["text"],
+                LastSuppliedBy = inventory["column_values"][22]["text"],
+                SupplierProductCode = inventory["column_values"][23]["text"],
+                SupplierProductName = inventory["column_values"][24]["text"],
+                SupplierFixedPrice = inventory["column_values"][25]["text"],
+                PriceTier1 = inventory["column_values"][26]["text"],
+                PriceTier2 = inventory["column_values"][27]["text"],
+                PriceTier3 = inventory["column_values"][28]["text"],
+                PriceTier4 = inventory["column_values"][29]["text"],
+                PriceTier5 = inventory["column_values"][30]["text"],
+                PriceTier6 = inventory["column_values"][31]["text"],
+                PriceTier7 = inventory["column_values"][32]["text"],
+                PriceTier8 = inventory["column_values"][33]["text"],
+                PriceTier9 = inventory["column_values"][34]["text"],
+                PriceTier10 = inventory["column_values"][35]["text"],
+                AssemblyBOM = inventory["column_values"][36]["text"],
+                AutoAssemble = inventory["column_values"][37]["text"],
+                AutoDisassemble = inventory["column_values"][38]["text"],
+                DropShip = inventory["column_values"][39]["text"],
+                DropShipSupplier = inventory["column_values"][40]["text"],
+                AverageCost = inventory["column_values"][41]["text"],
+                InventoryAccount = inventory["column_values"][43]["text"],
+                RevenueAccount = inventory["column_values"][44]["text"],
+                ExpenseAccount = inventory["column_values"][45]["text"],
+                COGSAccount = inventory["column_values"][46]["text"],
+                ProductAttributeSet = inventory["column_values"][47]["text"],
+            )
+        
+            input.save()
+
+        x = OMS_Locations.objects.all()
+        x.delete()
+        arr = monday.boards.fetch_items_by_board_id(StockLocation_boardID)
+        locations = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        for location in locations:
+            input = OMS_Locations(
+                Location = location["name"]
+            )
+            input.save()
 
     def str_converter(self, input):
         temp = []
@@ -89,6 +212,7 @@ class SalesImport_Generator:
         return temp
     
     def auto_matching_DB_viewer(self, customer_name):
+        # self.inventory_matching = modelto_dataframe(OMS_Inventory_List.objects.all())
         if exists(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv"):
             
             auto_df = pd.read_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
@@ -105,7 +229,7 @@ class SalesImport_Generator:
             if customer_name in self.SKU_list:
                 for sku in auto_df["PO"]:
                     temp = []
-                    for item in self.inventory_matching["ProductCode"]:
+                    for item in self.df["ProductCode"]:
                         if str(sku) in item:
                             temp.append(item)
                     vendor_options.update({
@@ -114,7 +238,7 @@ class SalesImport_Generator:
             else:
                 for sku in auto_df["PO"]:
                     vendor_options.update({
-                        str(sku): list(self.inventory_matching["ProductCode"])
+                        str(sku): list(self.df["ProductCode"])
                     })
             print("________________________")
             target = self.str_converter(auto_df["Vendor Style from OMS_equal"])
@@ -256,7 +380,9 @@ class SalesImport_Generator:
         for invoice in matching_res:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
-                    temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
+                    temp = self.df[self.df["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
+                    print(type(self.df["ProductCode"][0]))
+                    print(type(invoice["Vendor Style"][i]))
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1

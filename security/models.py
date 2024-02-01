@@ -266,6 +266,9 @@ class OMS_Customers(models.Model):
   DimensionAttribute9 = models.CharField(max_length = 1000, null = True)
   DimensionAttribute10 = models.CharField(max_length = 1000, null = True)
 
+class Ocustomer_fields(models.Model):
+  field_name = models.CharField(max_length = 50)
+
 class OMS_Inventory_List(models.Model):
   ProductCode = models.CharField(max_length = 1000, null = True)
   Name = models.CharField(max_length = 1000, null = True)
@@ -286,7 +289,7 @@ class OMS_Inventory_List(models.Model):
   CartonVolume = models.DecimalField(decimal_places = 2, null = True, max_digits = 10)
   WeightUnits = models.CharField(max_length = 1000, null = True)
   DimensionUnits = models.CharField(max_length = 1000, null = True)
-  Barcode = models.BigIntegerField(null = True)
+  Barcode = models.CharField(max_length = 1000, null = True)
   MinimumBeforeReorder = models.IntegerField(null = True)
   ReorderQuantity = models.IntegerField(null = True)
   DefaultLocation = models.CharField(max_length = 1000, null = True)
@@ -364,6 +367,9 @@ class OMS_Inventory_List(models.Model):
   HSCode = models.CharField(max_length = 1000, null = True)
   CountryOfOrigin = models.CharField(max_length = 1000, null = True)
 
+class Oinventory_fields(models.Model):
+  field_name = models.CharField(max_length = 50)
+
 class OMS_Payment_term(models.Model):
   Name = models.CharField(max_length = 1000, null = True)
   Days = models.IntegerField(null = True)
@@ -388,6 +394,9 @@ class OMS_UOM(models.Model):
 
 class OMS_Locations(models.Model):
   Location = models.CharField(max_length = 1000, null = True)
+
+class Olocation_fields(models.Model):
+  field_name = models.CharField(max_length = 50)
 
 class Input_paths(models.Model):
   path = models.CharField(max_length = 200, null = True)
