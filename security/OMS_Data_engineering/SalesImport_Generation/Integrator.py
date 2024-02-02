@@ -8,6 +8,8 @@ import gspread
 from ..sheet_reader import frame_converter
 import datetime
 from currency_converter import CurrencyConverter
+from ...models import OMS_Inventory_List, OMS_Customers, Oinventory_fields, Ocustomer_fields
+from ..util import modelto_dataframe
 
 class Integrate_All:
     def __init__(self, customer_name) -> None:
@@ -177,11 +179,13 @@ class Integrate_All:
                 # extract number from pattern "Case Pack 12 PD6 ..." (example, it is representative pattern)
                 return re.findall("\d+", temp.split("Case Pack")[1])[0]
 
-    def Integrate_final(self, matching_res, customer_name, terms, spreadsheet):
-        self.inventory_list = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
+    def Integrate_final(self, matching_res, customer_name, terms):
+        self.inventory_list = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
+        self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
+        # self.inventory_list = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
         c = CurrencyConverter()
 
-        for name, Currency in zip(list(frame_converter(spreadsheet.get_worksheet(0).get_all_records())["Name"]), list(frame_converter(spreadsheet.get_worksheet(0).get_all_records())["Currency"])):
+        for name, Currency in zip(list(self.customers["Name"]), list(self.customers["Currency"])):
             self.currency_matcher.update({
                 name: Currency
             })
@@ -233,7 +237,7 @@ class Integrate_All:
                     "ShipToOther*": self.fun_iter_topp("NO")
                 }
             )
-            # print(self.customer_name)
+
             if self.customer_name in ["Buc-ee's"]:
                 SalesImport[i].update(
                     {

@@ -1168,8 +1168,7 @@ class DollarTree_Parsing:
             p.rename(p.with_suffix('.txt'))
             f = open(str(p).replace("eml", "txt"), 'r')
             tx = f.read().split("\n")
-            for line in tx[:200]:
-                print(line)
+
             res[f"PDF{k}"]['sku'] = []
             res[f"PDF{k}"]['dept'] = []
             res[f"PDF{k}"]['desc'] = []
@@ -1186,7 +1185,7 @@ class DollarTree_Parsing:
                     count = 0
                     while "I N C ." not in tx[i - count]:
                         count = count + 1
-                    print("===", count)
+
                     if count == 12:
                         res[f"PDF{k}"]['BillTo_name'] = tx[i - 12]
                         res[f"PDF{k}"]['BillToadd_1'] = tx[i - 10]
@@ -1198,7 +1197,6 @@ class DollarTree_Parsing:
                         res[f"PDF{k}"]['BillTo_name'] = tx[i - 10]
                         res[f"PDF{k}"]['BillToadd_1'] = tx[i - 8]
                         # res[f"PDF{k}"]['BillToadd_2'] = tx[i - 6]
-                        print(tx[i - 4])
                         res[f"PDF{k}"]['BillTo_city'] = tx[i - 6].split(", ")[0]
                         res[f"PDF{k}"]['BillTo_state'] = tx[i - 6].split(", ")[1].split(" ")[0]
                         res[f"PDF{k}"]['BillTo_zip'] = tx[i - 6].split(", ")[1].split(" ")[1]
@@ -1206,7 +1204,6 @@ class DollarTree_Parsing:
                 elif "DATE: " in tx[i]:
                     if "VENDOR" in tx[i + 3]:
                         res[f"PDF{k}"]['date'] = tx[i].split("DATE: ")[1]
-                        print(tx[i])
                 elif "P/O#: " in tx[i]:
                     res[f"PDF{k}"]['PO#'] = tx[i].split("P/O#: ")[1]
                 elif "SHIP TO:" in tx[i]:
@@ -1227,19 +1224,14 @@ class DollarTree_Parsing:
                         res[f"PDF{k}"]['shipt_country'] = tx[i + 4].split(", ")[4]
 
                 elif "SKU: " in tx[i]:
-                    print(tx[i])
                     res[f"PDF{k}"]['sku'].append(tx[i].split("SKU: ")[1])
                 elif "DEPT: " in tx[i]:
-                    print(tx[i])
                     res[f"PDF{k}"]['dept'].append(tx[i].split("DEPT: ")[1].split(" ")[0])
                 elif "DESCRIPTION: " in tx[i]:
-                    print(tx[i])
                     res[f"PDF{k}"]['desc'].append(tx[i].split("DESCRIPTION: ")[1])
                 elif "UPC: " in tx[i]:
-                    print(tx[i])
                     res[f"PDF{k}"]['upc'].append(tx[i].split("UPC: ")[1].replace(" ", ""))
                 elif "SHIP: " in tx[i]:
-                    print(tx[i])
                     res[f"PDF{k}"]['ship_d'].append( tx[i].split("SHIP: ")[1].split("CANCEL: ")[0].replace(" ", ""))
                     res[f"PDF{k}"]['cancel_d'].append( tx[i].split("SHIP: ")[1].split("CANCEL: ")[1].split("ETA: ")[0].replace(" ", ""))
                     res[f"PDF{k}"]['quan'].append(tx[i + 2].split("QUANTITY: ")[1].split("CASE PACK: ")[0].replace(" ", ""))

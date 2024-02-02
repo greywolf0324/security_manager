@@ -69,45 +69,46 @@ class SalesImport_Generator:
             "Price Total Amount": ""
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
-        self.osales_fields = [item.field_name for item in Osalesimport_fields.objects.all()]
+        # self.osales_fields = [item.field_name for item in Osalesimport_fields.objects.all()]
 
-        f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
-        google_json = json.load(f)
-        credentials = service_account.Credentials.from_service_account_info(google_json)
-        scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-        creds_with_scope = credentials.with_scopes(scope)
-        client = gspread.authorize(creds_with_scope)
-        self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
+        # f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
+        # google_json = json.load(f)
+        # credentials = service_account.Credentials.from_service_account_info(google_json)
+        # scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+        # creds_with_scope = credentials.with_scopes(scope)
+        # client = gspread.authorize(creds_with_scope)
+        # self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
 
-        self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
-        self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
-        self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
-        print(type(self.inventory_matching))
+        # self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
+        # self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
+        # self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
         # print(len(self.inventory_matching[0]))
         # print(self.inventory_matching[0])
-        locations = OMS_Locations.objects.all()
-        invents = OMS_Inventory_List.objects.all()
-        invent_fields = Oinventory_fields.objects.all()
-        invent_cols = [f.name for f in OMS_Inventory_List._meta.get_fields()]
-        dic = {}
-        for field in invent_fields:
-            dic.update({
-                field.field_name: []
-            })
-        # print(invents[0])
-        field_object = OMS_Inventory_List._meta.get_field(invent_cols[0])
-        print(field_object.value_from_object(invents[0]))
-        for invent in invents:
-            for field_name, field in zip(invent_fields, invent_cols):
-                dic[field_name.field_name].append(OMS_Inventory_List._meta.get_field(field).value_from_object(invent))
 
-        self.df = pd.DataFrame(dic)
+        # invents = OMS_Inventory_List.objects.all()
+        # invent_fields = Oinventory_fields.objects.all()
+        # invent_cols = [f.name for f in OMS_Inventory_List._meta.get_fields()]
+        # dic = {}
+        # for field in invent_fields:
+        #     dic.update({
+        #         field.field_name: []
+        #     })
+        # # print(invents[0])
+        # field_object = OMS_Inventory_List._meta.get_field(invent_cols[0])
+        # print(len(invent_fields), len(invent_cols), "len")
+        # for invent in invents:
+        #     for field_name, field in zip(invent_fields, invent_cols[1:]):
+        #         dic[field_name.field_name].append(OMS_Inventory_List._meta.get_field(field).value_from_object(invent))
+
+        # self.df = pd.DataFrame(dic)
         # print(df.iloc[0])
-        # self.inventory_matching = modelto_dataframe(OMS_Inventory_List.objects.all(), Oinventory_fields.objects.all())
-        customer_fields = ["Locations"]
-        for field in customer_fields:
-            x = Olocation_fields(field_name = field)
-            x.save()
+        self.inventory_matching = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
+        self.stocklocations = modelto_dataframe(OMS_Locations, Olocation_fields)
+        self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
+        # customer_fields = ["Locations"]
+        # for field in customer_fields:
+        #     x = Olocation_fields(field_name = field)
+        #     x.save()
     def mondayoms_fetcher(self):
         apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
         monday = MondayClient(token=apiKey)
@@ -141,6 +142,7 @@ class SalesImport_Generator:
         x.delete()
         arr = monday.boards.fetch_items_by_board_id(Inventory_boardID)
         inventories = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+
         for inventory in inventories:
             input = OMS_Inventory_List(
                 ProductCode = inventory["name"],
@@ -185,6 +187,7 @@ class SalesImport_Generator:
                 DropShip = inventory["column_values"][39]["text"],
                 DropShipSupplier = inventory["column_values"][40]["text"],
                 AverageCost = inventory["column_values"][41]["text"],
+                DefaultUnitOfMeasure = inventory["column_values"][42]["text"],
                 InventoryAccount = inventory["column_values"][43]["text"],
                 RevenueAccount = inventory["column_values"][44]["text"],
                 ExpenseAccount = inventory["column_values"][45]["text"],
@@ -229,7 +232,7 @@ class SalesImport_Generator:
             if customer_name in self.SKU_list:
                 for sku in auto_df["PO"]:
                     temp = []
-                    for item in self.df["ProductCode"]:
+                    for item in self.inventory_matching["ProductCode"]:
                         if str(sku) in item:
                             temp.append(item)
                     vendor_options.update({
@@ -238,7 +241,7 @@ class SalesImport_Generator:
             else:
                 for sku in auto_df["PO"]:
                     vendor_options.update({
-                        str(sku): list(self.df["ProductCode"])
+                        str(sku): list(self.inventory_matching["ProductCode"])
                     })
             print("________________________")
             target = self.str_converter(auto_df["Vendor Style from OMS_equal"])
@@ -355,7 +358,7 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("tracking equal things...")
         extract = Extractor()
-        OMS_equal = extract.extractor(matching_res, customer_name, self.spreadsheet)
+        OMS_equal = extract.extractor(matching_res, customer_name)
         self.auto_dic = AutoDB().DB_tester(customer_name, matching_res)
 
         print("==============================================================================================================")
@@ -380,9 +383,9 @@ class SalesImport_Generator:
         for invoice in matching_res:
             for i in range(len(invoice[list(invoice.keys())[0]])):
                 if i != 0:
-                    temp = self.df[self.df["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
-                    print(type(self.df["ProductCode"][0]))
-                    print(type(invoice["Vendor Style"][i]))
+                    self.inventory_matching["ProductCode"] = self.inventory_matching["ProductCode"].astype('str')
+                    temp = self.inventory_matching[self.inventory_matching["ProductCode"] == invoice["Vendor Style"][i]]["DefaultUnitOfMeasure"]
+
                     if temp.values[0] == "Unit":
                         invoice["Pack Size UOM"][i] = 1
                         invoice["Number of Pcs per Inner Pack"][i] = 1
@@ -490,13 +493,13 @@ class SalesImport_Generator:
         return [customer_name, header_details, item_details]
     
     def processFile(self, data, matching_res, extra, customer_name, terms):
-        f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
-        google_json = json.load(f)
-        credentials = service_account.Credentials.from_service_account_info(google_json)
-        scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-        creds_with_scope = credentials.with_scopes(scope)
-        client = gspread.authorize(creds_with_scope)
-        self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
+        # f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
+        # google_json = json.load(f)
+        # credentials = service_account.Credentials.from_service_account_info(google_json)
+        # scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+        # creds_with_scope = credentials.with_scopes(scope)
+        # client = gspread.authorize(creds_with_scope)
+        # self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
         obj = Input_paths.objects.filter(created = Input_paths.objects.all()[len(Input_paths.objects.all()) - 1].created)
         path = obj[0].path
         filename = obj[0].file_name
@@ -527,13 +530,13 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("Integrating...")
         integrator = Integrate_All(customer_name=customer_name)
-        sales_import = integrator.Integrate_final(matching_res, customer_name, terms, self.spreadsheet)
-        print(sales_import[0])
+        sales_import = integrator.Integrate_final(matching_res, customer_name, terms)
+        # print(sales_import[0])
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()
         sales_import = updater.updater(sales_import)
-        print(len(sales_import[0]))
+
         print("==============================================================================================================")
         print("Just a second, writing...")
         f = open(Path(__file__).resolve().parent / "config/fieldnames_SalesImport.json")
@@ -542,21 +545,18 @@ class SalesImport_Generator:
         ws = wb.active
 
         # Example decimal numbers
-        number = [0.500, 1.000, 1.500]
+        # number = [0.500, 1.000, 1.500]
         sales_import = orderer(field_adder(sales_import, self.sales_fieldnames), self.sales_fieldnames)
-        print(sales_import[0])
+        # print(sales_import[0])
         for i, key in enumerate(self.sales_fieldnames):
             cell = ws.cell(row = 1, column = i + 1, value = key)
 
         counter = 1
         for i, order in enumerate(sales_import):
             len_order = len(order[list(order.keys())[0]])
-            # print("length: ", len_order)
-            # print(order)
             for j in range(len_order):
                 counter += 1
                 for k, key in enumerate(order):
-                    # print(order[key])
                     if key == "Discount":
                         try:
                             cell = ws.cell(row = counter, column = k + 1, value = float(order[key][j]))
@@ -567,7 +567,6 @@ class SalesImport_Generator:
                         cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                         cell.number_format = numbers.FORMAT_NUMBER_00
                     else:
-                        # print(key)
                         cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                     # cell = ws.cell(row = counter, column = k + 1, value = order[key][j])
                     # if key in ["Discount", "Total*"]:
@@ -628,7 +627,7 @@ class SalesImport_Generator:
         for invoice in dt:
             Inumbers.append(invoice["InvoiceNumber*"])
         integrator = Integrate_All(customer_name=customername)
-        sales_import = integrator.Integrate_final(matching_res, customername, terms, self.spreadsheet)
+        sales_import = integrator.Integrate_final(matching_res, customername, terms)
         print("==============================================================================================================")
         print("Updating SalesImport...")
         updater = SalesImport_Updater()

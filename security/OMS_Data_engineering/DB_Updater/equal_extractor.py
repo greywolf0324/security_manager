@@ -6,11 +6,13 @@ from google.oauth2 import service_account
 import gspread
 from ..sheet_reader import frame_converter
 import json
+from ...models import OMS_Customers, OMS_Inventory_List, Ocustomer_fields, Oinventory_fields
+from ..util import modelto_dataframe
 
 class Extractor:
     def __init__(self) -> None:
-        self.OMS_Customers = None
-        self.OMS_InventoryList = None
+        # self.OMS_Customers = None
+        # self.OMS_InventoryList = None
         self.length = 0
         self.vendor_customer = [
             "Buc-ee's",
@@ -28,9 +30,11 @@ class Extractor:
         ]
 
 
-    def extractor(self, matching_res, customer_name, spreadsheet):
-        self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())
-        self.OMS_InventoryList = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
+    def extractor(self, matching_res, customer_name):
+        OMS_customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
+        OMS_inventorylist = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
+        # self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())
+        # self.OMS_InventoryList = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
         
         equal_inventorylist = []
 
@@ -52,7 +56,7 @@ class Extractor:
             if matching_res[0]["Currency"][0] == "US Dollar":
                 customer_name = customer_name + " US"
 
-        payment_term = list(self.OMS_Customers[self.OMS_Customers["Name"] == customer_name]["PaymentTerm"])[0]
+        payment_term = list(OMS_customers[OMS_customers["Name"] == customer_name]["PaymentTerm"])[0]
         
         for i, content in enumerate(matching_res):
             self.length = len(content.keys())
@@ -62,13 +66,13 @@ class Extractor:
             for k, product in enumerate(list(content["Vendor Style"])[1:]):
                 if customer_name not in self.vendor_customer:
                     if str(content["Buyers Catalog or Stock Keeping #"][k + 1]) in list(self.OMS_InventoryList["SupplierProductCode"]):
-                        temp_inventory.append(list(self.OMS_InventoryList[self.OMS_InventoryList["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
+                        temp_inventory.append(list(OMS_inventorylist[OMS_inventorylist["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
                     else:
-                        temp_inventory.append(list(self.OMS_InventoryList["ProductCode"]))
+                        temp_inventory.append(list(OMS_inventorylist["ProductCode"]))
                     continue
                 else:
                     temp = []
-                    for product_ in list(self.OMS_InventoryList["ProductCode"]):
+                    for product_ in list(OMS_inventorylist["ProductCode"]):
                         if type(product) != str: product = str(int(float(product)))
                         if type(product_) != str: product_ = str(product_)
                         if product in product_:
