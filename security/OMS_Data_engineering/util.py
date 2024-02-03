@@ -1,12 +1,16 @@
 from collections import OrderedDict
 import pandas as pd
 
-def orderer(input, fields):
+def orderer(input, fields, customer_name):
     matching_res = []
 
     for matching in input:
         d = OrderedDict(matching)
 
+        # if customer_name == "MICHAELS":
+        #     for key in fields[:-1]:
+        #         d.move_to_end(key)
+        # else:
         for key in fields:
             d.move_to_end(key)
         

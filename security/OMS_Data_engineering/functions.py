@@ -33,7 +33,7 @@ filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        self.mondayoms_fetcher()
+        # self.mondayoms_fetcher()
 
         self.customer_name = ""
         self.auto_dic = []
@@ -293,7 +293,7 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res)
+        print(PO_res[0])
 
         print("==============================================================================================================")
         print("On Match Operating...")
@@ -302,7 +302,7 @@ class SalesImport_Generator:
         self.matching_res = matching_res
         # print(matching_res[0])
         uuid_code = str(uuid.uuid4())
-        matching_res = orderer(matching_res, self.osales_fieldnames)
+        matching_res = orderer(matching_res, self.osales_fieldnames, customer_name)
         
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
@@ -372,7 +372,7 @@ class SalesImport_Generator:
             elif self.customer_name == "Walmart":
                 if matching_res[0]["Currency"][0] == "US Dollar":
                     self.customer_name = self.customer_name + " US"
-
+        
         return [matching_res, OMS_equal, self.auto_dic, list(self.stocklocations["Locations"]), self.customer_name]
 
     def res_viewer(self, data, matching_res, customer_name = None, term = None):
@@ -546,7 +546,7 @@ class SalesImport_Generator:
 
         # Example decimal numbers
         # number = [0.500, 1.000, 1.500]
-        sales_import = orderer(field_adder(sales_import, self.sales_fieldnames), self.sales_fieldnames)
+        sales_import = orderer(field_adder(sales_import, self.sales_fieldnames), self.sales_fieldnames, customer_name)
         # print(sales_import[0])
         for i, key in enumerate(self.sales_fieldnames):
             cell = ws.cell(row = 1, column = i + 1, value = key)
