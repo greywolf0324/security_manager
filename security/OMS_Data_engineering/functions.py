@@ -74,12 +74,11 @@ class SalesImport_Generator:
         self.stocklocations = modelto_dataframe(OMS_Locations, Olocation_fields)
         self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
 
-    def mondayoms_fetcher(self):
+    def mondayoms_fetcher_1(self):
         apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
         monday = MondayClient(token=apiKey)
         Customers_boardID = 5790363144
-        Inventory_boardID = 5965921251
-        StockLocation_boardID = 5751350023
+        
 
         x = OMS_Customers.objects.all()
         x.delete()
@@ -102,7 +101,12 @@ class SalesImport_Generator:
                 Tags = customer["column_values"][16]["text"],
             )
             input.save()
-
+    def mondayoms_fetcher_2(self):
+        apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
+        monday = MondayClient(token=apiKey)
+        Inventory_boardID = 5965921251
+        StockLocation_boardID = 5751350023
+        
         x = OMS_Inventory_List.objects.all()
         x.delete()
         arr = monday.boards.fetch_items_by_board_id(Inventory_boardID)
