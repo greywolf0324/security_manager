@@ -967,4 +967,28 @@ $(document).ready(function () {
       }
     })
   })
+
+  $('.refresher').click(function () {
+    const formData = new FormData()
+    $.ajax({
+      url: 'refresher',
+      type: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        console.log("refreshed")
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 400) {
+          document.getElementById('csv-container').classList.toggle('d-none');
+          document.getElementById('csv-container').innerHTML = `<h5 class="text-danger">Database is not enough</h5>`
+          document.getElementById('loader2').classList.toggle('d-none');
+        }
+      }
+    })
+  })
 });

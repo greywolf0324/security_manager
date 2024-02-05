@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProcessForm
 from .OMS_Data_engineering.functions import SalesImport_Generator
@@ -64,6 +64,14 @@ def home(request):
   options = ["99 Cents Only Stores", "AIS LTD - USD", "ALBERT HARRISON", "ALLYSON PETTY", "ALLYSON PETTY", "Amazon Import - BEAZB", "Amazon Seller Central", "Anderson's Bookshop ", "Apple Annie's", "Argyle Toys", "BARGAINMAX", "BARNES & NOBLE", "Bealls", "BigLots ", "BMI", "BMS", "Bow Love", "BRANDI BRAVO", "BUC-EE'S", "CARL MILLER", "Cascade", "CASSIE GLUCK", "CASSIE GLUCK", "CHRISTINE TAYLOR", "Christophe Mennes", "CINDY HEDDAEUS", "CK", "CKEU LTD", "CM School Supply", "Conscious Discipline", "Coppel", "CORPORACION EL ROSADO S.A.", "Creative Kids Far East Inc.", "Creative Kids Online", "CRYSTAL WALKER", "CVS", "CYNTHIA FUSSY", "CYP BRANDS", "DARIUS MOSLEY", "Default Shopify Customer", "DISCOVERY CHILDREN'S MUSEUM", "DKB GBP", "DKB USD", "Dollar General", "Dollar General Domestic", "Dollar Tree", "DONITA LYNNE SMITH", "DONNA GINEVAN", "Dylan\u2019s Candy Bar", "EDUCATIONAL SERVICES", "EDUCATIONAL SERVICES", "Educators Resource", "EDUCTAORS RESOURCE", "ELEGANT MOMMY", "Elephants Trunk", "ENCORE", "ERIN DICKSON", "FABIOLA DE LEON", "Family Dollar", "FEB", "Five Below", "GEPPETTO", "Giant Tiger", "Goodthings Inc", "Grandrabbits Toy Shoppe", "Grocery Outlet", "HANA ZUCKER", "HARRODS", "HOBBYCRAFT", "Hudson", "Jennifer Welsch", "JESSICA GREEN", "Joann", "JOANNA OWEN", "JOANNA OWEN", "JOSEPH SIMPSON", "KEAGAN WICKERHAM", "KEELA LINDSAY", "KELLY PETERSON", "KOHLS", "KURTZ BROS. ", "LAURA MERRITT", "LEARNING EXPRESS", "Learning Gizmos", "Lekia", "LHU MILES", "LISA KANE CHARLES", "LOUISA ODLYZKO", "Love's Pharmacy & Gifts- Pass Christian", "MARK RYSAVY", "MARLENE WALKER", "MARSHALLS", "MCPS S EDUCATION", "MCPS S EDUCATION", "MICHAELS", "Mix Sales & Services", "Nasa Toys Panama", "NASCO", "National Energy Foundation", "NORTH EASTERN", "ORBICO", "Over The Rainbow Toys", "Pacifier", "PATRICIA BUCK", "PEEK A BOO", "Pepco", "Pepco - EUR", "Pepco - RMB", "Pepco - USD", "Pop Shelf", "Poundland - RMB", "PREMIUM", "Rainbow Resource Center", "REBECCA CLYMER", "Red Planet Group", "Rite Aid", "ROBIN MORAN", "S&S Worldwide", "SARAH ROLLINGS", "SARAH WRIGHT", "SAVANNAH KOON", "Scottwood Floral", "SHACOBY BAILEY", "Shady Maple", "SHANNA GRIFFIN", "SMF", "SMG", "Snapdoodle Toys & Games", "SUE STRUTZ", "TARGET", "TELEVIEW", "TFH USA", "The Paper Store", "THE WORKS", "THE WORKS - USD", "Therapro", "THERESA JUHAS", "THERESA JUHAS", "Timberdoodle", "TJMAXX", "TONY RUBOLINO", "TOYLAND", "Toyology", "Urbana Arcadia Toys", "VENESSA ORLUCK SACC PROGRAM", "VENESSA ORLUCK SACC PROGRAM", "VIRGINIA CATA", "VWR", "Walgreens", "Walmart Canada", "Walmart US", "WH Smith", "WHSmith High Street Limited", "Wonder Works", "WT & T", "YOLUNDA GILES"]
 
   return render(request, 'home.html', { "options": options })
+
+@login_required
+def refresher(request):
+  print("doing...")
+  generator.mondayoms_fetcher()
+  print("fetched")
+  
+  return render(request, 'home.html')
 
 @login_required
 def viewer(request):
