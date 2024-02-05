@@ -33,7 +33,7 @@ filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        # self.mondayoms_fetcher()
+        self.mondayoms_fetcher()
 
         self.customer_name = ""
         self.auto_dic = []
@@ -69,46 +69,11 @@ class SalesImport_Generator:
             "Price Total Amount": ""
         }
         self.input_item_keys = ["Buyers Catalog or Stock Keeping #", "UPC", "Vendor Style", "Retail Price", "Unit Of Measure", "Unit Price", "Quantity Ordered", "Total Case Pack Qty", "Pack Size", "Number of Pcs per Case Pack", "Number of Pcs per Inner Pack", "Number of Inner Packs", "Price Total Amount"]
-        # self.osales_fields = [item.field_name for item in Osalesimport_fields.objects.all()]
 
-        # f = open(Path(__file__).resolve().parent / "config/django-connection-1008-5f931d8f4038.json")
-        # google_json = json.load(f)
-        # credentials = service_account.Credentials.from_service_account_info(google_json)
-        # scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-        # creds_with_scope = credentials.with_scopes(scope)
-        # client = gspread.authorize(creds_with_scope)
-        # self.spreadsheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1CDnIivm8hatRQjG7nvbMxG-AuP19T-W2bNAhbFwEuE0")
-
-        # self.customers = frame_converter(self.spreadsheet.get_worksheet(0).get_all_records())
-        # self.inventory_matching = frame_converter(self.spreadsheet.get_worksheet(1).get_all_records())
-        # self.stocklocations = frame_converter(self.spreadsheet.get_worksheet(5).get_all_records())
-        # print(len(self.inventory_matching[0]))
-        # print(self.inventory_matching[0])
-
-        # invents = OMS_Inventory_List.objects.all()
-        # invent_fields = Oinventory_fields.objects.all()
-        # invent_cols = [f.name for f in OMS_Inventory_List._meta.get_fields()]
-        # dic = {}
-        # for field in invent_fields:
-        #     dic.update({
-        #         field.field_name: []
-        #     })
-        # # print(invents[0])
-        # field_object = OMS_Inventory_List._meta.get_field(invent_cols[0])
-        # print(len(invent_fields), len(invent_cols), "len")
-        # for invent in invents:
-        #     for field_name, field in zip(invent_fields, invent_cols[1:]):
-        #         dic[field_name.field_name].append(OMS_Inventory_List._meta.get_field(field).value_from_object(invent))
-
-        # self.df = pd.DataFrame(dic)
-        # print(df.iloc[0])
         self.inventory_matching = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
         self.stocklocations = modelto_dataframe(OMS_Locations, Olocation_fields)
         self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
-        # customer_fields = ["Locations"]
-        # for field in customer_fields:
-        #     x = Olocation_fields(field_name = field)
-        #     x.save()
+
     def mondayoms_fetcher(self):
         apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
         monday = MondayClient(token=apiKey)
