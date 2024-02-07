@@ -75,7 +75,8 @@ class SalesImport_Generator:
         self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
 
     def mondayoms_fetcher(self):
-        monday_pagefetcher()
+        # monday_pagefetcher()
+        pass
 
 
     def str_converter(self, input):
