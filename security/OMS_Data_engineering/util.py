@@ -96,26 +96,26 @@ def monday_pagefetcher():
     db_clearer(OMS_Inventory_List)
     db_clearer(OMS_Locations)
 
-    # num = 1
-    # arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-    
-    # customer_writer(db)
-
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-    #     print(num, "==========")
-    #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-        
-    #     customer_writer(db)
-
-    # ==================================================================================================================================
     num = 1
-    arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
+    arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     
-    inventory_writer(db)
+    customer_writer(db)
+
+    while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+        print(num, "==========")
+        num += 1
+        arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
+        db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        
+        customer_writer(db)
+
+    # ==================================================================================================================================
+    # num = 1
+    # arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
+    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    
+    # inventory_writer(db)
 
     # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 500:
     #     print(num, "==========")
