@@ -132,13 +132,13 @@ def monday_pagefetcher():
     
     location_writer(db)
 
-    while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-        print(num, "==========")
-        num += 1
-        arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
-        db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+    #     print(num, "==========")
+    #     num += 1
+    #     arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
+    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
         
-        location_writer(db)
+    #     location_writer(db)
 
 def modelto_dataframe(DB_model, Fields_model):
     DB = DB_model.objects.all()
