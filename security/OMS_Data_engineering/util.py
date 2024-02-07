@@ -93,7 +93,7 @@ def monday_pagefetcher():
     monday = MondayClient(token = apiKey)
 
     # db_clearer(OMS_Customers)
-    db_clearer(OMS_Inventory_List)
+    # db_clearer(OMS_Inventory_List)
     db_clearer(OMS_Locations)
 
     # num = 1
@@ -111,7 +111,7 @@ def monday_pagefetcher():
     #     customer_writer(db)
 
     # ==================================================================================================================================
-    num = 1
+    num = 2
     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     
