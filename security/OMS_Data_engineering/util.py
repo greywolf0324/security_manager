@@ -94,7 +94,7 @@ def monday_pagefetcher():
 
     # db_clearer(OMS_Customers)
     # db_clearer(OMS_Inventory_List)
-    db_clearer(OMS_Locations)
+    # db_clearer(OMS_Locations)
 
     # num = 1
     # arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
@@ -126,11 +126,11 @@ def monday_pagefetcher():
     #     inventory_writer(db)
 
     # ==================================================================================================================================
-    num = 1
-    arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
-    db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    # num = 1
+    # arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
+    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     
-    location_writer(db)
+    # location_writer(db)
 
     # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
     #     print(num, "==========")
