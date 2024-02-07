@@ -68,8 +68,7 @@ def home(request):
 @login_required
 def refresher(request):
   print("doing...")
-  generator.mondayoms_fetcher_1()
-  generator.mondayoms_fetcher_2()
+  generator.mondayoms_fetcher()
   print("fetched")
   
   return render(request, 'home.html')
