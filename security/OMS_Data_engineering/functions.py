@@ -26,14 +26,14 @@ from openpyxl import Workbook
 from openpyxl.styles import numbers
 from ..models import Osalesimport_fields, SalesImport_fields
 from collections import OrderedDict
-from .util import orderer, field_adder, modelto_dataframe
+from .util import orderer, field_adder, modelto_dataframe, monday_pagefetcher
 from monday import MondayClient
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        # self.mondayoms_fetcher()
+        self.mondayoms_fetcher()
 
         self.customer_name = ""
         self.auto_dic = []
@@ -74,16 +74,16 @@ class SalesImport_Generator:
         self.stocklocations = modelto_dataframe(OMS_Locations, Olocation_fields)
         self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
 
-    def mondayoms_fetcher_1(self):
-        apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
-        monday = MondayClient(token=apiKey)
+    def mondayoms_fetcher(self):
         Customers_boardID = 5790363144
-        
+        Inventory_boardID = 5829229370
+        StockLocation_boardID = 5751350023
 
         x = OMS_Customers.objects.all()
         x.delete()
-        arr = monday.boards.fetch_items_by_board_id(Customers_boardID)
-        customers = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+
+        customers = monday_pagefetcher(Customers_boardID)
+
         for customer in customers:
             input = OMS_Customers(
                 Name = customer["name"],
@@ -101,75 +101,81 @@ class SalesImport_Generator:
                 Tags = customer["column_values"][16]["text"],
             )
             input.save()
-    def mondayoms_fetcher_2(self):
-        apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
-        monday = MondayClient(token=apiKey)
-        Inventory_boardID = 5965921251
-        StockLocation_boardID = 5751350023
-        
+
         x = OMS_Inventory_List.objects.all()
         x.delete()
-        arr = monday.boards.fetch_items_by_board_id(Inventory_boardID)
-        inventories = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+
+        inventories = monday_pagefetcher(Inventory_boardID)
 
         for inventory in inventories:
             input = OMS_Inventory_List(
                 ProductCode = inventory["name"],
                 Name = inventory["column_values"][0]["text"],
-                Category = inventory["column_values"][1]["text"],
-                Brand = inventory["column_values"][2]["text"],
-                Type = inventory["column_values"][3]["text"],
-                FixedAssetType = inventory["column_values"][4]["text"],
-                CostingMethod = inventory["column_values"][5]["text"],
-                Length = inventory["column_values"][6]["text"],
-                Width = inventory["column_values"][7]["text"],
-                Height = inventory["column_values"][8]["text"],
-                Weight = inventory["column_values"][9]["text"],
-                CartonLength = inventory["column_values"][10]["text"],
-                CartonWidth = inventory["column_values"][11]["text"],
-                CartonHeight = inventory["column_values"][12]["text"],
-                CartonInnerQuantity = inventory["column_values"][13]["text"],
-                CartonQuantity = inventory["column_values"][14]["text"],
-                CartonVolume = inventory["column_values"][15]["text"],
-                WeightUnits = inventory["column_values"][16]["text"],
-                DimensionUnits = inventory["column_values"][17]["text"],
-                Barcode = inventory["column_values"][18]["text"],
-                ReorderQuantity = inventory["column_values"][20]["text"],
-                DefaultLocation = inventory["column_values"][21]["text"],
-                LastSuppliedBy = inventory["column_values"][22]["text"],
-                SupplierProductCode = inventory["column_values"][23]["text"],
-                SupplierProductName = inventory["column_values"][24]["text"],
-                SupplierFixedPrice = inventory["column_values"][25]["text"],
-                PriceTier1 = inventory["column_values"][26]["text"],
-                PriceTier2 = inventory["column_values"][27]["text"],
-                PriceTier3 = inventory["column_values"][28]["text"],
-                PriceTier4 = inventory["column_values"][29]["text"],
-                PriceTier5 = inventory["column_values"][30]["text"],
-                PriceTier6 = inventory["column_values"][31]["text"],
-                PriceTier7 = inventory["column_values"][32]["text"],
-                PriceTier8 = inventory["column_values"][33]["text"],
-                PriceTier9 = inventory["column_values"][34]["text"],
-                PriceTier10 = inventory["column_values"][35]["text"],
-                AssemblyBOM = inventory["column_values"][36]["text"],
-                AutoAssemble = inventory["column_values"][37]["text"],
-                AutoDisassemble = inventory["column_values"][38]["text"],
-                DropShip = inventory["column_values"][39]["text"],
-                DropShipSupplier = inventory["column_values"][40]["text"],
-                AverageCost = inventory["column_values"][41]["text"],
-                DefaultUnitOfMeasure = inventory["column_values"][42]["text"],
-                InventoryAccount = inventory["column_values"][43]["text"],
-                RevenueAccount = inventory["column_values"][44]["text"],
-                ExpenseAccount = inventory["column_values"][45]["text"],
-                COGSAccount = inventory["column_values"][46]["text"],
-                ProductAttributeSet = inventory["column_values"][47]["text"],
+                Type = inventory["column_values"][1]["text"],
+                Brand = inventory["column_values"][3]["text"],
+                CostingMethod = inventory["column_values"][4]["text"],
+                DefaultUnitOfMeasure = inventory["column_values"][5]["text"],
+                PurchaseTaxRule = inventory["column_values"][10]["text"],
+                SaleTaxRule = inventory["column_values"][11]["text"],
+                Status = inventory["column_values"][17]["text"],
+                DefaultLocation = inventory["column_values"][18]["text"],
+                Length = inventory["column_values"][40]["text"],
+                Width = inventory["column_values"][41]["text"],
+                Height = inventory["column_values"][42]["text"],
+                Weight = inventory["column_values"][43]["text"],
+                WeightUnits = inventory["column_values"][44]["text"],
+
+
+                # Length = inventory["column_values"][6]["text"],
+                # Width = inventory["column_values"][7]["text"],
+                # Height = inventory["column_values"][8]["text"],
+                # Weight = inventory["column_values"][9]["text"],
+                # CartonLength = inventory["column_values"][10]["text"],
+                # CartonWidth = inventory["column_values"][11]["text"],
+                # CartonHeight = inventory["column_values"][12]["text"],
+                # CartonInnerQuantity = inventory["column_values"][13]["text"],
+                # CartonQuantity = inventory["column_values"][14]["text"],
+                # CartonVolume = inventory["column_values"][15]["text"],
+                # WeightUnits = inventory["column_values"][16]["text"],
+                # DimensionUnits = inventory["column_values"][17]["text"],
+                # Barcode = inventory["column_values"][18]["text"],
+                # ReorderQuantity = inventory["column_values"][20]["text"],
+                # DefaultLocation = inventory["column_values"][21]["text"],
+                # LastSuppliedBy = inventory["column_values"][22]["text"],
+                # SupplierProductCode = inventory["column_values"][23]["text"],
+                # SupplierProductName = inventory["column_values"][24]["text"],
+                # SupplierFixedPrice = inventory["column_values"][25]["text"],
+                # PriceTier1 = inventory["column_values"][26]["text"],
+                # PriceTier2 = inventory["column_values"][27]["text"],
+                # PriceTier3 = inventory["column_values"][28]["text"],
+                # PriceTier4 = inventory["column_values"][29]["text"],
+                # PriceTier5 = inventory["column_values"][30]["text"],
+                # PriceTier6 = inventory["column_values"][31]["text"],
+                # PriceTier7 = inventory["column_values"][32]["text"],
+                # PriceTier8 = inventory["column_values"][33]["text"],
+                # PriceTier9 = inventory["column_values"][34]["text"],
+                # PriceTier10 = inventory["column_values"][35]["text"],
+                # AssemblyBOM = inventory["column_values"][36]["text"],
+                # AutoAssemble = inventory["column_values"][37]["text"],
+                # AutoDisassemble = inventory["column_values"][38]["text"],
+                # DropShip = inventory["column_values"][39]["text"],
+                # DropShipSupplier = inventory["column_values"][40]["text"],
+                # AverageCost = inventory["column_values"][41]["text"],
+                
+                # InventoryAccount = inventory["column_values"][43]["text"],
+                # RevenueAccount = inventory["column_values"][44]["text"],
+                # ExpenseAccount = inventory["column_values"][45]["text"],
+                # COGSAccount = inventory["column_values"][46]["text"],
+                # ProductAttributeSet = inventory["column_values"][47]["text"],
             )
         
             input.save()
 
         x = OMS_Locations.objects.all()
         x.delete()
-        arr = monday.boards.fetch_items_by_board_id(StockLocation_boardID)
-        locations = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        
+        locations = monday_pagefetcher(StockLocation_boardID)
+
         for location in locations:
             input = OMS_Locations(
                 Location = location["name"]

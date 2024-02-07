@@ -88,6 +88,7 @@ class PEPCO_Parsing:
                 if page_num == 0:
 
                     content = page.extract_text_simple().split("\n")
+                    cropage = page.within_bbox([page.search("PEPCO Poland")[0]['x0'], page.search("PEPCO Poland")[0]['top'], page.width, page.search("PEPCO Poland")[0]['top'] + 40])
                     if currency == "eur":
                         #title - 1
                         for i in range(13):
@@ -97,7 +98,10 @@ class PEPCO_Parsing:
                         
                         for i in range(1, 13):
                             res[f"PDF{k}"][self.keys[i]].insert(0, "")
-
+                        res[f"PDF{k}"]["names"] = [cropage.extract_text().split("\n")[0].split(" ")[0], ""]
+                        res[f"PDF{k}"]["country"] = [cropage.extract_text().split("\n")[0].split(" ")[1], ""]
+                        res[f"PDF{k}"]["postall"] = [cropage.extract_text().split("\n")[1].split(", ")[1].split(" ")[0], ""]
+                        res[f"PDF{k}"]["city"] = [cropage.extract_text().split("\n")[1].split(", ")[1].split(" ")[1], ""]
                         #title - 2
                         for i in range(4):
                             res[f"PDF{k}"][self.keys[i + 13]].append(content[i + 19].split(".")[-1][1:])

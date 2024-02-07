@@ -294,10 +294,23 @@ class Integrate_All:
                         key: element[self.add_match[key]]
                     })
             elif "Pepco" in self.customer_name:
-                for key in self.add_match:
-                    SalesImport[i].update({
-                        key: element[self.add_match[key]]
-                    })
+                SalesImport[i].update(
+                    {
+                        "ShippingAddressLine1*": element["Ship To Address 1"],
+                        "ShippingAddressLine2": element["Ship To Address 2"],
+                        "ShippingCity*": element["Ship To City"],
+                        "ShippingProvince*": element["Ship To State"],
+                        "ShippingPostcode*": element["Ship to Zip"],
+                        "ShippingCountry*": element["Ship To Country"],
+                        "ShipToCompany*": element["Ship To Name"],
+                        "BillingAddressLine1*": element["Ship To Address 1"],
+                        "BillingAddressLine2": element["Ship To Address 2"],
+                        "BillingCity*": element["Ship To City"],
+                        "BillingProvince*": element["Ship To State"],
+                        "BillingPostcode*": element["Ship to Zip"],
+                        "BillingCountry*": element["Ship To Country"],
+                    }
+                )
             else:
                 for key in self.add_match:
                     SalesImport[i].update({

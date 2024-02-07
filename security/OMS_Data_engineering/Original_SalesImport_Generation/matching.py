@@ -106,7 +106,11 @@ class PO_Match_PEPCO(PO_Match):
             "Payment Terms Net Days": "Terms of payments",
             "Number of Inner Packs": "Pack multiplier",
             "Number of Pcs per Inner Pack": "ONE",
-            "Notes/Comments": "notes"
+            "Notes/Comments": "notes",
+            "Ship To Name": "names",
+            "Ship To City": "city",
+            "Ship to Zip": "postall",
+            "Ship To Country": "country"
         }
         self.initial_part = {
             "PO Number": "",

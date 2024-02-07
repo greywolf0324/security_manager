@@ -12,7 +12,7 @@ from ..util import modelto_dataframe
 class Extractor:
     def __init__(self) -> None:
         # self.OMS_Customers = None
-        # self.OMS_InventoryList = None
+        # OMS_inventorylist = None
         self.length = 0
         self.vendor_customer = [
             "Buc-ee's",
@@ -34,7 +34,7 @@ class Extractor:
         OMS_customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
         OMS_inventorylist = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
         # self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())
-        # self.OMS_InventoryList = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
+        # OMS_inventorylist = frame_converter(spreadsheet.get_worksheet(1).get_all_records())
         
         equal_inventorylist = []
 
@@ -62,14 +62,13 @@ class Extractor:
             self.length = len(content.keys())
 
             temp_inventory = []
-
             for k, product in enumerate(list(content["Vendor Style"])[1:]):
                 if customer_name not in self.vendor_customer:
-                    if str(content["Buyers Catalog or Stock Keeping #"][k + 1]) in list(self.OMS_InventoryList["SupplierProductCode"]):
-                        temp_inventory.append(list(OMS_inventorylist[OMS_inventorylist["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
-                    else:
-                        temp_inventory.append(list(OMS_inventorylist["ProductCode"]))
-                    continue
+                    # if str(content["Buyers Catalog or Stock Keeping #"][k + 1]) in list(OMS_inventorylist["SupplierProductCode"]):
+                    #     temp_inventory.append(list(OMS_inventorylist[OMS_inventorylist["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
+                    # else:
+                    temp_inventory.append(list(OMS_inventorylist["ProductCode"]))
+                    # continue
                 else:
                     temp = []
                     for product_ in list(OMS_inventorylist["ProductCode"]):
@@ -78,7 +77,7 @@ class Extractor:
                         if product in product_:
                             temp.append(product_)
                     
-                temp_inventory.append(temp)
+                    temp_inventory.append(temp)
 
             equal_inventorylist.append(temp_inventory)
 
