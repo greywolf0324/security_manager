@@ -43,11 +43,11 @@ def monday_pagefetcher(board_id):
     arr = monday.boards.fetch_items_by_board_id(board_ids = board_id, limit = 100, page=num)
     db.extend([item for item in [item for item in arr['data']['boards'][0]['items']]])
 
-    while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-        print(num, "==========")
-        num += 1
-        arr = monday.boards.fetch_items_by_board_id(board_ids = board_id, limit = 100, page=num)
-        db.extend([item for item in [item for item in arr['data']['boards'][0]['items']]])
+    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+    #     print(num, "==========")
+    #     num += 1
+    #     arr = monday.boards.fetch_items_by_board_id(board_ids = board_id, limit = 100, page=num)
+    #     db.extend([item for item in [item for item in arr['data']['boards'][0]['items']]])
 
     return db
 
