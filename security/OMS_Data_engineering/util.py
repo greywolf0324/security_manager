@@ -111,19 +111,19 @@ def monday_pagefetcher():
     #     customer_writer(db)
 
     # ==================================================================================================================================
-    num = 3
+    num = 1
     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     
     inventory_writer(db)
 
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 500:
-    #     print(num, "==========")
-    #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
-    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 500:
+        print(num, "==========")
+        num += 1
+        arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
+        db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
         
-    #     inventory_writer(db)
+        inventory_writer(db)
 
     # ==================================================================================================================================
     # num = 1
