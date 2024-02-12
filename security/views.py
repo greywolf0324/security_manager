@@ -46,6 +46,7 @@ customer_list.sort()
 @login_required
 def home(request):
   user = request.user
+  generator.mondayoms_fetcher()
   if request.method == 'POST':
     files = request.FILES.getlist('data')
     matching_res = json.loads(request.POST['input'])
