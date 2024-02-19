@@ -5,7 +5,7 @@ app_name = 'security'
 
 urlpatterns = [
   path('', views.home, name='home'),
-  # path('parse-upload', views.parseUpload, name='parse-upload'),
+  path('parse-upload', views.parseUpload, name='parse-upload'),
   path('required-items', views.requiredItems, name='required-items'),
   path('history', views.history, name='history'),
   path('history_view/<str:creation_date>/', views.history_viewer, name='history_view'),
