@@ -42,18 +42,18 @@ def monday_pagefetcher():
         for customer in database:
             input = OMS_Customers(
                 Name = customer["name"],
-                Status = customer["column_values"][4]["text"],
-                Currency = customer["column_values"][5]["text"],
-                PaymentTerm = customer["column_values"][6]["text"],
-                TaxRule = customer["column_values"][7]["text"],
-                PriceTier = customer["column_values"][8]["text"],
-                Discount = customer["column_values"][9]["text"],
-                CreditLimit = customer["column_values"][10]["text"],
-                Carrier = customer["column_values"][12]["text"],
-                SalesRepresentative = customer["column_values"][13]["text"],
-                Location = customer["column_values"][14]["text"],
-                TaxNumber = customer["column_values"][15]["text"],
-                Tags = customer["column_values"][16]["text"],
+                Status = customer["column_values"][5]["text"],
+                Currency = customer["column_values"][6]["text"],
+                PaymentTerm = customer["column_values"][7]["text"],
+                TaxRule = customer["column_values"][8]["text"],
+                PriceTier = customer["column_values"][9]["text"],
+                Discount = customer["column_values"][10]["text"],
+                CreditLimit = customer["column_values"][11]["text"],
+                Carrier = customer["column_values"][13]["text"],
+                SalesRepresentative = customer["column_values"][14]["text"],
+                Location = customer["column_values"][15]["text"],
+                TaxNumber = customer["column_values"][16]["text"],
+                Tags = customer["column_values"][17]["text"],
             )
             input.save()
     
@@ -99,7 +99,8 @@ def monday_pagefetcher():
     num = 1
     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-    
+    print(0, "==========")
+    print(db[0])
     customer_writer(db)
 
     while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
