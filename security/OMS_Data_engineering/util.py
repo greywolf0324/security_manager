@@ -96,7 +96,7 @@ def monday_pagefetcher():
     # db_clearer(OMS_Inventory_List)
     # db_clearer(OMS_Locations)
 
-    num = 2
+    num = 3
     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     print(0, "==========")
