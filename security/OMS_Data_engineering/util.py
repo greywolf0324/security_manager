@@ -92,24 +92,24 @@ def monday_pagefetcher():
     apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
     monday = MondayClient(token = apiKey)
 
-    # db_clearer(OMS_Customers)
+    db_clearer(OMS_Customers)
     # db_clearer(OMS_Inventory_List)
     # db_clearer(OMS_Locations)
 
-    # num = 1
-    # arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-    # print(0, "==========")
-    # print(db[0])
-    # customer_writer(db)
+    num = 1
+    arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
+    db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    print(0, "==========")
+    print(db[0])
+    customer_writer(db)
 
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-    #     print(num, "==========")
-    #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+    while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+        print(num, "==========")
+        num += 1
+        arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
+        db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
         
-    #     customer_writer(db)
+        customer_writer(db)
 
     # ==================================================================================================================================
     # num = 1
