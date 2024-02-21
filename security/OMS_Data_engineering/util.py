@@ -113,7 +113,7 @@ def monday_pagefetcher():
     #     customer_writer(db)
 
     # ==================================================================================================================================
-    num = 1
+    num = 2
     print(num, "writing...")
     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
     
