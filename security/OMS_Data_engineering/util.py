@@ -2,6 +2,7 @@ from monday import MondayClient
 from collections import OrderedDict
 import pandas as pd
 from ..models import OMS_Customers, OMS_Locations, OMS_Inventory_List
+import time
 
 def orderer(input, fields, customer_name):
     matching_res = []
@@ -119,7 +120,7 @@ def monday_pagefetcher():
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     print(len(db))
     inventory_writer(db)
-
+    time.sleep(1)
     while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 50:
         print(num, "==========")
         num += 1
@@ -127,6 +128,7 @@ def monday_pagefetcher():
         db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
         
         inventory_writer(db)
+        time.sleep(1)
 
     # ==================================================================================================================================
     # num = 1
