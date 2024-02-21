@@ -115,16 +115,16 @@ def monday_pagefetcher():
     # ==================================================================================================================================
     num = 1
     print(num, "writing...")
-    arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 50, page=num)
+    arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
     
     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     print(len(db))
     inventory_writer(db)
 
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 50:
+    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 500:
     #     print(num, "==========")
     #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 50, page=num)
+    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
     #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
         
     #     inventory_writer(db)
