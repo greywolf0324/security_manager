@@ -112,7 +112,7 @@ class Original_SalesImport(models.Model):
   Buying_Party_Address_2 = models.CharField(max_length = 1000, null = True)
   Buying_Party_City = models.CharField(max_length = 1000, null = True)
   Buying_Party_State = models.CharField(max_length = 1000, null = True)
-  Buying_Party_Zip = models.BigIntegerField(null = True)
+  Buying_Party_Zip = models.CharField(max_length = 1000, null = True)
   Buying_Party_Country = models.CharField(max_length = 1000, null = True)
   Buying_Party_Contact = models.CharField(max_length = 1000, null = True)
   Ultimate_Location = models.CharField(max_length = 1000, null = True)
