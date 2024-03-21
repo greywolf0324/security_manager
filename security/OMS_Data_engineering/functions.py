@@ -172,10 +172,10 @@ class SalesImport_Generator:
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
         self.matching_res = matching_res
-        # print(matching_res[0])
+        
         uuid_code = str(uuid.uuid4())
         matching_res = orderer(matching_res, self.osales_fieldnames, customer_name)
-        
+        print(len(self.matching_cols), len(matching_res[0].keys()))
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
             for i in range(length):
@@ -186,7 +186,11 @@ class SalesImport_Generator:
 
                 obj.created = uuid_code
                 for key, vkey in zip(self.matching_cols, matching_res[k].keys()):
+                    # print(key, ":", vkey)
                     if key in ["PO_Number", "Release_Number", "Retailers_PO", "Buyers_Catalog_or_Stock_Keeping", "UPC_EAN", "Ship_To_Location", "PO_Line", "Qty_Ordered", "Vendor_Style", "Number_of_Inner_Packs", "Number_of_Pcs_per_Inner_Pack", "Qty_per_Store", "Vendor", "Ship_to_Zip", "Bill_To_Zip", "Buying_Party_Zip", "Mark_for_Postal"]:
+                        # if key in ["PO_Number", "Release_Number"]:
+                            # print(vkey, "--", matching_res[k][vkey][i], "==")
+                            
                         try:
                             matching_res[k][vkey][i] = int(float(matching_res[k][vkey][i]))
                         except:

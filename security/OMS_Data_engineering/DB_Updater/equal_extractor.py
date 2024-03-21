@@ -55,8 +55,7 @@ class Extractor:
         elif customer_name == "Walmart":
             if matching_res[0]["Currency"][0] == "US Dollar":
                 customer_name = customer_name + " US"
-        print(OMS_customers["Name"], "--")
-        print(customer_name, "--")
+
         payment_term = list(OMS_customers[OMS_customers["Name"] == customer_name]["PaymentTerm"])[0]
         
         for i, content in enumerate(matching_res):
