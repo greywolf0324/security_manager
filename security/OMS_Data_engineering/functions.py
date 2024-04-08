@@ -175,7 +175,7 @@ class SalesImport_Generator:
         
         uuid_code = str(uuid.uuid4())
         matching_res = orderer(matching_res, self.osales_fieldnames, customer_name)
-        print(len(self.matching_cols), len(matching_res[0].keys()))
+        # print(len(self.matching_cols), len(matching_res[0].keys()))
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
             for i in range(length):
