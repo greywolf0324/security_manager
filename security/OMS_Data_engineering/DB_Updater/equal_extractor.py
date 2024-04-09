@@ -30,7 +30,7 @@ class Extractor:
         ]
 
 
-    def extractor(self, matching_res, customer_name):
+    def extractor(self, customer_name, matching_res):
         OMS_customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
         OMS_inventorylist = modelto_dataframe(OMS_Inventory_List, Oinventory_fields)
         # self.OMS_Customers = frame_converter(spreadsheet.get_worksheet(0).get_all_records())

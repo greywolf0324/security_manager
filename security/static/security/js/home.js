@@ -510,7 +510,7 @@ $(document).ready(function () {
     const keys = ["Buyers Catalog or Stock Keeping #", "Vendor Style", "Product/Item Description", "Unit of Measure", "StockLocation", "Vendor Style from OMS_equal"]
     const customername = data5
     const customernameoptions = customername === "Pepco" ? "<select class='w-75 form-select'><option>Pepco - EUR</option><option>Pepco - CNY</option><option>Pepco - USD</option></select>" : `<select class='w-75 form-select'><option>${customername}</option></select>`
-
+    
     var termsfrompo = data[0]["Payment Terms Net Days"][0] || ""
     // if (termsfrompo !== ""){
     //   for (var key in term_options) {
@@ -556,6 +556,7 @@ $(document).ready(function () {
     //               </div>
     //             </div>`;
     // $(selector1).html(head1)
+    console.log("==>", data3)
     const table_len = data.length
     const sku_keyname = customerStyle(customername)
     var tables = `
@@ -587,6 +588,7 @@ $(document).ready(function () {
               var selectedValue = data3[data[i][sku_keyname][index]]
               var determinevalue = data3[data[i][sku_keyname][index]]
             }
+            console.log("-->", selectedValue)
             const hasValue = options["sku_options"][i][index - 1].findIndex(v => v == selectedValue) !== -1
             return `<td contenteditable="true"><select class="form-select step-2-vendor-style" ${hasValue ? "disabled" : ""} data-hasvalue="${hasValue}"><option value="" disabled selected>Select Vendor Style</option>${options["sku_options"][i][index - 1].map(option => `<option value="${option}" ${option == selectedValue ? "selected" : ""}>${option}</option>`)}</select></td>`;
           }
@@ -700,6 +702,7 @@ $(document).ready(function () {
         }
         $("#customize_box_title").html(data5)
         document.getElementById('step_2_content').classList.toggle('d-none');
+        
         displayTable(data1, "#table-view", "#table-header-view", { "sku_options": data2.OMS_Inventory_List, "uom_options": uoms, "location_options": locations }, data2.OMS_Payment_term, data3, data4, data5)
         document.getElementById('loader1').classList.toggle('d-none');
         let isCompleted = true

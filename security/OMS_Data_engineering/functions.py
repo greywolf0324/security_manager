@@ -91,6 +91,7 @@ class SalesImport_Generator:
         if exists(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv"):
             
             auto_df = pd.read_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
+            print(auto_df)
             temp = []
             for item in auto_df["PO"]:
                 if type(item) == float:
@@ -234,9 +235,9 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("tracking equal things...")
         extract = Extractor()
-        OMS_equal = extract.extractor(matching_res, customer_name)
+        OMS_equal = extract.extractor(customer_name, matching_res)
         self.auto_dic = AutoDB().DB_tester(customer_name, matching_res)
-
+        print(self.auto_dic)
         print("==============================================================================================================")
         print("Displaying...")
         if (self.customer_name == "Pepco" or self.customer_name == "Poundland") and matching_res[0]["Currency"][0] == "CNY":

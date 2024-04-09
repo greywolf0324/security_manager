@@ -260,7 +260,7 @@ def POconversion(request):
   customername = request.GET.get('customer-name', customer_list[0])
   conversion = generator.auto_matching_DB_viewer(customername)
   if type(conversion) != str:
-    
+    print(conversion)
     combined_values = zip(conversion["PO"], conversion["UOM"], conversion["LOCATION"], conversion["TARGET"])
     
     uom_options = conversion["UOM_options"]

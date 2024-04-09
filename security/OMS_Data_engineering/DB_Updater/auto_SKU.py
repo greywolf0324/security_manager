@@ -30,15 +30,18 @@ class AutoDB:
         else:
             self.auto_dic = {}
             auto_df = pd.read_csv(Path(__file__).resolve().parent.parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
-
+            print(list(auto_df["PO"])[0], type(list(auto_df["PO"])[0]), "--")
             if customer_name in self.SKU_list:
                 for po in matching_res:
                     for sku in list(po["Vendor Style"])[1:]:
                         try:
-                            sku_con = int(float(sku))
+                            if type(list(auto_df["PO"])[0]) == str:
+                                sku_con = str(int(float(sku)))
+                            else:
+                                sku_con = int(float(sku))
                         except:
                             sku_con = str(sku)
-
+                        print(sku_con, type(sku_con))
                         if sku_con in list(auto_df["PO"]):
                             self.auto_dic.update(
                                 {
