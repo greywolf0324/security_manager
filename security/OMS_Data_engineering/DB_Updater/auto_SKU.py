@@ -30,7 +30,7 @@ class AutoDB:
         else:
             self.auto_dic = {}
             auto_df = pd.read_csv(Path(__file__).resolve().parent.parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
-            print(list(auto_df["PO"])[0], type(list(auto_df["PO"])[0]), "--")
+            # print(list(auto_df["PO"])[0], type(list(auto_df["PO"])[0]), "--")
             if customer_name in self.SKU_list:
                 for po in matching_res:
                     for sku in list(po["Vendor Style"])[1:]:
