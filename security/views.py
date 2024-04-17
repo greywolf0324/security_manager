@@ -38,7 +38,8 @@ customer_list = [
     "Hobby Lobby",
     "buy buy BABY",
     # "Lekia",
-    "Dollar Tree Stores"
+    "Dollar Tree Stores",
+    "BJ's Wholesale Club. Inc"
 ]
 
 customer_list.sort()
@@ -66,13 +67,13 @@ def home(request):
 
   return render(request, 'home.html', { "options": options })
 
-@login_required
-def refresher(request):
-  print("doing...")
-  generator.mondayoms_fetcher()
-  print("fetched")
+# @login_required
+# def refresher(request):
+#   print("doing...")
+#   generator.mondayoms_fetcher()
+#   print("fetched")
   
-  return render(request, 'home.html')
+#   return render(request, 'home.html')
 
 @login_required
 def viewer(request):

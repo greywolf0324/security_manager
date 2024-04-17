@@ -54,4 +54,4 @@ def customer_fields_updater():
     # print(df.head())
     df.to_csv(Path(__file__).resolve().parent.parent / "config/customer_fields.csv")
 
-customer_fields_updater()
+# customer_fields_updater()

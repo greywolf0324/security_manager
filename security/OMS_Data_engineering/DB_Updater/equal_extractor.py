@@ -14,7 +14,7 @@ class Extractor:
         # self.OMS_Customers = None
         # OMS_inventorylist = None
         self.length = 0
-        self.vendor_customer = [
+        self.SKU_list = [
             "Buc-ee's",
             "Family Dollar",
             "Gabe's",
@@ -26,7 +26,8 @@ class Extractor:
             "Meijers",
             "MICHAELS",
             'Fred Meyer',
-            "buy buy BABY"
+            "buy buy BABY",
+            "BJ's Wholesale Club. Inc"
         ]
 
 
@@ -63,7 +64,7 @@ class Extractor:
 
             temp_inventory = []
             for k, product in enumerate(list(content["Vendor Style"])[1:]):
-                if customer_name not in self.vendor_customer:
+                if customer_name not in self.SKU_list:
                     # if str(content["Buyers Catalog or Stock Keeping #"][k + 1]) in list(OMS_inventorylist["SupplierProductCode"]):
                     #     temp_inventory.append(list(OMS_inventorylist[OMS_inventorylist["SupplierProductCode"] == str(content["Buyers Catalog or Stock Keeping #"][k + 1])]["ProductCode"]))
                     # else:

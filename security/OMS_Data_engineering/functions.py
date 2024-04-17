@@ -1,7 +1,7 @@
 import datetime
 import uuid
-from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing, Byebye_Parsing, DollarTree_Parsing
-from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia, PO_Match_ByebyeBaby, PO_Match_DollarTree
+from .OCR.parse import BUCEE_Parsing, PEPCO_Parsing, PEPCO_Add_Parsing, Walgreens_Parsing, Dollarama_Parsing, Family_Dollar_Parsing, Gabes_Parsing, TEDI_Parsing, Walmart_Parsing, Ollies_Parsing, ORBICO_Parsing, EXCEL_Parsing, CVS_Parsing, GiantTiger_Parsing, HOBBYlobby_Parsing, Lekia_Parsing, Byebye_Parsing, DollarTree_Parsing, BJwholesales_Parsing
+from .Original_SalesImport_Generation.matching import PO_Match_BUCEE, PO_Match_PEPCO, PO_Match_PEPCO_Add, PO_Match_Walgreens, PO_Match_Dollarama, PO_Match_Family_Dollar, PO_Match_Gabes, PO_Match_TEDI, PO_Match_Walmart, PO_Match_Ollies, PO_Match_ORBICO, PO_Match_EXCEL, PO_Match_CVS, PO_Match_GiantTiger, PO_Match_HOBBYlobby, PO_Match_Lekia, PO_Match_ByebyeBaby, PO_Match_DollarTree, PO_Match_BJwholesales
 from .DB_Updater.equal_extractor import Extractor
 from .DB_Updater.customers_updater import customer_fields_updater
 from .DB_Updater.auto_SKU import AutoDB
@@ -26,14 +26,15 @@ from openpyxl import Workbook
 from openpyxl.styles import numbers
 from ..models import Osalesimport_fields, SalesImport_fields
 from collections import OrderedDict
-from .util import orderer, field_adder, modelto_dataframe, monday_pagefetcher
+from .util import orderer, field_adder, modelto_dataframe
 from monday import MondayClient
+import requests
 
 filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        self.mondayoms_fetcher()
+        self.monday_pagefetcher()
 
         self.customer_name = ""
         self.auto_dic = []
@@ -74,10 +75,158 @@ class SalesImport_Generator:
         self.stocklocations = modelto_dataframe(OMS_Locations, Olocation_fields)
         self.customers = modelto_dataframe(OMS_Customers, Ocustomer_fields)
 
-    def mondayoms_fetcher(self):
-        # monday_pagefetcher()
-        pass
+    # def mondayoms_fetcher(self):
+    #     monday_pagefetcher()
+    #     pass
+    def monday_pagefetcher(self):
+        Customers_boardID = 5790363144
+        Inventory_boardID = 5829229370
+        StockLocation_boardID = 5751350023
+        
+        def customer_writer(database):
+            for customer in database:
+                input = OMS_Customers(
+                    Name = customer["name"],
+                    Status = customer["column_values"][5]["text"],
+                    Currency = customer["column_values"][6]["text"],
+                    PaymentTerm = customer["column_values"][7]["text"],
+                    TaxRule = customer["column_values"][8]["text"],
+                    PriceTier = customer["column_values"][9]["text"],
+                    Discount = customer["column_values"][10]["text"],
+                    CreditLimit = customer["column_values"][11]["text"],
+                    Carrier = customer["column_values"][13]["text"],
+                    SalesRepresentative = customer["column_values"][14]["text"],
+                    Location = customer["column_values"][15]["text"],
+                    TaxNumber = customer["column_values"][16]["text"],
+                    Tags = customer["column_values"][17]["text"],
+                )
+                input.save()
+        
+        def inventory_writer(database):
+            for inventory in database:
+                input = OMS_Inventory_List(
+                    ProductCode = inventory["name"],
+                    Name = inventory["column_values"][1]["text"],
+                    Type = inventory["column_values"][2]["text"],
+                    # Brand = inventory["column_values"][3]["text"],
+                    CostingMethod = inventory["column_values"][5]["text"],
+                    DefaultUnitOfMeasure = inventory["column_values"][6]["text"],
+                    PurchaseTaxRule = inventory["column_values"][11]["text"],
+                    SaleTaxRule = inventory["column_values"][12]["text"],
+                    Status = inventory["column_values"][18]["text"],
+                    DefaultLocation = inventory["column_values"][19]["text"],
+                    Length = inventory["column_values"][41]["text"],
+                    Width = inventory["column_values"][42]["text"],
+                    Height = inventory["column_values"][43]["text"],
+                    Weight = inventory["column_values"][44]["text"],
+                    WeightUnits = inventory["column_values"][45]["text"],
+                )
+                input.save()
 
+        def location_writer(database):
+            for location in database:
+                input = OMS_Locations(
+                    Location = location["name"]
+                )
+                input.save()
+
+        def db_clearer(OMS):
+            x = OMS.objects.all()
+            x.delete()
+
+        page_count = 50    
+        apiUrl = "https://api.monday.com/v2"
+        apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
+        header = {"Authorization": apiKey}
+        
+        # monday = MondayClient(token = apiKey)
+
+
+        # db_clearer(OMS_Customers)
+        db_clearer(OMS_Inventory_List)
+        # db_clearer(OMS_Locations)
+
+        # num = 1
+        # arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
+        # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        # print(0, "==========")
+        # print(db[0])
+        # customer_writer(db)
+
+        # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+        #     print(num, "==========")
+        #     num += 1
+        #     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
+        #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+            
+        #     customer_writer(db)
+
+        # ==================================================================================================================================
+        
+        init_query = f'{{boards (ids: 5829229370) {{name items_count description items_page(limit: {page_count}) {{cursor items{{name column_values{{id value text type}}}}}}}} }}'
+        data = {'query': init_query}
+
+        r = requests.post(url=apiUrl, headers=header, json=data)
+        res = json.loads(r.text)
+
+        cursor_key = res['data']['boards'][0]['items_page']['cursor']
+        items = res['data']['boards'][0]['items_page']['items']
+
+        # num = 1
+        # print(num, "writing...")
+        # arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
+        # print("--", arr)
+        # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        # print(len(db))
+        inventory_writer(items)
+
+        count = len(items)
+        while count == page_count:
+            # print(num, "==========")
+            # num += 1
+            # arr = monday.boards.fetch_items_by_board_id(board_ids = Inventory_boardID, limit = 500, page=num)
+            # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+            print("writing...")
+            query = """query {
+                                next_items_page (limit: 50, cursor: "%s") {
+                                    cursor
+                                    items {
+                                    id
+                                    name
+                                    column_values{
+                                        id
+                                        value
+                                        type
+                                        text
+                                    }
+                                    }
+                                }
+                                }""" % cursor_key
+
+            data = {'query' : query}
+
+            r = requests.post(url=apiUrl, json=data, headers=header)
+
+            res = json.loads(r.text)
+            cursor_key = res['data']['next_items_page']['cursor']
+            items = res['data']['next_items_page']['items']
+            count = len(items)
+            inventory_writer(items)
+
+        # ==================================================================================================================================
+        # num = 1
+        # arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
+        # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+        
+        # location_writer(db)
+
+        # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
+        #     print(num, "==========")
+        #     num += 1
+        #     arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
+        #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
+            
+        #     location_writer(db)
 
     def str_converter(self, input):
         temp = []
@@ -156,7 +305,7 @@ class SalesImport_Generator:
         print("==============================================================================================================")
         print("CustomerFields Updating...")
 
-        customer_fields_updater()
+        # customer_fields_updater()
 
         self.customer_name = customer_name
         self.uploadFile(data)
@@ -166,17 +315,19 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        # print(PO_res[0])
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
+        print(matching_res)
         self.matching_res = matching_res
         
         uuid_code = str(uuid.uuid4())
         matching_res = orderer(matching_res, self.osales_fieldnames, customer_name)
         # print(len(self.matching_cols), len(matching_res[0].keys()))
+        
         for k, _ in enumerate(matching_res):
             length = len(matching_res[k][list(matching_res[k].keys())[0]])
             for i in range(length):
@@ -206,9 +357,10 @@ class SalesImport_Generator:
                             matching_res[k][vkey][i] = None
 
                     elif key in ["PO_Date","Requested_Delivery_Date","Delivery_Dates","Ship_Dates","Cancel_Date"]:
-                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar", "Dollar Tree Stores"]:
+                        if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar", "Dollar Tree Stores", "BJ's Wholesale Club. Inc"]:
                             try:
                                 temp = matching_res[k][vkey][i].split("/")
+                                print(temp)
                                 matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
                                 matching_res[k][vkey][i] = None

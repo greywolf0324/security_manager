@@ -1247,3 +1247,67 @@ class DollarTree_Parsing:
                     break
             
         return res
+    
+class BJwholesales_Parsing:
+    def __init__(self, customer_name) -> None:
+        pass
+
+    def PO_parser(self, paths: list, currency):
+        res = {}
+
+        for k, path in enumerate(paths):
+            res[f"PDF{k}"] = {}
+            pdf = pdfplumber.open(path)
+            
+            for i, page in enumerate(pdf.pages):
+                res[f"PDF{k}"][f"page{i}"] = {}
+
+                order_info = page.within_bbox([page.search("ORDER INFORMATION")[0]['x0'], page.search("ORDER INFORMATION")[0]['top'], page.search("SUPPLIER INFORMATION")[0]['x0'], page.search("TOTAL WEIGHT")[0]['bottom']]).extract_text().split("\n")
+                res[f"PDF{k}"][f"page{i}"]["purchase_order_no"] = order_info[2].split(": ")[1]
+                res[f"PDF{k}"][f"page{i}"]["order_date"] = order_info[3].split(": ")[1]
+                res[f"PDF{k}"][f"page{i}"]["payment_terms"] = order_info[7].split(": ")[1]
+                res[f"PDF{k}"][f"page{i}"]["delivery_date"] = order_info[10].split(": ")[1]
+                res[f"PDF{k}"][f"page{i}"]["ship_window_ship"] = order_info[11].split(": ")[1].split("-")[0]
+                res[f"PDF{k}"][f"page{i}"]["ship_window_cancel"] = order_info[11].split(": ")[1].split("-")[1]
+                res[f"PDF{k}"][f"page{i}"]["total_volume"] = order_info[13].split(": ")[1]
+                res[f"PDF{k}"][f"page{i}"]["total_weight"] = order_info[14].split(": ")[1]
+
+                supplier_info = page.within_bbox([page.search("SUPPLIER INFORMATION")[0]['x0'], page.search("SUPPLIER INFORMATION")[0]['top'], page.search("SHIP MERCHANDISE TO")[0]['x0'], page.search("SUPPLIER NO")[0]['top']]).extract_text().split("\n")
+                res[f"PDF{k}"][f"page{i}"]["supplier_information"] = "\n".join(supplier_info[1:])
+
+                shipto_info = page.within_bbox([page.search("SHIP MERCHANDISE TO")[0]['x0'], page.search("SHIP MERCHANDISE TO")[0]['top'], page.search("INVOICE TO")[0]['x0'], page.search("SUPPLIER FAX")[0]['top']]).extract_text().split("\n")
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_name"] = shipto_info[1]
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_add"] = shipto_info[3]
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_city"] = shipto_info[4].split(" ")[0]
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_state"] = shipto_info[4].split(" ")[1]
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_zip"] = shipto_info[4].split(" ")[2]
+                res[f"PDF{k}"][f"page{i}"]["ship_merchandise_to_country"] = shipto_info[4].split(" ")[3]
+
+                invoiceto_info = page.within_bbox([page.search("INVOICE TO")[0]['x0'], page.search("INVOICE TO")[0]['top'], page.width, page.search("SUPPLIER FAX")[0]['top']]).extract_text().split("\n")
+                res[f"PDF{k}"][f"page{i}"]["invoice_to_name"] = invoiceto_info[1]
+                res[f"PDF{k}"][f"page{i}"]["invoice_to_city"] = invoiceto_info[3].split(", ")[0]
+                res[f"PDF{k}"][f"page{i}"]["invoice_to_state"] = invoiceto_info[3].split(", ")[1].split(" ")[0]
+                res[f"PDF{k}"][f"page{i}"]["invoice_to_zip"] = invoiceto_info[3].split(", ")[1].split(" ")[1]
+
+                # producttable_info
+                vlines = [page.search("Line")[0]['x0'], page.search("Description")[0]['x0'], page.search("ITEM NUM")[0]['x0'], page.search("UPC")[0]['x0'], page.search("Vend Item Num")[0]['x0'], page.search("QTY UOM")[0]['x0'], page.search("Case Pack")[0]['x0'], page.search("Deliv Date")[0]['x0'], page.search("Unit Price")[0]['x0'], page.search("Ext PriceCur.")[0]['x0'] - 5, page.search("Ext PriceCur.")[0]['x1'] + 5]
+                hlines = [page.search("Line")[0]['top'] - 2, page.search("Line")[0]['bottom'], page.search("Line")[0]['bottom'] + 20]
+
+                cropage = page.within_bbox([vlines[0], hlines[0], vlines[-1], hlines[-1]])
+
+                producttable_info = cropage.extract_table(dict(
+                    explicit_vertical_lines = vlines,
+                    explicit_horizontal_lines = hlines
+                ))
+                
+                res[f"PDF{k}"][f"page{i}"]["Description"] = producttable_info[2][1]
+                res[f"PDF{k}"][f"page{i}"]["item_num"] = producttable_info[2][2]
+                res[f"PDF{k}"][f"page{i}"]["upc_num"] = producttable_info[2][3]
+                res[f"PDF{k}"][f"page{i}"]["vend_item_num"] = producttable_info[2][4]
+                res[f"PDF{k}"][f"page{i}"]["qty_uom"] = producttable_info[2][5].split(" ")[0]
+                res[f"PDF{k}"][f"page{i}"]["casepack_qty"] = producttable_info[2][6]
+                res[f"PDF{k}"][f"page{i}"]["deliv_date"] = producttable_info[2][7]
+                res[f"PDF{k}"][f"page{i}"]["unitprice_per_uom"] = producttable_info[2][8].split(" ")[0]
+                res[f"PDF{k}"][f"page{i}"]["ext_price"] = producttable_info[2][9].split(" ")[0].replace(",", "")
+
+        return res

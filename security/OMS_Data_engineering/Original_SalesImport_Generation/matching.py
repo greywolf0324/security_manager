@@ -2624,3 +2624,118 @@ class PO_Match_DollarTree(PO_Match):
                     del item[key]
 
         return output
+    
+class PO_Match_BJwholesales(PO_Match):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.PO_keys = []
+        self.length = 2
+        self.pair = {
+            "PO Number": "purchase_order_no",
+            "PO Date": "order_date",
+            "Ship Dates": "ship_window_ship",
+            "Cancel Date": "ship_window_cancel",
+            "Qty Ordered": "",
+            # "Unit of Measure": "",
+            "Unit Price": "unitprice_per_uom",
+            "Payment Terms Net Days": "payment_terms",
+            "UPC/EAN": "upc_num",
+            "Vendor Style": "vend_item_num",
+            "Product/Item Description": "Description",
+            "Ship To Name": "ship_merchandise_to_name",	
+            "Ship To Address 1": "ship_merchandise_to_add",	
+            "Ship To City": "ship_merchandise_to_city",	
+            "Ship To State": "ship_merchandise_to_state",	
+            "Ship to Zip": "ship_merchandise_to_zip",	
+            "Ship To Country": "ship_merchandise_to_country",
+            "Bill To Name": "invoice_to_name",
+            "Bill To City": "invoice_to_city",
+            "Bill To State": "invoice_to_state",
+            "Bill To Zip": "invoice_to_zip",
+        }
+
+        f = open(Path(__file__).resolve().parent.parent / "config/field_names_SalesImport_original.json")
+        self.field_names = json.load(f)
+        self.field_names_temp = []
+
+        for item in self.field_names:
+            self.field_names_temp.append(item) 
+
+        for item in self.field_names_temp:
+            if item in list(self.pair.keys()):
+                (self.field_names).remove(item)
+
+    def match_plain(self, input):
+        res = []
+
+        for i, _ in enumerate(input):
+            pdf = input[f"PDF{i}"]
+
+            for j, _ in enumerate(pdf):
+                res.append(pdf[f"page{j}"])
+
+        return res
+    
+    def match_same(self, input):
+        self.initial_part_init()
+        
+        for key in self.pair:
+            if key in ["PO Number"]:
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append(input[self.pair[key]])
+
+                input["Retailers PO"] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input["Retailers PO"].append("")
+
+                del input[self.pair[key]]
+            elif key in ["PO Date", "Ship Dates", "Cancel Date", "Payment Terms Net Days", "Ship To Name", "Ship To Address 1", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Bill To Name", "Bill To City", "Bill To State", "Bill To Zip"]:
+                input[key] = [input[self.pair[key]]]
+
+                for _ in range(self.length - 1): 
+                    input[key].append("")
+                
+                del input[self.pair[key]]
+            elif key in ["Qty Ordered", "Unit Price", "UPC/EAN", "Vendor Style", "Product/Item Description", "Unit of Measure"]:
+                input[key] = [""]
+
+                for i in range(self.length - 1):
+                    if key == "Unit of Measure":
+                        input[key].append("Each")
+                    elif key == "Qty Ordered":
+                        input[key].append(int(input["qty_uom"][:-2]) * int(input["casepack_qty"]))
+
+                        del input["qty_uom"]
+                        del input["casepack_qty"]
+                    else:
+                        input[key].append(input[self.pair[key]])
+
+                        del input[self.pair[key]]
+
+        return input
+    
+    def match_final(self, PO_res):
+        output = self.match_plain(PO_res)
+        
+        self.PO_keys = list(output[0].keys())
+        self.PO_inherited = []
+        for key in self.pair:
+            self.PO_inherited.append(self.pair[key])
+        
+        self.PO_inherited.append("qty_uom")
+        self.PO_inherited.append("casepack_qty")
+
+        for content in output:
+            item = self.match_same(content)
+            item = self.match_formula(item)
+
+            for key in self.PO_keys:
+                if key not in self.PO_inherited:
+                    del item[key]
+        df = pd.DataFrame(output[0])
+        df.to_csv("temp.csv", index=False)
+        return output

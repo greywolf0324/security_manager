@@ -8,7 +8,7 @@ class AutoDB:
         self.auto_dic = {}
         self.length = 0
         self.customer_name = ""
-        self.SKU_list = ["Buc-ee's", "Gabe's", "Family Dollar", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer", "buy buy BABY"]
+        self.SKU_list = ["Buc-ee's", "Gabe's", "Family Dollar", "Walmart", "Big Lots Stores", "TARGET", "Five Below", "Lekia", "Meijers", "MICHAELS", "Fred Meyer", "buy buy BABY", "BJ's Wholesale Club. Inc"]
         self.customer_list = ["Pepco", "Dollarama", "Poundland", "Walgreens", "Ollies", "TEDI", "CVS", "Giant Tiger", "Hobby Lobby"]
 
     def DB_tester(self, customer_name, matching_res):

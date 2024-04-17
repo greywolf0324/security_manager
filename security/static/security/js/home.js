@@ -353,7 +353,8 @@ $(document).ready(function () {
       "Meijers",
       "MICHAELS",
       "Fred Meyer",
-      "buy buy BABY"
+      "buy buy BABY",
+      "BJ's Wholesale Club. Inc"
     ];
     return styles.includes(name) ? "Vendor Style" : "Buyers Catalog or Stock Keeping #"
   }

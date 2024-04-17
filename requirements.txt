@@ -6,3 +6,4 @@ pdfplumber
 google-api-python-client
 gspread
 CurrencyConverter
+monday
