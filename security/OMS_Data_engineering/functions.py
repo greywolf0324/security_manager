@@ -34,7 +34,7 @@ filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        self.monday_pagefetcher()
+        # self.monday_pagefetcher()
 
         self.customer_name = ""
         self.auto_dic = []
