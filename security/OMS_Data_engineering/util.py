@@ -131,41 +131,23 @@ def monday_pagefetcher():
     apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMxNTY0MDE4NiwiYWFpIjoxMSwidWlkIjo1MzU2MTE3OSwiaWFkIjoiMjAyNC0wMS0zMFQxMzowMToyOC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTQwOTEyNjQsInJnbiI6InVzZTEifQ.8C67Rzk5p64CozxxpGB-bbTn5BPv27TwF7dQ-3bTTuk"
     header = {"Authorization": apiKey}
     
-    # monday = MondayClient(token = apiKey)
-
-
-    db_clearer(OMS_Customers)
+    # db_clearer(OMS_Customers)
     # db_clearer(OMS_Inventory_List)
     # db_clearer(OMS_Locations)
 
-    res = init_querier(Customers_boardID)
-    cursor_key = res['data']['boards'][0]['items_page']['cursor']
-    items = res['data']['boards'][0]['items_page']['items']
-    customer_writer(items)
+    # res = init_querier(Customers_boardID)
+    # cursor_key = res['data']['boards'][0]['items_page']['cursor']
+    # items = res['data']['boards'][0]['items_page']['items']
+    # customer_writer(items)
 
-    count = len(items)
-    while count == page_count:
-        print("writing...")
-        res = querier(cursor_key)
-        cursor_key = res['data']['next_items_page']['cursor']
-        items = res['data']['next_items_page']['items']
-        count = len(items)
-        customer_writer(items)
-
-    # num = 1
-    # arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-    # print(0, "==========")
-    # print(db[0])
-    # customer_writer(db)
-
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-    #     print(num, "==========")
-    #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = Customers_boardID, limit = 100, page=num)
-    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-        
-    #     customer_writer(db)
+    # count = len(items)
+    # while count == page_count:
+    #     print("writing...")
+    #     res = querier(cursor_key)
+    #     cursor_key = res['data']['next_items_page']['cursor']
+    #     items = res['data']['next_items_page']['items']
+    #     count = len(items)
+    #     customer_writer(items)
 
     # ==================================================================================================================================
     
@@ -184,19 +166,20 @@ def monday_pagefetcher():
     #     inventory_writer(items)
 
     # ==================================================================================================================================
-    # num = 1
-    # arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
-    # db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
     
-    # location_writer(db)
+    # res = init_querier(StockLocation_boardID)
+    # cursor_key = res['data']['boards'][0]['items_page']['cursor']
+    # items = res['data']['boards'][0]['items_page']['items']
+    # location_writer(items)
 
-    # while len([item for item in [item for item in arr['data']['boards'][0]['items']]]) == 100:
-    #     print(num, "==========")
-    #     num += 1
-    #     arr = monday.boards.fetch_items_by_board_id(board_ids = StockLocation_boardID, limit = 100, page=num)
-    #     db = [item for item in [item for item in arr['data']['boards'][0]['items']]]
-        
-    #     location_writer(db)
+    # count = len(items)
+    # while count == page_count:
+    #     print("writing...")
+    #     res = querier(cursor_key)
+    #     cursor_key = res['data']['next_items_page']['cursor']
+    #     items = res['data']['next_items_page']['items']
+    #     count = len(items)
+    #     location_writer(items)
 
 def modelto_dataframe(DB_model, Fields_model):
     DB = DB_model.objects.all()
