@@ -71,7 +71,7 @@
               {% csrf_token %}
               <label for="upload_image_background" class="w-100">
                 <fieldset class="upload_dropZone text-center p-4 bg-transparent flex justify-center items-center"
-                  style="cursor: pointer;">
+                  style="cursor: pointer; ">
   
                   <i class="fas fs-40px fa-upload text-gray"></i>
                   <p class="medium fw-bold mt-2 mb-0 text-gray"> Drop files here or click to upload.</p>
@@ -81,7 +81,7 @@
                     multiple type="file"
                     accept=".pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv" />
   
-                  <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0"></div>
+                  <div class="upload_gallery d-flex flex-wrap justify-content-center gap-3 mb-0" style="overflow: auto; height: 100px; margin-right: 10px"></div>
   
                 </fieldset>
   
