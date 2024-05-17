@@ -623,7 +623,7 @@ $(document).ready(function () {
             </tr>`
       })
         }
-  `
+      `
     }
     tables += '</tbody>'
     $(selector).html(tables)

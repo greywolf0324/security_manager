@@ -168,13 +168,12 @@ class PEPCO_Parsing:
                     content = page.extract_text_simple().split("\n")
 
                     if currency == "eur":
-                        res[f"PDF{k}"][self.keys[25]].append(" ".join(content[6].split(" ")[3]))
+                        res[f"PDF{k}"][self.keys[25]].append(" ".join(content[6].split(" ")[-2]))
                         res[f"PDF{k}"][self.keys[25]].insert(1, "")
 
                         res[f"PDF{k}"][self.keys[26]].append(content[8].split(".")[-1][1:])
                         res[f"PDF{k}"][self.keys[26]].insert(0, "")
-
-                        res[f"PDF{k}"]["PO_currency"].append(content[6].split(" ")[4])
+                        res[f"PDF{k}"]["PO_currency"].append(content[6].split(" ")[-1])
                         res[f"PDF{k}"]["PO_currency"].append("")
 
                     if currency == "usd":
