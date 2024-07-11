@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'securitydbmanage.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'security_db',
+        'NAME': 'security_DB',
         'USER': 'postgres',
         'PASSWORD': 'philgrey',
         'HOST': 'localhost',

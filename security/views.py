@@ -102,14 +102,14 @@ def auto_matching_DB_viewer(request):
 def parseUpload(request):
   files = request.FILES.getlist('data')
   customer_name = request.POST['customername']
-
+  print("this: ", files[0])
   if customer_name == "Pepco":
     currency = request.POST['currency']
     res = generator.parseUpload(files, customer_name = customer_name, currency = currency)
     
   else:
     res = generator.parseUpload(files, customer_name = customer_name)
-
+  return
   return JsonResponse({ "data1": json.dumps(res[0]), "data2": json.dumps(res[1]), "data3": json.dumps(res[2]), "data4": json.dumps(res[3]), "data5": json.dumps(res[4]) }, status=200)
 
 @login_required
