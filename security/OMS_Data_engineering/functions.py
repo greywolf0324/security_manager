@@ -91,7 +91,7 @@ class SalesImport_Generator:
         if exists(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv"):
             
             auto_df = pd.read_csv(Path(__file__).resolve().parent / f"config/AutoFill_DB/{customer_name}.csv", index_col = False)
-            print(auto_df)
+
             temp = []
             for item in auto_df["PO"]:
                 if type(item) == float:
@@ -116,9 +116,8 @@ class SalesImport_Generator:
                     vendor_options.update({
                         str(sku): list(self.inventory_matching["ProductCode"])
                     })
-            print("________________________")
+
             target = self.str_converter(auto_df["Vendor Style from OMS_equal"])
-            print("========================")
 
             return {"PO": list(auto_df["PO"]), "UOM": list(auto_df["Unit of Measure"]), "LOCATION": list(auto_df["StockLocation"]), "TARGET": target, "UOM_options": UOM_options, "location_options": location_options, "vendor_options": vendor_options}
         
@@ -166,13 +165,13 @@ class SalesImport_Generator:
         print("On PDF parsing...")
         parser = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].parser)(customer_name)
         PO_res = parser.PO_parser(paths, currency)
-        print(PO_res)
+        # print(PO_res)
 
         print("==============================================================================================================")
         print("On Match Operating...")
         matcher = eval(Matching_dict.objects.filter(customer_name = customer_name)[0].matcher)()
         matching_res = matcher.match_final(PO_res)
-        print(matching_res)
+        # print(matching_res)
         self.matching_res = matching_res
         
         uuid_code = str(uuid.uuid4())
@@ -211,7 +210,6 @@ class SalesImport_Generator:
                         if customer_name in ["Buc-ee's", "Big Lots Stores", "CVS", "Five Below", "Fred Meyer", "Meijers", "MICHAELS", "Tar Heel Trading", "TARGET", "Walgreens", "Walmart US", "Gabe's", "Hobby Lobby", "Ollies", "Walmart", "Dollarama", "Family Dollar", "Dollar Tree Stores", "BJ's Wholesale Club. Inc"]:
                             try:
                                 temp = matching_res[k][vkey][i].split("/")
-                                print(temp)
                                 matching_res[k][vkey][i] = "-".join([temp[i] for i in [2, 0, 1]])
                             except:
                                 matching_res[k][vkey][i] = None
@@ -240,7 +238,7 @@ class SalesImport_Generator:
         extract = Extractor()
         OMS_equal = extract.extractor(customer_name, matching_res)
         self.auto_dic = AutoDB().DB_tester(customer_name, matching_res)
-        print(self.auto_dic)
+        # print(self.auto_dic)
         print("==============================================================================================================")
         print("Displaying...")
         if (self.customer_name == "Pepco" or self.customer_name == "Poundland") and matching_res[0]["Currency"][0] == "CNY":

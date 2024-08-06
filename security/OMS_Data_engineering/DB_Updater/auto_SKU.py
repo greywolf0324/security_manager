@@ -41,7 +41,7 @@ class AutoDB:
                                 sku_con = int(float(sku))
                         except:
                             sku_con = str(sku)
-                        print(sku_con, type(sku_con))
+                        # print(sku_con, type(sku_con))
                         if sku_con in list(auto_df["PO"]):
                             self.auto_dic.update(
                                 {

@@ -531,7 +531,7 @@ class TEDI_Parsing:
 class Walmart_Parsing:
     def __init__(self, customer_name) -> None:
         self.keys = ["PO Number", "Release Number", "PO Date", "Dept #", "Retailers PO", "Requested Delivery Date", "Delivery Dates", "Ship Dates", "Cancel Date", "Carrier", "Carrier Details", "Ship To Location", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Retail Price", "Product/Item Description", "Color", "Size", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "Number of Pcs per Inner Pack", "Store #", "Qty per Store #", "Record Type", "PO purpose", "PO Type", "Contract Number", "Currency", "Ship Status", "Letter of Credit", "Vendor #", "Division #", "Cust Acct #", "Customer Order #", "Promo #", "Ticket Description", "Other Info / #s", "Frt Terms", "Carrier Service Level", "Payment Terms %", "Payment Terms Disc Due Date", "Payment Terms Disc Days Due", "Payment Terms Net Due Date", "Payment Terms Net Days", "Payment Terms Disc Amt", "Payment Terms Desc", "Contact Phone", "Contact Fax", "Contact Email", "Allow/Charge Type", "Allow/Charge Service", "Allow/Charge Amt", "Allow/Charge %", "Allow/Charge Rate", "Allow/Charge Qty", "Allow/Charge Desc", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Ship To Contact", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country", "Bill To Contact", "Buying Party Name", "Buying Party Location", "Buying Party Address 1", "Buying Party Address 2", "Buying Party City", "Buying Party State", "Buying Party Zip", "Buying Party Country", "Buying Party Contact", "Ultimate Location", "Notes/Comments", "Ship To Additional Name", "Ship To Additional Name 2", "Bill To Additional Name", "Bill To Additional Name 2", "Buyer Additional Name", "Buyer Additional Name 2", "GTIN", "PO Total Amount", "PO Total Weight ", "PO Total UOM ", "Shipping account number", "Mark for Name", "Mark for Address 1", "Mark for Address 2", "Mark for City", "Mark for State", "Mark for Postal", "Mark for Country", "Shipping Container Code", "National Drug Code", "Expiration Date", "Dist", "Scheduled Quantity", "Scheduled Qty UOM", "Required By Date", "Must Arrive By", "Entire Shipment", "Agreement Number", "Additional Vendor Part #", "Buyer Part Number", "Carrier Details Special Handling", "Restrictions/Conditions"]
-        
+        self.keys_v2 = ["PO Number", "Release Number", "PO Date", "Dept #", "Retailers PO", "Requested Delivery Date", "Delivery Dates", "Ship Dates", "Cancel Date", "Carrier", "Carrier Details", "Ship To Location", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Retail Price", "Product/Item Description", "Color", "Size", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "Number of Pcs per Inner Pack", "Store #", "Qty per Store #", "Record Type", "PO purpose", "PO Type", "Contract Number", "Currency", "Ship Status", "Letter of Credit", "Vendor #", "Division #", "Cust Acct #", "Customer Order #", "Promo #", "Ticket Description", "Other Info / #s", "Frt Terms", "Carrier Service Level", "Payment Terms %", "Payment Terms Disc Due Date", "Payment Terms Disc Days Due", "Payment Terms Net Due Date", "Payment Terms Net Days", "Payment Terms Disc Amt", "Payment Terms Desc", "Contact Phone", "Contact Fax", "Contact Email", "Allow/Charge Type", "Allow/Charge Service", "Allow/Charge Amt", "Allow/Charge %", "Allow/Charge Rate", "Allow/Charge Qty", "Allow/Charge Desc", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Ship To Contact", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country", "Bill To Contact", "Buying Party Name", "Buying Party Location", "Buying Party Address 1", "Buying Party Address 2", "Buying Party City", "Buying Party State", "Buying Party Zip", "Buying Party Country", "Buying Party Contact", "Ultimate Location", "Notes/Comments", "Ship To Additional Name", "Ship To Additional Name 2", "Bill To Additional Name", "Bill To Additional Name 2", "Buyer Additional Name", "Buyer Additional Name 2", "GTIN", "PO Total Amount", "PO Total Weight ", "PO Total UOM ", "Shipping account number", "Mark for Name", "Mark for Address 1", "Mark for Address 2", "Mark for City", "Mark for State", "Mark for Postal", "Mark for Country", "Shipping Container Code", "National Drug Code", "Expiration Date", "Dist", "Scheduled Quantity", "Scheduled Qty UOM", "Required By Date", "Must Arrive By", "Entire Shipment", "Agreement Number", "Additional Vendor Part #", "Buyer Part Number", "Carrier Details Special Handling", "Restrictions/Conditions", "Must Route By Date", "Vendor Location #", "Product Availability Date"]
     def PO_parser(self, paths: list, currency):
         res = []
 
@@ -539,6 +539,11 @@ class Walmart_Parsing:
             pdf = pd.read_csv(path)
             res.append([])
 
+            print(len(pdf.columns), len(self.keys), len(self.keys_v2))
+            if len(pdf.columns) < 124:
+                keys = self.keys
+            else:
+                keys = self.keys_v2
             lis = list(pdf["PO Number"])
             lens = []
             init = lis[0]
@@ -559,7 +564,7 @@ class Walmart_Parsing:
             for num, length in enumerate(lens):
                 res[k].append({})
 
-                for key in self.keys:
+                for key in keys:
                     res[k][num].update({
                         key: []
                     })
@@ -568,7 +573,7 @@ class Walmart_Parsing:
                 for i in range(length):
                     if type(pdf.iloc[i + steper]["Unit of Measure"]) == str or i == 0:
                         
-                        for key, item in zip(self.keys, list(pdf.iloc[i + steper])):
+                        for key, item in zip(keys, list(pdf.iloc[i + steper])):
                             if type(item) == np.int64:
                                 res[k][num][key].append(int(item))
                             
@@ -593,7 +598,41 @@ class Walmart_Parsing:
                 steper = steper + i + 1
         
         return res
-    
+
+# class Walmart_Parsing:
+#     def __init__(self, customer_name) -> None:
+#         self.keys = ["PO Number", "Release Number", "PO Date", "Dept #", "Retailers PO", "Requested Delivery Date", "Delivery Dates", "Ship Dates", "Cancel Date", "Carrier", "Carrier Details", "Ship To Location", "PO Line #", "Qty Ordered", "Unit of Measure", "Unit Price", "Buyers Catalog or Stock Keeping #", "UPC/EAN", "Vendor Style", "Retail Price", "Product/Item Description", "Color", "Size", "Pack Size", "Pack Size UOM", "Number of Inner Packs", "Number of Pcs per Inner Pack", "Store #", "Qty per Store #", "Record Type", "PO purpose", "PO Type", "Contract Number", "Currency", "Ship Status", "Letter of Credit", "Vendor #", "Division #", "Cust Acct #", "Customer Order #", "Promo #", "Ticket Description", "Other Info / #s", "Frt Terms", "Carrier Service Level", "Payment Terms %", "Payment Terms Disc Due Date", "Payment Terms Disc Days Due", "Payment Terms Net Due Date", "Payment Terms Net Days", "Payment Terms Disc Amt", "Payment Terms Desc", "Contact Phone", "Contact Fax", "Contact Email", "Allow/Charge Type", "Allow/Charge Service", "Allow/Charge Amt", "Allow/Charge %", "Allow/Charge Rate", "Allow/Charge Qty", "Allow/Charge Desc", "Ship To Name", "Ship To Address 1", "Ship To Address 2", "Ship To City", "Ship To State", "Ship to Zip", "Ship To Country", "Ship To Contact", "Bill To Name", "Bill To Address 1", "Bill To Address 2", "Bill To City", "Bill To State", "Bill To Zip", "Bill To Country", "Bill To Contact", "Buying Party Name", "Buying Party Location", "Buying Party Address 1", "Buying Party Address 2", "Buying Party City", "Buying Party State", "Buying Party Zip", "Buying Party Country", "Buying Party Contact", "Ultimate Location", "Notes/Comments", "Ship To Additional Name", "Ship To Additional Name 2", "Bill To Additional Name", "Bill To Additional Name 2", "Buyer Additional Name", "Buyer Additional Name 2", "GTIN", "PO Total Amount", "PO Total Weight ", "PO Total UOM ", "Shipping account number", "Mark for Name", "Mark for Address 1", "Mark for Address 2", "Mark for City", "Mark for State", "Mark for Postal", "Mark for Country", "Shipping Container Code", "National Drug Code", "Expiration Date", "Dist", "Scheduled Quantity", "Scheduled Qty UOM", "Required By Date", "Must Arrive By", "Entire Shipment", "Agreement Number", "Additional Vendor Part #", "Buyer Part Number", "Carrier Details Special Handling", "Restrictions/Conditions", "Must Route By Date", "Vendor Location #", "Product Availability Date"]
+
+#     def PO_parser(self, paths: list, currency):
+#         res = []
+
+#         for k, path in enumerate(paths):
+#             pdf = pd.read_csv(path)
+#             res.append([])
+
+#             lis = list(pdf["PO Number"])
+#             lens = []
+#             lens = []
+#             init = lis[0]
+#             length = 0
+
+#             for item in lis:
+#                 if init == item:
+#                     length = length + 1
+#                 else:
+#                     lens.append(length)
+#                     init = item
+#                     length = 1
+            
+#             lens.append(length)
+#             steper = 0
+
+#             for num, length in enumerate(lens):
+#                 res[k].append({})
+
+#                 for key in self.keys:
+
+
 class Ollies_Parsing:
     def __init__(self, customer_name) -> None:
         pass
