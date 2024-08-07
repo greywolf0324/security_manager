@@ -45,18 +45,18 @@ def monday_pagefetcher():
         for customer in database:
             input = OMS_Customers(
                 Name = customer["name"],
-                Status = customer["column_values"][9]["text"],
-                Currency = customer["column_values"][10]["text"],
-                PaymentTerm = customer["column_values"][11]["text"],
-                TaxRule = customer["column_values"][12]["text"],
-                PriceTier = customer["column_values"][13]["text"],
-                Discount = customer["column_values"][14]["text"],
-                CreditLimit = customer["column_values"][15]["text"],
-                Carrier = customer["column_values"][17]["text"],
-                SalesRepresentative = customer["column_values"][18]["text"],
-                Location = customer["column_values"][19]["text"],
-                TaxNumber = customer["column_values"][20]["text"],
-                Tags = customer["column_values"][22]["text"],
+                Status = customer["column_values"][10]["text"],
+                Currency = customer["column_values"][11]["text"],
+                PaymentTerm = customer["column_values"][12]["text"],
+                TaxRule = customer["column_values"][13]["text"],
+                PriceTier = customer["column_values"][14]["text"],
+                Discount = customer["column_values"][15]["text"],
+                CreditLimit = customer["column_values"][16]["text"],
+                Carrier = customer["column_values"][18]["text"],
+                SalesRepresentative = customer["column_values"][19]["text"],
+                Location = customer["column_values"][20]["text"],
+                TaxNumber = customer["column_values"][21]["text"],
+                Tags = customer["column_values"][23]["text"],
             )
             input.save()
     
@@ -142,7 +142,7 @@ def monday_pagefetcher():
 
     count = len(items)
     while count == page_count:
-        print("writing...")
+        print("writing Customer...")
         res = querier(cursor_key)
         cursor_key = res['data']['next_items_page']['cursor']
         items = res['data']['next_items_page']['items']
@@ -158,7 +158,7 @@ def monday_pagefetcher():
 
     count = len(items)
     while count == page_count:
-        print("writing...")
+        print("writing Inventory...")
         res = querier(cursor_key)
         cursor_key = res['data']['next_items_page']['cursor']
         items = res['data']['next_items_page']['items']
@@ -174,7 +174,7 @@ def monday_pagefetcher():
 
     count = len(items)
     while count == page_count:
-        print("writing...")
+        print("writing Location...")
         res = querier(cursor_key)
         cursor_key = res['data']['next_items_page']['cursor']
         items = res['data']['next_items_page']['items']

@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
+from .OMS_Data_engineering.util import monday_pagefetcher
 
 app_name = 'security'
+
+# monday_pagefetcher()
 
 urlpatterns = [
   path('', views.home, name='home'),

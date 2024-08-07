@@ -33,8 +33,8 @@ filenames = []
 
 class SalesImport_Generator:
     def __init__(self) -> None:
-        # monday_pagefetcher()
-
+        monday_pagefetcher()
+        
         self.customer_name = ""
         self.auto_dic = []
         self.matching_res = []
