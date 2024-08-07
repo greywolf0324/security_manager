@@ -134,7 +134,7 @@ def monday_pagefetcher():
     db_clearer(OMS_Customers)
     db_clearer(OMS_Inventory_List)
     db_clearer(OMS_Locations)
-
+    print("clearer")
     res = init_querier(Customers_boardID)
     cursor_key = res['data']['boards'][0]['items_page']['cursor']
     items = res['data']['boards'][0]['items_page']['items']
