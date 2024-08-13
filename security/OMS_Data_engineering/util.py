@@ -163,10 +163,11 @@ def monday_pagefetcher():
         cursor_key = res['data']['next_items_page']['cursor']
         items = res['data']['next_items_page']['items']
         count = len(items)
+        print(count)
         inventory_writer(items)
 
     # ==================================================================================================================================
-    
+    print("loc writing . . .")
     res = init_querier(StockLocation_boardID)
     cursor_key = res['data']['boards'][0]['items_page']['cursor']
     items = res['data']['boards'][0]['items_page']['items']
